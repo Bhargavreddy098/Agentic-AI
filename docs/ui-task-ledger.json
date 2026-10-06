@@ -77,8 +77,12 @@
         "F13"
       ],
       "stage": "foundation",
-      "status": "pending",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        "Actual loopback HTTP/SSE contract tests cover synthetic identity, idempotency, immutable replay, decisions, expiry, failures, management proposals and upload quarantine. Scenario invocation documented in docs/gateway-demo-guide.md.",
+        "Fresh review found cancellation, old-run timer and upload transport defects. All three reproduced RED then fixed with passing regressions. Production fixture refuses startup; real keys/actions unsupported.",
+        "2026-10-06 checkpoint: 159 unit tests pass across 12 files; lint/root and UI types pass; production UI/fixture builds pass; source, boundary, architecture, dependency and traceability checks pass. No live security qualification claimed."
+      ]
     },
     {
       "id": "U04",
@@ -95,8 +99,12 @@
         "F15"
       ],
       "stage": "chat",
-      "status": "pending",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        "Exact seven ordered sections, opaque interaction deep link and shared shell verified. Clarifications/approvals stay in Chat; management routes are unavailable scaffolds.",
+        "Authenticated workspace summaries drive secondary history and pending badge; unauthorized/absent Gateway disables new conversation. Draft/canonical ownership is the single WorkspaceProvider/ChatStore.",
+        "Three production-browser checks pass: connected history/pending ownership, desktop collapse, mobile drawer Escape/focus and no overflow. Navigation unit test passes; final build/types/lint pass."
+      ]
     },
     {
       "id": "U05",
@@ -113,8 +121,13 @@
         "F12"
       ],
       "stage": "chat",
-      "status": "pending",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        "Reducer/parser tests observed RED before implementation or fixes: missing reducer, fragmented CRLF and truncated stream frames. Duplicate deltas, stale decisions, sequence gaps and other-chat late events pass.",
+        "Fresh review found stale asynchronous recovery rejection and unbounded no-progress retries. Generation guards, snapshot cursor coverage and three-attempt exhaustion verified in regressions.",
+        "Nine state tests pass; actual HTTP reload plus replay reconstructs identical messages/cards. Identity/logout clears sensitive state, local bounded drafts stay separate from canonical snapshots, subscriptions abort on navigation.",
+        "2026-10-06: 159 unit tests pass; connected production-browser checks 3/3 pass; production build, lint and strict root/UI types pass. No competing library runtime or browser provider calls."
+      ]
     },
     {
       "id": "U06",

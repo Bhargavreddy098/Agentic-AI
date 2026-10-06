@@ -13,7 +13,8 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "@asi/ui": "workspace:*",
-    "@asi/contracts": "workspace:*"
+    "@asi/contracts": "workspace:*",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "tailwindcss": "4.3.3",

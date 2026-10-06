@@ -1,0 +1,15 @@
+{
+  "name": "@asi/gateway-fixture",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@asi/contracts": "workspace:*",
+    "hono": "4.13.13",
+    "@hono/node-server": "2.1.3"
+  }
+}

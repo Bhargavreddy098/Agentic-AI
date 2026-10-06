@@ -1,0 +1,3 @@
+export function UnavailableSection({ title, description }: { title: string; description: string }) {
+  return <main className="section-page"><div className="section-kicker">WORKSPACE</div><h1>{title}</h1><p className="section-description">{description}</p><section className="unavailable-panel"><div className="empty-symbol">◈</div><h2>Backend integration pending</h2><p>This section has no live backend connected yet. Its data and management controls become available after the corresponding build gates pass.</p><span className="neutral-badge">Unavailable in this preview</span></section></main>;
+}

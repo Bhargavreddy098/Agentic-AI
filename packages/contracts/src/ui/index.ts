@@ -74,7 +74,7 @@ export const UiEventSchema = z.discriminatedUnion("eventType", [
 ]).refine(value => !("conversationId" in value.payload) || value.payload.conversationId === value.conversationId, "event projection belongs to another conversation");
 
 export type Page<T> = { items: T[]; nextCursor: string | null };
-export type Catalog<T> = { items: T[]; revision: number; availability: z.infer<typeof Availability>; reason?: string };
+export type Catalog<T> = { items: T[]; revision: number; availability: z.infer<typeof Availability>; reason?: string | undefined };
 export type SendMessageInput = z.infer<typeof SendMessageInputSchema>;
 export type ClarificationAnswer = z.infer<typeof ClarificationAnswerSchema>;
 export type ApprovalDecisionInput = z.infer<typeof ApprovalDecisionInputSchema>;
