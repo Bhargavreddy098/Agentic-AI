@@ -1,0 +1,6 @@
+{
+  "type": "approval", "interactionId": "interaction-1", "approvalId": "approval-1", "effectId": "effect-1",
+  "conversationId": "conversation-1", "runId": "run-1", "version": 1, "status": "pending",
+  "action": "Simulated read", "target": "Synthetic document", "preview": "Read demo content only",
+  "expiresAt": "2099-01-01T00:00:00Z", "requiredActorRole": "user", "actionRef": "bound-action-1"
+}

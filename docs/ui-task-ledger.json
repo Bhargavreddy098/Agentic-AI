@@ -52,8 +52,15 @@
         "F16"
       ],
       "stage": "foundation",
-      "status": "pending",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        "Five unsafe-input tests observed RED→GREEN: required IDs/revision, replacement effect args, question/approval separation, provider secrets in projections and unknown/invalid-sequence events.",
+        "Seven UI contract/endpoint/fixture tests passed; full unit suite137/137 passed across8 files. Root and UI typecheck, contracts build, lint, architecture and UI boundary checks pass.",
+        "All UI DTOs/commands/events use strict Zod schemas. UI historical timestamps remain parseable; backend server-time/authorization checks belong to real Gateway gates.",
+        "GatewayClient defines every specified method; endpoint mapping encodes opaque IDs and separates answers/decisions. Frozen decision fixtures and runGatewayContractTests(createClient) published for U03/U17.",
+        "Ruling: compact declarations initially centralized in packages/contracts/src/ui/index.ts rather than six source files; one shared owner, unchanged public type names/endpoints. Cost: larger source module until schemas are split without wire changes.",
+        "UI reference parts use canonical referenceId plus type/partId, chosen at this first wire definition; no existing deployed schema changed. No backend approval authority or inference implemented."
+      ]
     },
     {
       "id": "U03",

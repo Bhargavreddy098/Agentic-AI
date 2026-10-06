@@ -17,6 +17,7 @@ export * from "./tool.js";
 export * from "./memory.js";
 export * from "./audit.js";
 export * from "./delivery.js";
+export * from "./ui/index.js";
 
 export const CandidateSchema = z.strictObject({
   schemaVersion: SchemaVersionSchema,
