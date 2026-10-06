@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+coverage/
+.env
+.env.*
+!.env.example
+data/
+*.db
+*.db-wal
+*.db-shm
+*.log
+.DS_Store
+Thumbs.db
+evals/**/outputs/
+docs/release-evidence/**/raw/

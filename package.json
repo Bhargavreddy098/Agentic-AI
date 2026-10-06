@@ -1,0 +1,36 @@
+{
+  "name": "asi-agent-system",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": "24.19.0",
+    "pnpm": "12.6.0"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "build": "pnpm -r build",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:security": "vitest run --project security",
+    "test:protocols": "vitest run --project protocols",
+    "test:e2e": "vitest run --project e2e",
+    "test:load": "vitest run --project load",
+    "verify:architecture": "node scripts/verify-architecture.mjs .",
+    "verify:dependencies": "node scripts/verify-dependencies.mjs .",
+    "verify:traceability": "node scripts/verify-traceability.mjs .",
+    "verify:protected-files": "node scripts/verify-protected-files.mjs .",
+    "verify": "pnpm lint && pnpm typecheck && pnpm build && pnpm test:unit && pnpm verify:architecture && pnpm verify:dependencies && pnpm verify:traceability && pnpm verify:protected-files"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.19.1",
+    "eslint": "10.12.0",
+    "globals": "17.13.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "vitest": "5.0.3"
+  }
+}

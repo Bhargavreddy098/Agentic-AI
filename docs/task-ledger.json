@@ -1,0 +1,645 @@
+{
+  "schemaVersion": 1,
+  "status": "approved",
+  "approvedByHuman": true,
+  "approvalDate": "2026-10-06",
+  "executionMethod": "native-sequential",
+  "approval": {
+    "date": "2026-10-06",
+    "decidedBy": "user",
+    "decisions": {
+      "specAndPlans": "system spec, system plan, UI spec, and UI plan approved as proposed",
+      "executionMethod": "native-sequential",
+      "buildOrder": "interleave UI early: system 01-02, then U01-U03; backend 03-16 while UI U04-U16 proceeds; real integration U17-U19 after system 01-16 and 19 pass",
+      "primaryUiLibrary": "AI Elements",
+      "deployment": "single-tenant Linux host; Windows development workstation"
+    },
+    "pendingDecisions": {
+      "firstRealTasks": "blocks the Task 10 evaluation corpus",
+      "modelDataPolicy": "blocks Task 11 credentials and real data",
+      "spendRetentionQuotas": "blocks first real inference and release",
+      "microVmBackend": "blocks Tasks 12 and 27"
+    },
+    "recordedIn": "docs/decisions/0001-runtime-and-dependencies.md"
+  },
+  "date": "2026-10-06",
+  "spec": "docs/superpowers/specs/2026-10-06-asi-agent-design.md",
+  "plan": "docs/superpowers/plans/2026-10-06-asi-agent-build.md",
+  "tasks": [
+    {
+      "id": "01",
+      "title": "Freeze baseline and reproducible workspace",
+      "dependsOn": [],
+      "requirements": [
+        "R01",
+        "R04",
+        "R20",
+        "R21",
+        "R24"
+      ],
+      "stage": "A",
+      "status": "completed",
+      "optional": false,
+      "evidence": [
+        "Environment: Node v24.19.0, pnpm 12.6.0, npm 12.0.2, git 2.49.0.windows.1; Docker CLI 29.4.3 present but daemon not running (sandbox qualification deferred to the qualified Linux host); WSL present, not qualified.",
+        "RED observed before implementation: 3/3 tests failed with MODULE_NOT_FOUND for the four verifier scripts.",
+        "GREEN: pnpm exec vitest run tests/architecture/imports.test.ts -> 3 tests passed; violations fixture yields CHANNEL_MODEL_BYPASS (ARCH-001) and UNPINNED_DEPENDENCY (DEP-001); clean fixture and repository root yield zero violations.",
+        "pnpm verify: eslint, tsc typecheck, build, test:unit, verify:architecture (7 files scanned, 0 violations), verify:dependencies (1 manifest, 0 violations), verify:traceability (0 violations), verify:protected-files (25 protected patterns, 0 violations) all exit 0.",
+        "Forbidden-import drill: temporary apps/web/src/probe-direct-model.ts importing 'ai' produced CHANNEL_MODEL_BYPASS (ARCH-001) with exit 1; probe file and empty directories removed afterwards.",
+        "pnpm install --frozen-lockfile: lockfile up to date, resolution skipped, no mutation.",
+        "Approvals recorded 2026-10-06 in architecture-baseline.json, ui-baseline.json, task-ledger.json, ui-task-ledger.json and docs/decisions/0001-runtime-and-dependencies.md: spec and plans approved as proposed; native-sequential execution; AI Elements as primary UI library; single-tenant Linux host deployment; architecture baseline now declares componentPaths for the 12 components with supporting-package ownership notes.",
+        "Limitations: Docker daemon is not running on this workstation, so Tasks 12/13/22/23/25/27/29 sandbox qualification must run on the Linux host; no apps/packages implementation code exists yet (Task 02 onwards); pending user decisions (first real tasks, model/data policy, spend/retention quotas, microVM backend) remain recorded in the ADR."
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Versioned boundary schemas",
+      "dependsOn": [
+        "01"
+      ],
+      "requirements": [
+        "R04",
+        "R12",
+        "R18"
+      ],
+      "stage": "A",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "03",
+      "title": "Scoped identities and secrets",
+      "dependsOn": [
+        "02"
+      ],
+      "requirements": [
+        "R02",
+        "R03",
+        "R06",
+        "R20",
+        "R22"
+      ],
+      "stage": "A",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "04",
+      "title": "Durable control and leases",
+      "dependsOn": [
+        "03"
+      ],
+      "requirements": [
+        "R08",
+        "R12",
+        "R15",
+        "R23"
+      ],
+      "stage": "A",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "05",
+      "title": "Signed audit receipts",
+      "dependsOn": [
+        "04"
+      ],
+      "requirements": [
+        "R03",
+        "R15",
+        "R19",
+        "R23"
+      ],
+      "stage": "A",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "06",
+      "title": "Shared budgets",
+      "dependsOn": [
+        "05"
+      ],
+      "requirements": [
+        "R14",
+        "R23"
+      ],
+      "stage": "A",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "07",
+      "title": "Policy and approvals",
+      "dependsOn": [
+        "03",
+        "04",
+        "05",
+        "06"
+      ],
+      "requirements": [
+        "R02",
+        "R03",
+        "R08",
+        "R22",
+        "R24"
+      ],
+      "stage": "A",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "08",
+      "title": "Fenced episodic owner",
+      "dependsOn": [
+        "04",
+        "07"
+      ],
+      "requirements": [
+        "R08",
+        "R09",
+        "R11",
+        "R23"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "09",
+      "title": "Hierarchical RLS memory",
+      "dependsOn": [
+        "04",
+        "07",
+        "08"
+      ],
+      "requirements": [
+        "R02",
+        "R06",
+        "R10",
+        "R11",
+        "R23"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "10",
+      "title": "Redacted telemetry and evals",
+      "dependsOn": [
+        "02",
+        "05"
+      ],
+      "requirements": [
+        "R19",
+        "R23"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "11",
+      "title": "Privacy and inference routing",
+      "dependsOn": [
+        "03",
+        "05",
+        "06",
+        "07",
+        "10"
+      ],
+      "requirements": [
+        "R02",
+        "R05",
+        "R14",
+        "R19",
+        "R22"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "12",
+      "title": "Isolation qualification",
+      "dependsOn": [
+        "03",
+        "07"
+      ],
+      "requirements": [
+        "R03",
+        "R07",
+        "R22",
+        "R23"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "13",
+      "title": "Verified tools and effects",
+      "dependsOn": [
+        "05",
+        "06",
+        "07",
+        "12"
+      ],
+      "requirements": [
+        "R02",
+        "R07",
+        "R08",
+        "R11",
+        "R15",
+        "R22"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "14",
+      "title": "Capability routing and BullMQ",
+      "dependsOn": [
+        "03",
+        "04",
+        "06",
+        "13"
+      ],
+      "requirements": [
+        "R06",
+        "R12",
+        "R14",
+        "R23"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "15",
+      "title": "Deterministic Mastra orchestrator",
+      "dependsOn": [
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14"
+      ],
+      "requirements": [
+        "R04",
+        "R05",
+        "R08",
+        "R12",
+        "R14",
+        "R23"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "16",
+      "title": "Gateway web/CLI vertical slice",
+      "dependsOn": [
+        "15"
+      ],
+      "requirements": [
+        "R01",
+        "R02",
+        "R08",
+        "R12",
+        "R15",
+        "R21",
+        "R23"
+      ],
+      "stage": "B",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "17",
+      "title": "Compression and recall",
+      "dependsOn": [
+        "16"
+      ],
+      "requirements": [
+        "R05",
+        "R09",
+        "R10",
+        "R11",
+        "R13",
+        "R14"
+      ],
+      "stage": "C",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "18",
+      "title": "Signed skills",
+      "dependsOn": [
+        "16",
+        "13"
+      ],
+      "requirements": [
+        "R02",
+        "R03",
+        "R07",
+        "R11",
+        "R24"
+      ],
+      "stage": "C",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "19",
+      "title": "Recovery approvals cancellation",
+      "dependsOn": [
+        "16",
+        "07"
+      ],
+      "requirements": [
+        "R08",
+        "R12",
+        "R15",
+        "R22",
+        "R23"
+      ],
+      "stage": "C",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "20",
+      "title": "Slack adapter",
+      "dependsOn": [
+        "16",
+        "19"
+      ],
+      "requirements": [
+        "R01",
+        "R02",
+        "R15",
+        "R21"
+      ],
+      "stage": "C",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "21",
+      "title": "Quiet durable heartbeat",
+      "dependsOn": [
+        "06",
+        "16",
+        "19"
+      ],
+      "requirements": [
+        "R02",
+        "R12",
+        "R14",
+        "R23"
+      ],
+      "stage": "C",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "22",
+      "title": "MCP protocol adapter",
+      "dependsOn": [
+        "13",
+        "19"
+      ],
+      "requirements": [
+        "R02",
+        "R07",
+        "R11",
+        "R18",
+        "R22"
+      ],
+      "stage": "D",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "23",
+      "title": "A2A protocol adapter",
+      "dependsOn": [
+        "13",
+        "14",
+        "19"
+      ],
+      "requirements": [
+        "R02",
+        "R06",
+        "R11",
+        "R12",
+        "R18"
+      ],
+      "stage": "D",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "24",
+      "title": "Fleet WhatsApp Discord",
+      "dependsOn": [
+        "20",
+        "22",
+        "23"
+      ],
+      "requirements": [
+        "R01",
+        "R06",
+        "R08",
+        "R12",
+        "R14",
+        "R21"
+      ],
+      "stage": "D",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "25",
+      "title": "Production restore retention release",
+      "dependsOn": [
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24"
+      ],
+      "requirements": [
+        "R02",
+        "R09",
+        "R15",
+        "R19",
+        "R22",
+        "R23"
+      ],
+      "stage": "D",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "26",
+      "title": "Offline scoped consolidation",
+      "dependsOn": [
+        "25",
+        "09",
+        "11",
+        "17"
+      ],
+      "requirements": [
+        "R05",
+        "R09",
+        "R10",
+        "R11",
+        "R14",
+        "R16",
+        "R23"
+      ],
+      "stage": "E",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "27",
+      "title": "Shadow tool synthesis",
+      "dependsOn": [
+        "25",
+        "12",
+        "13",
+        "18"
+      ],
+      "requirements": [
+        "R03",
+        "R07",
+        "R11",
+        "R15",
+        "R17"
+      ],
+      "stage": "E",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "28",
+      "title": "Optional observations and exchange",
+      "dependsOn": [
+        "26"
+      ],
+      "requirements": [
+        "R10",
+        "R11",
+        "R16",
+        "R24"
+      ],
+      "stage": "E",
+      "status": "pending",
+      "optional": true,
+      "evidence": []
+    },
+    {
+      "id": "29",
+      "title": "Guarded scaffold evolution",
+      "dependsOn": [
+        "25",
+        "26",
+        "27"
+      ],
+      "requirements": [
+        "R02",
+        "R03",
+        "R07",
+        "R14",
+        "R15",
+        "R17",
+        "R24"
+      ],
+      "stage": "F",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    },
+    {
+      "id": "30",
+      "title": "Full conformance and handoff",
+      "dependsOn": [
+        "29"
+      ],
+      "requirements": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R17",
+        "R18",
+        "R19",
+        "R20",
+        "R21",
+        "R22",
+        "R23",
+        "R24"
+      ],
+      "stage": "F",
+      "status": "pending",
+      "optional": false,
+      "evidence": []
+    }
+  ],
+  "frontend": {
+    "plan": "docs/superpowers/plans/2026-10-06-agent-workspace-ui-build.md",
+    "ledger": "docs/ui-task-ledger.json",
+    "relationship": "U01-U22 extends Client Surfaces; backend task IDs and pending status preserved"
+  }
+}

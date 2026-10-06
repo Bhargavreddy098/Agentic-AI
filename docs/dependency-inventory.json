@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen",
+  "date": "2026-10-06",
+  "policy": {
+    "exactVersionsOnly": true,
+    "allowedInternalProtocol": "workspace:*",
+    "rejectedSpecifiers": [
+      "^",
+      "~",
+      ">",
+      "<",
+      ">=",
+      "<=",
+      "*",
+      "latest",
+      "workspace:^",
+      "workspace:~",
+      "git+",
+      "github:",
+      "npm:",
+      "file:"
+    ],
+    "peerDependencies": "exact pins required; a range peer requires an approved ADR (R24)",
+    "rule": "Every external dependency is an exact version recorded here with registry provenance, integrity digest, license, and qualification evidence. Ranges fail with UNPINNED_DEPENDENCY; unrecorded exact versions fail with UNAPPROVED_DEPENDENCY. Promoting a planned entry to approved happens in its owning task with fresh registry evidence."
+  },
+  "toolchain": {
+    "node": "24.19.0",
+    "pnpm": "12.6.0",
+    "npm": "12.0.2",
+    "git": "2.49.0.windows.1",
+    "packageManagerField": "pnpm@12.6.0",
+    "engineStrict": true,
+    "strictPeerDependencies": true,
+    "autoInstallPeers": false,
+    "typescript": "5.9.3"
+  },
+  "approved": [
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+      "role": "compiler baseline; strict ESM (NodeNext), strictNullChecks, strictFunctionTypes, noUncheckedIndexedAccess, exactOptionalPropertyTypes",
+      "qualification": "latest 5.9.x patch on npm registry 2026-10-06",
+      "status": "approved"
+    },
+    {
+      "name": "vitest",
+      "version": "5.0.3",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-xMw97S3rjdtj5dkVat7jCsqWBpvchs3RlpQctUqwJD0KkERk40vz2fJ77lDwW/Vzh/pk18eItYAzkodhSes3jQ==",
+      "role": "test runner for unit, contract, integration, security, protocol, e2e, and load suites",
+      "qualification": "engines ^22.12.0 || ^24.0.0 || >=26.0.0 satisfied by node 24.19.0; npm registry 2026-10-06",
+      "status": "approved"
+    },
+    {
+      "name": "eslint",
+      "version": "10.12.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-npHjrHb2o4ehH3mE+YuxABR+0gyb0aVWCIolgJDArwCiHEIsonBm3ZKjel5b0U5+a+MbEvIyRCGCzD3eKKK2NA==",
+      "role": "linter (flat config)",
+      "qualification": "engines ^20.19.0 || ^22.13.0 || >=24 satisfied by node 24.19.0; npm registry 2026-10-06",
+      "status": "approved"
+    },
+    {
+      "name": "typescript-eslint",
+      "version": "8.71.1",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-oiNVPC3/NbV1FpaHU07l8O6ynqG9v4PAiW2WvTrAmZdR0f2HI/gE668ElMLCK7Xbsu5k2fK5C4fXNiq05j7/nQ==",
+      "role": "TypeScript ESLint parser and recommended rules",
+      "qualification": "peers eslint ^8.57.0 || ^9.0.0 || ^10.0.0 (10.12.0 present) and typescript >=4.8.4 <6.1.0 (5.9.3 present); npm registry 2026-10-06",
+      "status": "approved"
+    },
+    {
+      "name": "@eslint/js",
+      "version": "10.0.1",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-zeR9k5pd4gxjZ0abRoIaxdc7I3nDktoXZk2qOv9gCNWx3mVwEn32VRhyLaRsDiJjTs0xq/T8mfPtyuXu7GWBcA==",
+      "role": "ESLint core recommended rule set",
+      "qualification": "peer eslint ^9.0.0 || ^10.0.0 (10.12.0 present); npm registry 2026-10-06",
+      "status": "approved"
+    },
+    {
+      "name": "globals",
+      "version": "17.13.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-RwMTC61u7hrG3ZJMkZQOK4JLJrKS8QtoTii63EmWvFXHqycY9FObBJQCbsLxSO8kjKhWE5kV1GC+Vb1g3RI0Zg==",
+      "role": "Node global definitions for linting plain ESM scripts",
+      "qualification": "npm registry 2026-10-06",
+      "status": "approved"
+    },
+    {
+      "name": "@types/node",
+      "version": "24.19.1",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-aS3/DG0oM05K0RIXXP+hKjinGG5IgSSVGzswZxW3O0sS3pH4/fycXundUC9XsszgKCk4gHXylTEK6hyFxVxnoQ==",
+      "role": "Node 24 type definitions for tests and verification scripts",
+      "qualification": "latest 24.x patch on npm registry 2026-10-06; matches runtime node 24.19.0 line",
+      "status": "approved"
+    },
+    {
+      "name": "zod",
+      "version": "4.6.5",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==",
+      "role": "runtime-validated boundary contracts (spec section 11 mandates this exact version)",
+      "qualification": "spec-mandated pin; v4.4+ unknown/any optionality soundness change requires explicit optional/unknown tests in Task 02; npm registry 2026-10-06",
+      "status": "approved"
+    }
+  ],
+  "planned": [
+    {
+      "name": "hono",
+      "version": "4.13.13",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "gateway HTTP server (Task 16)",
+      "owningTask": "16",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "@hono/node-server",
+      "version": "2.1.3",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "Hono Node adapter (Task 16)",
+      "owningTask": "16",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "ai",
+      "version": "7.0.128",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "role": "Vercel AI SDK core; imports allowed ONLY inside packages/privacy and packages/models (ARCH-001)",
+      "owningTask": "11",
+      "peerNotes": "peers zod ^3.25.76 || ^4.1.8; approved zod 4.6.5 satisfies",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "@ai-sdk/openai",
+      "version": "4.0.84",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "role": "OpenAI provider adapter inside the privacy service (Task 11)",
+      "owningTask": "11",
+      "peerNotes": "peers zod ^3.25.76 || ^4.1.8; approved zod 4.6.5 satisfies",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "@ai-sdk/anthropic",
+      "version": "4.0.72",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "role": "Anthropic provider adapter inside the privacy service (Task 11)",
+      "owningTask": "11",
+      "peerNotes": "peers zod ^3.25.76 || ^4.1.8; approved zod 4.6.5 satisfies",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "@modelcontextprotocol/sdk",
+      "version": "1.32.1",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "MCP adapter (Task 22); target protocol revision 2026-07-28 subject to SDK behavior qualification",
+      "owningTask": "22",
+      "status": "version-resolved; SDK must implement the pinned revision behavior or the integration stops at its compatibility gate"
+    },
+    {
+      "name": "mastra",
+      "version": "1.32.1",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "role": "Mastra CLI/entry (Task 15); the deterministic shell imports core APIs behind an adapter port",
+      "owningTask": "15",
+      "peerNotes": "peers @mastra/core >=1.58.0-0 <2.0.0-0; @mastra/core 1.74.0 satisfies",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "@mastra/core",
+      "version": "1.74.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-x3qnBlB4RsL4VLH1PgKNSJkGk3qCuIDNsZvR9Dv8mdfUwHTNS5BgZkeJoM1dWawGQA9aK9iYajgcWqaixyqnyw==",
+      "role": "Mastra core 1.x behind the orchestrator adapter port (Task 15); internal memory/tool defaults must not bypass custom privacy/tool/memory ports",
+      "owningTask": "15",
+      "peerNotes": "peers zod ^3.25.0 || ^4.0.0; approved zod 4.6.5 satisfies",
+      "status": "version-resolved; integrity captured 2026-10-06"
+    },
+    {
+      "name": "bullmq",
+      "version": "6.3.11",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "queue transport behind QueuePort (Tasks 04, 14); Redis is transport, never authoritative task history",
+      "owningTask": "14",
+      "peerNotes": "peers pg >=8.0.0, redis >=5.0.0, ioredis >=5.0.0, bullmq-otel >=2.0.0; peer optionality must be confirmed at install (strict-peer-dependencies is enabled)",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "ioredis",
+      "version": "6.0.0",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "Redis client used by BullMQ (Tasks 04, 14)",
+      "owningTask": "14",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "next",
+      "version": "16.3.8",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "web client App Router (U01); no provider generation routes, no inference in Next",
+      "owningTask": "U01",
+      "peerNotes": "peers react ^19 and react-dom ^19 (19.3.0 planned); optional peers (sass, @playwright/test, @opentelemetry/api, babel-plugin-react-compiler) remain uninstalled unless a reviewed task requires them",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "react",
+      "version": "19.3.0",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "web client presentation (U01)",
+      "owningTask": "U01",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "react-dom",
+      "version": "19.3.0",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "web client DOM renderer (U01)",
+      "owningTask": "U01",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "tailwindcss",
+      "version": "4.3.3",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "utility CSS layer for the shared shell (U01)",
+      "owningTask": "U01",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "pg",
+      "version": "8.23.1",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "PostgreSQL client for the memory broker, audit, budgets, and control owners (Tasks 04, 05, 06, 09); credentials stay in trusted services",
+      "owningTask": "04",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "pgvector",
+      "version": "0.3.0",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "pgvector client helpers for tenant-filtered vector retrieval (Task 09)",
+      "owningTask": "09",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "better-sqlite3",
+      "version": "13.0.3",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "candidate SQLite driver for the episodic owner (Task 08); the built-in node:sqlite is the alternative; final driver choice and bundled-build bug-fix qualification happen in Task 08",
+      "owningTask": "08",
+      "status": "version-resolved; driver selection qualified at Task 08, never silently substituted"
+    },
+    {
+      "name": "langfuse",
+      "version": "3.39.2",
+      "registry": "npm",
+      "license": "MIT",
+      "role": "telemetry export target behind the internal OTel facade (Task 10); exporter failure must never lose durable audit records",
+      "owningTask": "10",
+      "peerNotes": "peers zod ^3.25 || ^4.0 (satisfied) and REQUIRED peer @cfworker/json-schema ^4.1.1 (4.1.1 resolved); Task 10 must install the peer or qualification fails loudly",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "@cfworker/json-schema",
+      "version": "4.1.1",
+      "registry": "npm",
+      "license": "verify at promotion",
+      "role": "required peer of langfuse (Task 10)",
+      "owningTask": "10",
+      "status": "version-resolved as a required peer; license and integrity captured at promotion"
+    },
+    {
+      "name": "@opentelemetry/api",
+      "version": "1.9.1",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "role": "telemetry API facade (Task 10)",
+      "owningTask": "10",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "@opentelemetry/sdk-node",
+      "version": "0.222.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "role": "telemetry SDK node configuration (Task 10)",
+      "owningTask": "10",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "@opentelemetry/exporter-trace-otlp-http",
+      "version": "0.222.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "role": "OTLP HTTP trace export toward Langfuse (Task 10)",
+      "owningTask": "10",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    }
+  ],
+  "containerImages": [
+    {
+      "image": "postgres:17",
+      "qualifiedReference": "docker.io/library/postgres:17@sha256:3cec7eb015ba8adb28139fa5c83b8489cdf0e666e53dfdf20f598ae0cc8739e3",
+      "platform": "linux/amd64",
+      "role": "control state, leases, outboxes, receipts, curated shared memory (Task 04)",
+      "qualification": "manifest digest resolved from the registry 2026-10-06 without the daemon; pull-and-run verification happens on the qualified Linux host at the owning task",
+      "status": "digest-resolved; runtime qualification deferred"
+    },
+    {
+      "image": "redis:8",
+      "qualifiedReference": "docker.io/library/redis:8@sha256:6e9101032a2126aeeb4b1e862ac77d2fcf26b831ae37e5ff2e69169f82ddd411",
+      "platform": "linux/amd64",
+      "role": "BullMQ transport (Tasks 04, 14); never authoritative task history",
+      "qualification": "manifest digest resolved from the registry 2026-10-06 without the daemon; pull-and-run verification happens on the qualified Linux host at the owning task",
+      "status": "digest-resolved; runtime qualification deferred"
+    }
+  ],
+  "protocols": [
+    {
+      "protocol": "Model Context Protocol",
+      "targetRevision": "2026-07-28",
+      "sdk": "@modelcontextprotocol/sdk 1.32.1 (planned)",
+      "note": "legacy 2025-11-25 behavior requires an explicit compatibility fixture and decision (Task 22); a version mismatch is a protocol error, not a guessed downgrade"
+    },
+    {
+      "protocol": "Agent-to-Agent",
+      "targetRevision": "1.0.0",
+      "sdk": "none pinned yet",
+      "note": "JSON-RPC binding first; SDK selection and qualification happen in Task 23"
+    }
+  ],
+  "openQualifications": [
+    "Docker CLI 29.4.3 is present on this Windows workstation but the Docker daemon is not running; image pull verification, Linux Landlock/seccomp probes, and all sandbox/security integration checks (Tasks 12, 13, 22, 23, 25, 27, 29) must run on the qualified Linux host before those tasks execute.",
+    "WSL is present with the docker-desktop distribution (version 2); it is not yet qualified as the Linux enforcement runtime.",
+    "SQLite driver choice (better-sqlite3 13.0.3 versus built-in node:sqlite) and bundled-build bug-fix qualification are decided in Task 08, not assumed here.",
+    "bullmq 6.3.11 peer optionality (redis, bullmq-otel) must be confirmed at install time with strict-peer-dependencies enabled."
+  ]
+}

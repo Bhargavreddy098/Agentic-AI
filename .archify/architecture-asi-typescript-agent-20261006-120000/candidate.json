@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "ASI-Level TypeScript Agent System",
+    "output": ".archify/architecture-asi-typescript-agent-20261006-120000/asi-typescript-agent.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "govKernel",
+      "type": "security",
+      "label": "Policy Kernel",
+      "sublabel": "Landlock / seccomp daemon",
+      "pos": [40, 80],
+      "size": [150, 64],
+      "tag": "Out-of-Process"
+    },
+    {
+      "id": "privRouter",
+      "type": "security",
+      "label": "Privacy Router",
+      "sublabel": "PII stripping & routing",
+      "pos": [270, 80],
+      "size": [150, 64],
+      "tag": "Differential Privacy"
+    },
+    {
+      "id": "frontierModels",
+      "type": "external",
+      "label": "Frontier Models",
+      "sublabel": "Claude / OpenAI / Nemotron",
+      "pos": [500, 80],
+      "size": [150, 64],
+      "tag": "AI SDK (40+ LLMs)"
+    },
+    {
+      "id": "sandbox",
+      "type": "cloud",
+      "label": "Isolated Sandbox",
+      "sublabel": "MicroVM / Container exec",
+      "pos": [730, 80],
+      "size": [150, 64],
+      "tag": "DGM / Eval-Gated"
+    },
+    {
+      "id": "channels",
+      "type": "external",
+      "label": "Client Surfaces",
+      "sublabel": "WhatsApp / Slack / CLI",
+      "pos": [40, 260],
+      "size": [150, 64],
+      "tag": "20+ Ingress Platforms"
+    },
+    {
+      "id": "gateway",
+      "type": "backend",
+      "label": "Unified Gateway",
+      "sublabel": "Hono / WS control plane",
+      "pos": [270, 260],
+      "size": [150, 64],
+      "tag": "Session Routing & Heartbeat"
+    },
+    {
+      "id": "supervisor",
+      "type": "backend",
+      "label": "Mastra Orchestrator",
+      "sublabel": "Deterministic agent loop",
+      "pos": [500, 260],
+      "size": [150, 64],
+      "tag": "Zod 4.6.5 Contracts"
+    },
+    {
+      "id": "specialists",
+      "type": "backend",
+      "label": "Specialist Fleet",
+      "sublabel": "Capability-rank workers",
+      "pos": [730, 260],
+      "size": [150, 64],
+      "tag": "BullMQ / JetStream"
+    },
+    {
+      "id": "toolRuntime",
+      "type": "backend",
+      "label": "Tool Engine",
+      "sublabel": "MCP & A2A v1.0 runtime",
+      "pos": [960, 260],
+      "size": [150, 64],
+      "tag": "Self-Registering Registry"
+    },
+    {
+      "id": "sessionFTS",
+      "type": "database",
+      "label": "Episodic Store",
+      "sublabel": "SQLite FTS5 + WAL",
+      "pos": [270, 440],
+      "size": [150, 64],
+      "tag": "50/85% Cache Compression"
+    },
+    {
+      "id": "consolidation",
+      "type": "backend",
+      "label": "Dream Consolidator",
+      "sublabel": "Offline SCM memory engine",
+      "pos": [500, 440],
+      "size": [150, 64],
+      "tag": "Cron NREM/REM Link"
+    },
+    {
+      "id": "memStore",
+      "type": "database",
+      "label": "Hierarchical Memory",
+      "sublabel": "PostgreSQL 17 + pgvector",
+      "pos": [730, 440],
+      "size": [150, 64],
+      "tag": "3-Tier RLS Isolation"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "ASI Agent Architecture (Node.js 24 LTS / TypeScript 5.9)",
+      "wraps": [
+        "govKernel",
+        "privRouter",
+        "sandbox",
+        "gateway",
+        "supervisor",
+        "specialists",
+        "toolRuntime",
+        "sessionFTS",
+        "consolidation",
+        "memStore"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Out-of-Process Policy & Isolation Perimeter",
+      "wraps": ["govKernel", "privRouter", "sandbox"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Durable Memory & Consolidation Tier",
+      "wraps": ["sessionFTS", "consolidation", "memStore"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "channels-to-gateway",
+      "from": "channels",
+      "to": "gateway",
+      "label": "HTTPS / WSS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gateway-to-gov",
+      "from": "gateway",
+      "to": "govKernel",
+      "label": "verify policy",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "right"
+    },
+    {
+      "id": "gateway-to-supervisor",
+      "from": "gateway",
+      "to": "supervisor",
+      "label": "session event",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gateway-to-fts",
+      "from": "gateway",
+      "to": "sessionFTS",
+      "label": "append log",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "supervisor-to-privrouter",
+      "from": "supervisor",
+      "to": "privRouter",
+      "label": "sanitized prompt",
+      "variant": "default",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "privrouter-to-models",
+      "from": "privRouter",
+      "to": "frontierModels",
+      "label": "AI SDK :443",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "supervisor-to-specialists",
+      "from": "supervisor",
+      "to": "specialists",
+      "label": "delegate task",
+      "variant": "emphasis"
+    },
+    {
+      "id": "specialists-to-tools",
+      "from": "specialists",
+      "to": "toolRuntime",
+      "label": "dispatch",
+      "variant": "emphasis"
+    },
+    {
+      "id": "tools-to-sandbox",
+      "from": "toolRuntime",
+      "to": "sandbox",
+      "label": "isolated exec",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "right"
+    },
+    {
+      "id": "specialists-to-memory",
+      "from": "specialists",
+      "to": "memStore",
+      "label": "RLS query",
+      "variant": "default",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "fts-to-consolidation",
+      "from": "sessionFTS",
+      "to": "consolidation",
+      "label": "offline recall",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "consolidation-to-memory",
+      "from": "consolidation",
+      "to": "memStore",
+      "label": "dream sync",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Governance & Structural Security",
+      "items": [
+        "Out-of-process Policy Kernel (NemoClaw/OpenShell pattern) with Landlock & seccomp",
+        "Dynamic Mode Lattice: privilege escalation requires verified policy check and signed audit receipts",
+        "Privacy Router: differential-privacy PII stripping, local Nemotron vs cloud frontier model gating",
+        "Signed skill & tool execution in isolated MicroVM sandbox prevents supply-chain attacks (CVE-2026-25253)"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Deterministic Shell & Orchestration",
+      "items": [
+        "Mastra orchestrator core with TypeScript strict contracts and deterministic execution shell",
+        "Zod 4.6.5 end-to-end typed contracts (v4.4+ soundness with strict optionality and fast validate)",
+        "Suffix-only 50%/85% compression preserving Anthropic prompt-cache prefix hits",
+        "Capability-rank task allocation via BullMQ/Redis with double-wrapped tool error handling"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Memory Hierarchy & Learning Loop",
+      "items": [
+        "3-Tier Shared Memory (Global / Role / Private) in PostgreSQL 17 + pgvector enforced via Row-Level Security (RLS)",
+        "Episodic SQLite FTS5 store with writer-claim fences and immutable compression lineage",
+        "Offline Dream Consolidation (SCM pattern): background NREM/REM clustering and cross-domain linking",
+        "Eval-gated Darwin Gödel Machine (DGM) self-evolution workspace with benchmark-tested rollbacks"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Standards & Interoperability",
+      "items": [
+        "Model Context Protocol (MCP Streamable HTTP) for standardized tool and resource connectivity",
+        "Agent-to-Agent (A2A v1.0) protocol with Agent Cards for decentralized coordination",
+        "OpenTelemetry GenAI span tree exporting tokens, cost, latency, and evals to Langfuse",
+        "Unified Gateway: 20+ messaging platforms (WhatsApp, Slack, Discord, CLI) with proactive heartbeats"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 1,
+  "status": "approved",
+  "approvedByHuman": true,
+  "approvalDate": "2026-10-06",
+  "executionMethod": "native-sequential",
+  "date": "2026-10-06",
+  "spec": "docs/superpowers/specs/2026-10-06-agent-workspace-ui-design.md",
+  "plan": "docs/superpowers/plans/2026-10-06-agent-workspace-ui-build.md",
+  "tasks": [
+    {
+      "id": "U01",
+      "title": "Freeze stack and component source ownership",
+      "dependsOn": [],
+      "backendDependsOn": [
+        "01"
+      ],
+      "requirements": [
+        "F05",
+        "F11",
+        "F15",
+        "F16",
+        "F17"
+      ],
+      "stage": "foundation",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U02",
+      "title": "Versioned UI contracts and client interface",
+      "dependsOn": [
+        "U01"
+      ],
+      "backendDependsOn": [
+        "02"
+      ],
+      "requirements": [
+        "F04",
+        "F06",
+        "F07",
+        "F08",
+        "F09",
+        "F10",
+        "F16"
+      ],
+      "stage": "foundation",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U03",
+      "title": "Simulated HTTP and SSE Gateway",
+      "dependsOn": [
+        "U02"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F07",
+        "F08",
+        "F09",
+        "F12",
+        "F13"
+      ],
+      "stage": "foundation",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U04",
+      "title": "Seven-section shell and secondary chat rail",
+      "dependsOn": [
+        "U03"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F01",
+        "F02",
+        "F03",
+        "F13",
+        "F15"
+      ],
+      "stage": "chat",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U05",
+      "title": "Canonical store and replay recovery",
+      "dependsOn": [
+        "U04"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F05",
+        "F07",
+        "F08",
+        "F10",
+        "F12"
+      ],
+      "stage": "chat",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U06",
+      "title": "Composer attachments and cancellation",
+      "dependsOn": [
+        "U05"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F06",
+        "F07",
+        "F08",
+        "F10",
+        "F13",
+        "F14"
+      ],
+      "stage": "chat",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U07",
+      "title": "Safe messages and streaming viewport",
+      "dependsOn": [
+        "U06"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F02",
+        "F05",
+        "F07",
+        "F13",
+        "F14",
+        "F17"
+      ],
+      "stage": "chat",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U08",
+      "title": "Inline clarification answers",
+      "dependsOn": [
+        "U07"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F02",
+        "F03",
+        "F04",
+        "F07",
+        "F09",
+        "F13",
+        "F14"
+      ],
+      "stage": "chat",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U09",
+      "title": "Inline approval and management navigation",
+      "dependsOn": [
+        "U08"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F02",
+        "F03",
+        "F04",
+        "F07",
+        "F09",
+        "F10",
+        "F15"
+      ],
+      "stage": "chat",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U10",
+      "title": "Task tool artifact result cards",
+      "dependsOn": [
+        "U09"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F02",
+        "F07",
+        "F08",
+        "F13",
+        "F14",
+        "F17"
+      ],
+      "stage": "chat",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U11",
+      "title": "Models and Providers",
+      "dependsOn": [
+        "U10"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F03",
+        "F06",
+        "F07",
+        "F10",
+        "F13",
+        "F17"
+      ],
+      "stage": "sections",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U12",
+      "title": "Skills management and selection",
+      "dependsOn": [
+        "U11"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F03",
+        "F06",
+        "F07",
+        "F11",
+        "F13",
+        "F17"
+      ],
+      "stage": "sections",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U13",
+      "title": "Tools and Connections",
+      "dependsOn": [
+        "U12"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F03",
+        "F06",
+        "F07",
+        "F13",
+        "F17"
+      ],
+      "stage": "sections",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U14",
+      "title": "Memory projections and revisions",
+      "dependsOn": [
+        "U13"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F03",
+        "F06",
+        "F07",
+        "F10",
+        "F13"
+      ],
+      "stage": "sections",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U15",
+      "title": "Activity and Tasks",
+      "dependsOn": [
+        "U14"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F02",
+        "F03",
+        "F07",
+        "F08",
+        "F13"
+      ],
+      "stage": "sections",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U16",
+      "title": "Settings local and server preferences",
+      "dependsOn": [
+        "U15"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F03",
+        "F06",
+        "F07",
+        "F10",
+        "F13",
+        "F14"
+      ],
+      "stage": "sections",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U17",
+      "title": "Authenticated real UI Gateway",
+      "dependsOn": [
+        "U16"
+      ],
+      "backendDependsOn": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "07",
+        "08"
+      ],
+      "requirements": [
+        "F06",
+        "F07",
+        "F08",
+        "F10",
+        "F12",
+        "F16"
+      ],
+      "stage": "live",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U18",
+      "title": "Real catalog configuration ports",
+      "dependsOn": [
+        "U17"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F03",
+        "F06",
+        "F07",
+        "F10",
+        "F12",
+        "F13",
+        "F16",
+        "F17"
+      ],
+      "stage": "live",
+      "status": "pending",
+      "evidence": [],
+      "backendPortDependencies": {
+        "models": [
+          "06",
+          "07",
+          "11"
+        ],
+        "skills": [
+          "07",
+          "13",
+          "18"
+        ],
+        "connections": [
+          "07",
+          "13",
+          "20",
+          "22",
+          "23"
+        ],
+        "memory": [
+          "07",
+          "09"
+        ],
+        "activity": [
+          "04",
+          "05",
+          "10"
+        ],
+        "settings": [
+          "06",
+          "07",
+          "21",
+          "25"
+        ]
+      }
+    },
+    {
+      "id": "U19",
+      "title": "Real protected interaction and run flow",
+      "dependsOn": [
+        "U18"
+      ],
+      "backendDependsOn": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "19"
+      ],
+      "requirements": [
+        "F02",
+        "F04",
+        "F07",
+        "F08",
+        "F09",
+        "F12",
+        "F16",
+        "F18"
+      ],
+      "stage": "live",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U20",
+      "title": "Responsive accessibility and visual review",
+      "dependsOn": [
+        "U16"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F01",
+        "F11",
+        "F13",
+        "F14",
+        "F15"
+      ],
+      "stage": "quality",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U21",
+      "title": "UI security architecture and race protection",
+      "dependsOn": [
+        "U19",
+        "U20"
+      ],
+      "backendDependsOn": [],
+      "requirements": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F07",
+        "F08",
+        "F09",
+        "F10",
+        "F11",
+        "F12",
+        "F13",
+        "F14",
+        "F15",
+        "F16",
+        "F17",
+        "F18"
+      ],
+      "stage": "quality",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "U22",
+      "title": "Release evidence and handoff",
+      "dependsOn": [
+        "U21"
+      ],
+      "backendDependsOn": [
+        "25"
+      ],
+      "requirements": [
+        "F11",
+        "F12",
+        "F15",
+        "F16",
+        "F17",
+        "F18"
+      ],
+      "stage": "release",
+      "status": "pending",
+      "evidence": []
+    }
+  ]
+}
