@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "memoryId": "memory-1",
+  "tenantId": "tenant-1",
+  "scope": "private",
+  "owner": "agent-1",
+  "version": 1,
+  "value": "user prefers concise answers",
+  "confidence": 0.9,
+  "sourceEpisodeIds": ["episode-1"],
+  "authority": "consolidation",
+  "sensitivity": "internal"
+}

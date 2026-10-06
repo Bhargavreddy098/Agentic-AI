@@ -1,0 +1,418 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`public wire contracts > AppendReceipt matches the frozen wire shape snapshot 1`] = `
+{
+  "commandId": "required",
+  "contentHash": "required",
+  "episodeId": "required",
+  "sequence": "required",
+}
+`;
+
+exports[`public wire contracts > ApprovalRecord matches the frozen wire shape snapshot 1`] = `
+{
+  "approvalId": "required",
+  "approver": "required",
+  "effectId": "required",
+  "expiresAt": "required",
+  "inputHash": "required",
+  "nonce": "required",
+  "policyVersion": "required",
+  "schemaVersion": "required",
+}
+`;
+
+exports[`public wire contracts > AuditReceipt matches the frozen wire shape snapshot 1`] = `
+{
+  "effectId": "required",
+  "inputHash": "required",
+  "keyId": "required",
+  "mode": "required",
+  "outputHash": "required",
+  "policyVersion": "required",
+  "previousHash": "required",
+  "receiptId": "required",
+  "runId": "required",
+  "schemaVersion": "required",
+  "sequence": "required",
+  "sessionId": "required",
+  "signature": "required",
+  "status": "required",
+  "tenantId": "required",
+  "timestamp": "required",
+}
+`;
+
+exports[`public wire contracts > BudgetRef matches the frozen wire shape snapshot 1`] = `
+{
+  "accountId": "required",
+  "rootRunId": "required",
+  "tenantId": "required",
+}
+`;
+
+exports[`public wire contracts > BudgetReservation matches the frozen wire shape snapshot 1`] = `
+{
+  "budgetRef": "required",
+  "reservationId": "required",
+  "reservedCostMicroUsd": "required",
+  "reservedTokens": "required",
+  "status": "required",
+}
+`;
+
+exports[`public wire contracts > Candidate matches the frozen wire shape snapshot 1`] = `
+{
+  "allowedChangedPaths": "required",
+  "artifactHash": "required",
+  "candidateId": "required",
+  "policyDigests": "required",
+  "requestedPermissions": "required",
+  "schemaDigests": "required",
+  "schemaVersion": "required",
+  "status": "required",
+}
+`;
+
+exports[`public wire contracts > Checkpoint matches the frozen wire shape snapshot 1`] = `
+{
+  "checkpointId": "required",
+  "completedEffectIds": "required",
+  "completedTaskIds": "required",
+  "modelResultRefs": "required",
+  "runContext": "required",
+  "state": "required",
+  "version": "required",
+}
+`;
+
+exports[`public wire contracts > CompressionRecord matches the frozen wire shape snapshot 1`] = `
+{
+  "compressionId": "required",
+  "modelVersion": "required",
+  "parentGeneration": "required",
+  "policyVersion": "required",
+  "prefixHash": "required",
+  "schemaVersion": "required",
+  "sessionId": "required",
+  "sourceDigests": "required",
+  "sourceRange": "required",
+  "summaryHash": "required",
+}
+`;
+
+exports[`public wire contracts > ConsolidationPlan matches the frozen wire shape snapshot 1`] = `
+{
+  "expectedMemoryVersions": "required",
+  "planId": "required",
+  "proposedRevisions": "required",
+  "provenance": "required",
+  "schemaVersion": "required",
+  "sensitivity": "required",
+  "sourceEpisodeIds": "required",
+  "sourceScopes": "required",
+  "status": "required",
+  "tenantId": "required",
+}
+`;
+
+exports[`public wire contracts > DeliveryRecord matches the frozen wire shape snapshot 1`] = `
+{
+  "channel": "required",
+  "contentHash": "required",
+  "deliveryId": "required",
+  "destinationIdentity": "required",
+  "runId": "required",
+  "schemaVersion": "required",
+  "sessionId": "required",
+  "status": "required",
+}
+`;
+
+exports[`public wire contracts > EffectRequest matches the frozen wire shape snapshot 1`] = `
+{
+  "action": "required",
+  "effectId": "required",
+  "idempotencyKey": "required",
+  "inputHash": "required",
+  "resource": "required",
+  "runContext": "required",
+  "schemaVersion": "required",
+  "traceId": "required",
+}
+`;
+
+exports[`public wire contracts > Episode matches the frozen wire shape snapshot 1`] = `
+{
+  "content": "optional",
+  "createdAt": "required",
+  "episodeId": "required",
+  "kind": "required",
+  "schemaVersion": "required",
+  "sequence": "required",
+  "sessionId": "required",
+  "sourceIds": "required",
+  "tenantId": "required",
+}
+`;
+
+exports[`public wire contracts > EpisodeCommand matches the frozen wire shape snapshot 1`] = `
+{
+  "commandId": "required",
+  "content": "optional",
+  "episodeId": "required",
+  "kind": "required",
+  "principal": "required",
+  "runContext": "required",
+  "schemaVersion": "required",
+  "sourceEventId": "required",
+}
+`;
+
+exports[`public wire contracts > EvalReport matches the frozen wire shape snapshot 1`] = `
+{
+  "candidateId": "required",
+  "caseSetDigests": "required",
+  "costMicroUsd": "required",
+  "evaluatorVersion": "required",
+  "governanceFailures": "required",
+  "latencyMs": "required",
+  "schemaVersion": "required",
+  "scores": "required",
+  "signedEvidenceRefs": "required",
+}
+`;
+
+exports[`public wire contracts > MemoryQuery matches the frozen wire shape snapshot 1`] = `
+{
+  "limit": "required",
+  "query": "required",
+  "requestedScopes": "required",
+  "runContext": "required",
+  "schemaVersion": "required",
+}
+`;
+
+exports[`public wire contracts > MemoryRecord matches the frozen wire shape snapshot 1`] = `
+{
+  "authority": "required",
+  "confidence": "required",
+  "memoryId": "required",
+  "schemaVersion": "required",
+  "scope": "required",
+  "sensitivity": "required",
+  "sourceEpisodeIds": "required",
+  "tenantId": "required",
+  "value": "required",
+  "version": "required",
+}
+`;
+
+exports[`public wire contracts > MemoryWrite matches the frozen wire shape snapshot 1`] = `
+{
+  "effectRequest": "required",
+  "record": "required",
+  "runContext": "required",
+  "schemaVersion": "required",
+  "sourceEpisodeIds": "required",
+}
+`;
+
+exports[`public wire contracts > ModelRequest matches the frozen wire shape snapshot 1`] = `
+{
+  "budgetReservation": "required",
+  "maxOutputTokens": "required",
+  "modelClass": "required",
+  "promptParts": "required",
+  "runContext": "required",
+  "schemaVersion": "required",
+  "sensitivity": "required",
+  "stablePrefix": "required",
+  "traceId": "required",
+}
+`;
+
+exports[`public wire contracts > ModelResult matches the frozen wire shape snapshot 1`] = `
+{
+  "costMicroUsd": "required",
+  "finishReason": "required",
+  "outputRefs": "required",
+  "providerModelRevision": "required",
+  "resultId": "required",
+  "usageTokens": "required",
+}
+`;
+
+exports[`public wire contracts > NormalizedError matches the frozen wire shape snapshot 1`] = `
+{
+  "code": "required",
+  "retryable": "required",
+  "safeMessage": "required",
+}
+`;
+
+exports[`public wire contracts > Observation matches the frozen wire shape snapshot 1`] = `
+{
+  "confidence": "required",
+  "entity": "required",
+  "observedAt": "required",
+  "ownerId": "required",
+  "relation": "required",
+  "revision": "required",
+  "scope": "required",
+  "sourceIds": "required",
+  "tenantId": "required",
+  "validUntil": "required",
+  "value": "required",
+}
+`;
+
+exports[`public wire contracts > PolicyDecision matches the frozen wire shape snapshot 1`] = `
+{
+  "boundCapability": "required",
+  "boundExpiresAt": "required",
+  "decision": "required",
+  "decisionId": "required",
+  "policyVersion": "required",
+  "schemaVersion": "required",
+}
+`;
+
+exports[`public wire contracts > Principal matches the frozen wire shape snapshot 1`] = `
+{
+  "audience": "required",
+  "authenticatedSource": "required",
+  "capabilities": "required",
+  "expiresAt": "required",
+  "roles": "required",
+  "subjectId": "required",
+  "tenantId": "required",
+}
+`;
+
+exports[`public wire contracts > PromotionDecision matches the frozen wire shape snapshot 1`] = `
+{
+  "approverIds": "required",
+  "artifactHash": "required",
+  "candidateHash": "required",
+  "decision": "required",
+  "expiresAt": "required",
+  "policyVersion": "required",
+  "reportHash": "required",
+  "schemaVersion": "required",
+}
+`;
+
+exports[`public wire contracts > RunContext matches the frozen wire shape snapshot 1`] = `
+{
+  "budgetRef": "required",
+  "deadlineAt": "required",
+  "mode": "required",
+  "runId": "required",
+  "sessionId": "required",
+  "writerEpoch": "required",
+}
+`;
+
+exports[`public wire contracts > SessionEvent matches the frozen wire shape snapshot 1`] = `
+{
+  "causationId": "required",
+  "content": "required",
+  "correlationId": "required",
+  "eventId": "required",
+  "platform": "required",
+  "principal": "required",
+  "receivedAt": "required",
+  "schemaVersion": "required",
+  "sessionId": "required",
+  "tenantId": "required",
+  "traceId": "required",
+}
+`;
+
+exports[`public wire contracts > SkillManifest matches the frozen wire shape snapshot 1`] = `
+{
+  "applicableTaskTypes": "required",
+  "artifactHash": "required",
+  "publisherId": "required",
+  "publisherSignature": "required",
+  "requiredCapabilities": "required",
+  "schemaVersion": "required",
+  "scriptManifests": "required",
+  "skillId": "required",
+  "skillVersion": "required",
+  "trustStatus": "required",
+}
+`;
+
+exports[`public wire contracts > TaskEnvelope matches the frozen wire shape snapshot 1`] = `
+{
+  "causationId": "required",
+  "correlationId": "required",
+  "idempotencyKey": "required",
+  "input": "required",
+  "principalGrant": "required",
+  "requiredCapabilities": "required",
+  "runContext": "required",
+  "schemaVersion": "required",
+  "taskId": "required",
+  "traceId": "required",
+}
+`;
+
+exports[`public wire contracts > TaskResult matches the frozen wire shape snapshot 1`] = `
+{
+  "evidenceRefs": "required",
+  "output": "required",
+  "runId": "required",
+  "schemaVersion": "required",
+  "status": "required",
+  "taskId": "required",
+  "traceId": "required",
+  "usage": "required",
+}
+`;
+
+exports[`public wire contracts > ToolManifest matches the frozen wire shape snapshot 1`] = `
+{
+  "artifactDigest": "required",
+  "executionClass": "required",
+  "inputSchema": "required",
+  "outputSchema": "required",
+  "publisherSignature": "required",
+  "requiredCapabilities": "required",
+  "schemaVersion": "required",
+  "toolId": "required",
+  "toolVersion": "required",
+}
+`;
+
+exports[`public wire contracts > ToolResult matches the frozen wire shape snapshot 1`] = `
+{
+  "content": "required",
+  "receiptId": "required",
+  "schemaVersion": "required",
+  "status": "required",
+  "toolId": "required",
+  "usage": "required",
+}
+`;
+
+exports[`public wire contracts > WorkerDescriptor matches the frozen wire shape snapshot 1`] = `
+{
+  "capabilities": "required",
+  "capacity": "required",
+  "health": "required",
+  "supportedTaskTypes": "required",
+  "workerId": "required",
+}
+`;
+
+exports[`public wire contracts > WriterLease matches the frozen wire shape snapshot 1`] = `
+{
+  "expiresAt": "required",
+  "runId": "required",
+  "sessionId": "required",
+  "writerEpoch": "required",
+}
+`;

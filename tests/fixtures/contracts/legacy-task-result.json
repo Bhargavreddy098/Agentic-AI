@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "taskId": "task-1",
+  "runId": "run-1",
+  "traceId": "trace-1",
+  "status": "done",
+  "result": { "answer": "42" },
+  "usage": { "inputTokens": 10, "outputTokens": 5 },
+  "evidenceRefs": []
+}

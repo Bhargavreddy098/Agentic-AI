@@ -1,6 +1,6 @@
 # Architecture and planning rules
 
-This workspace contains research and proposed plans. Product implementation has not started.
+This workspace contains research, approved baselines and implementation in progress. Task ledgers and fresh validation evidence determine completion; do not infer it from source existence or old planning prose.
 
 Read before work:
 

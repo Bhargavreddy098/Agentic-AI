@@ -10,7 +10,8 @@
  *   QUEUE_PACKAGE_BYPASS        a non-queue component imports the queue backend
  *   CROSS_APP_IMPORT            an app imports another app directly
  *   PACKAGE_IMPORTS_APP         a package imports an app
- *   CONTRACTS_INFRASTRUCTURE_IMPORT  packages/contracts imports non-contract infrastructure
+ *   CONTRACTS_INFRASTRUCTURE_IMPORT  packages/contracts production code imports non-contract
+ *                                     infrastructure (zod only; vitest allowed under test paths)
  *   UNMAPPED_COMPONENT_PATH     a source path under apps/ or packages/ is not declared in the baseline
  *   BASELINE_INCONSISTENT       the machine-readable baseline lost a pictured component or flow
  *
@@ -48,6 +49,7 @@ const SKIP_DIRECTORIES = new Set([
   ".git",
   "dist",
   "build",
+  ".next",
   "coverage",
 ]);
 const SCAN_EXCLUSIONS = ["tests/fixtures"];
@@ -195,6 +197,19 @@ function isExcluded(relativePath) {
   return SCAN_EXCLUSIONS.some((exclusion) =>
     relativePath === exclusion || relativePath.startsWith(`${exclusion}/`),
   );
+}
+
+const NON_PRODUCTION_SEGMENTS = new Set([
+  "test",
+  "tests",
+  "__tests__",
+  "fixtures",
+  "mocks",
+]);
+
+function isProductionSourcePath(relativePath) {
+  const segments = relativePath.split("/");
+  return !segments.some((segment) => NON_PRODUCTION_SEGMENTS.has(segment));
 }
 
 function buildComponentIndex(baseline) {
@@ -496,7 +511,11 @@ function verifyArchitecture(target, baseline) {
       if (
         component === "contracts" &&
         packageName &&
-        packageName !== "zod"
+        packageName !== "zod" &&
+        !(
+          !isProductionSourcePath(relativePath) &&
+          packageName === "vitest"
+        )
       ) {
         violations.push({
           code: "CONTRACTS_INFRASTRUCTURE_IMPORT",
@@ -504,7 +523,7 @@ function verifyArchitecture(target, baseline) {
           file: relativePath,
           specifier,
           component,
-          detail: `packages/contracts must not import infrastructure package '${packageName}'; contracts are pure schemas (zod only)`,
+          detail: `packages/contracts must not import infrastructure package '${packageName}'; contracts are pure schemas (zod only; the test runner is permitted only under test directories)`,
         });
       }
     }

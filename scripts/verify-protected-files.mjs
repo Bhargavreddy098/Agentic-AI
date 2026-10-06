@@ -88,17 +88,21 @@ function gitStatus(repoRoot) {
   } catch {
     return { status: "pending-first-commit", changedFiles: [] };
   }
-  const porcelain = gitArguments(repoRoot, ["status", "--porcelain"]);
-  const changedFiles = porcelain
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .map((line) => {
-      const path = line.slice(3);
-      const renameIndex = path.lastIndexOf(" -> ");
-      return renameIndex >= 0 ? path.slice(renameIndex + 4) : path;
-    })
-    .map(toPosix);
+  const porcelain = gitArguments(repoRoot, ["status", "--porcelain=v1", "-z", "--untracked-files=all"]);
+  const entries = porcelain.split("\0");
+  const changedFiles = [];
+  // In -z output renames/copies have a second NUL-delimited source path.
+  // Include it as well so moving a protected file cannot hide its removal.
+  for (let index = 0; index < entries.length; index += 1) {
+    const entry = entries[index];
+    if (!entry) continue;
+    changedFiles.push(toPosix(entry.slice(3)));
+    if (entry && /^[RC]|^.[RC]/.test(entry.slice(0, 2))) {
+      index += 1;
+      const source = entries[index];
+      if (source) changedFiles.push(toPosix(source));
+    }
+  }
   return { status: "enforcing", changedFiles };
 }
 

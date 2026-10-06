@@ -8,7 +8,9 @@
     "allowJs": true,
     "checkJs": false,
     "types": ["node"]
+    ,"jsx": "react-jsx"
+    ,"lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["tests/**/*.ts", "scripts/**/*.mjs", "vitest.config.ts", "eslint.config.js"],
+  "include": ["tests/**/*.ts", "scripts/**/*.mjs", "packages/**/*.ts", "vitest.config.ts", "eslint.config.js"],
   "exclude": ["tests/fixtures/**"]
 }

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "messageId": "event-1",
+  "tenant": "tenant-1",
+  "sessionId": "session-1",
+  "platform": "whatsapp",
+  "traceId": "trace-1",
+  "correlationId": "correlation-1",
+  "causationId": "causation-1",
+  "principal": {
+    "tenantId": "tenant-1",
+    "subjectId": "subject-1",
+    "roles": ["user"],
+    "capabilities": ["chat:send"],
+    "audience": "gateway",
+    "expiresAt": "2099-06-15T12:00:00.000Z",
+    "authenticatedSource": "platform-adapter"
+  },
+  "receivedAt": "2026-06-15T12:00:00.000Z",
+  "content": [{ "type": "text", "text": "hello" }]
+}

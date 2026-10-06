@@ -63,9 +63,16 @@
         "R18"
       ],
       "stage": "A",
-      "status": "pending",
+      "status": "completed",
       "optional": false,
-      "evidence": []
+      "evidence": [
+        "Audit retained existing unfinished contract implementation and compatibility fixtures; original RED evidence unavailable, explicitly documented in ADR0002.",
+        "New regressions observed RED then GREEN: invalid calendar date, lossy JSON, nested sparse/accessor data, event/principal tenant and delegated/budget tenant.",
+        "Fresh independent foundation review identified three important findings; all fixed. Public @asi/contracts Node24 import reproduces resolved dist exports.",
+        "2026-10-06: contracts 125 tests passed; complete unit suite130 tests passed across7 files. Root typecheck and lint exit0; contracts TypeScript build exit0.",
+        "Architecture, dependency, traceability and UI boundary/source verifiers pass before commit. Protected drift intentionally fails for uncommitted governance until explicit ADR-backed commit.",
+        "No live identity/policy/isolation/RLS validation claimed. Compatibility snapshots freeze top-level requiredness, not every nested wire variant."
+      ]
     },
     {
       "id": "03",
