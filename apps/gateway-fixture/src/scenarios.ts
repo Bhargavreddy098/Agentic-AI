@@ -39,7 +39,7 @@ export function createDemoGateway() {
       const part = message?.parts.find(part => part.partId === event.payload.partId);
       if (part?.type === "text") part.text += event.payload.text;
     }
-    if (event.eventType === "run.status") { entry.snapshot.runStatus = event.payload.status; entry.summary.activeRun = event.payload.status; }
+    if (event.eventType === "run.status") { entry.snapshot.runStatus = event.payload.status; entry.snapshot.activeRunId = event.payload.runId; entry.summary.activeRun = event.payload.status; }
     if (event.eventType === "approval.requested" || event.eventType === "approval.resolved" || event.eventType === "clarification.requested" || event.eventType === "clarification.resolved") {
       const index = entry.snapshot.interactions.findIndex(item => item.interactionId === event.payload.interactionId);
       if (index < 0) entry.snapshot.interactions.push(event.payload); else entry.snapshot.interactions[index] = event.payload;
@@ -188,6 +188,7 @@ export function createDemoGateway() {
       uploads.set(uploadId, { view, byteSize: input.byteSize, uploaded: false }); return { ...view };
     }));
   });
+  app.get(`${base}/uploads/:id`, c => { const upload = uploads.get(c.req.param("id")); return upload ? c.json(upload.view) : c.json(error("INVALID_INPUT", "Upload unavailable."), 404); });
   app.put(`${base}/uploads/:id/content`, async c => {
     const upload = uploads.get(c.req.param("id")); if (!upload || upload.view.status !== "uploading") return c.json(error("POLICY_DENIED", "Upload unavailable."), 403);
     const bytes = await c.req.arrayBuffer();

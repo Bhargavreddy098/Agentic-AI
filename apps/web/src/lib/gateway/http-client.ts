@@ -27,11 +27,11 @@ export class HttpGatewayClient implements GatewayClient {
   private checkMode(response: Response) {
     if (this.mode === "live" && response.headers.get("x-asi-demo") === "true") throw new GatewayError(502, "Live connection returned a demo response.");
   }
-  private async request<T extends z.ZodType>(endpoint: keyof typeof gatewayEndpoints, schema: T, id?: string, body?: unknown, query = ""): Promise<z.infer<T>> {
+  private async request<T extends z.ZodType>(endpoint: keyof typeof gatewayEndpoints, schema: T, id?: string, body?: unknown, query = "", signal?: AbortSignal): Promise<z.infer<T>> {
     const method = gatewayEndpoints[endpoint][0];
     if (method !== "GET" && !this.csrf) await this.getMe();
     const headers = { ...this.transportHeaders(method !== "GET"), "content-type": "application/json" };
-    const response = await fetch(this.baseUrl + gatewayPath(endpoint, id) + query, { method, headers, credentials: "include", cache: "no-store", ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
+    const response = await fetch(this.baseUrl + gatewayPath(endpoint, id) + query, { method, headers, credentials: "include", cache: "no-store", ...(body === undefined ? {} : { body: JSON.stringify(body) }), ...(signal ? { signal } : {}) });
     this.checkMode(response);
     if (!response.ok) throw new GatewayError(response.status, response.status === 401 ? "Sign in again to continue." : "Gateway request failed. Refresh the current state.");
     if (this.mode === "demo" && typeof window === "undefined") { const cookie = response.headers.get("set-cookie"); if (cookie) this.demoCookie = cookie.split(";")[0] ?? ""; }
@@ -54,6 +54,7 @@ export class HttpGatewayClient implements GatewayClient {
     if (!response.ok) throw new GatewayError(response.status, "Upload failed.");
   }
   completeUpload(id: string, commandId: string) { return this.request("completeUpload", UploadViewSchema, id, { commandId }); }
+  getUpload(id: string, signal: AbortSignal) { return this.request("getUpload", UploadViewSchema, id, undefined, "", signal); }
   getModels() { return this.request("models", CatalogSchema(ModelViewSchema)); }
   getProviders() { return this.request("providers", CatalogSchema(ProviderViewSchema)); }
   getSkills() { return this.request("skills", CatalogSchema(SkillViewSchema)); }

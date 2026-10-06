@@ -32,7 +32,7 @@ export function reduceConversation(state: ConversationState, value: unknown): Co
       }
       break;
     }
-    case "run.status": snapshot.runStatus = event.payload.status; break;
+    case "run.status": snapshot.runStatus = event.payload.status; snapshot.activeRunId = event.payload.runId; break;
     case "approval.requested": case "approval.resolved": case "clarification.requested": case "clarification.resolved":
       upsert(snapshot.interactions, event.payload, item => item.interactionId === event.payload.interactionId); break;
     case "task.updated": upsert(snapshot.tasks, event.payload, item => item.taskId === event.payload.taskId); break;

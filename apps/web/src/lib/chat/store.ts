@@ -1,6 +1,8 @@
 import type { GatewayClient } from "../gateway/client.ts";
 import { GatewayError } from "../gateway/http-client.ts";
 import { hydrateConversation, reduceConversation, type ConversationState } from "./reducer.ts";
+import { SubmissionController } from "./submission.ts";
+import type { UiCommandResult } from "@asi/contracts";
 
 export type ChatStoreState = { workspaceId: string | null; conversation: ConversationState | null; connection: "idle" | "connecting" | "connected" | "recovering" | "disconnected" | "unauthenticated"; draft: string; error: string | null };
 const empty = (): ChatStoreState => ({ workspaceId: null, conversation: null, connection: "idle", draft: "", error: null });
@@ -16,12 +18,36 @@ export class ChatStore {
   private generation = 0;
   private identity: string | null = null;
   private drafts = new Map<string, string>();
+  private submissions = new Map<string, SubmissionController>();
+  private cancellations = new Map<string, string>();
   constructor(private readonly client: GatewayClient) {}
   getSnapshot = () => this.state;
   subscribe = (listener: () => void) => { this.listeners.add(listener); return () => { this.listeners.delete(listener); }; };
   private publish(next: ChatStoreState) { this.state = next; this.listeners.forEach(listener => listener()); }
+  submissionFor(id: string) {
+    const existing = this.submissions.get(id); if (existing) return existing;
+    if (this.submissions.size >= 100) { const settled = [...this.submissions].find(([, controller]) => !controller.pending); if (settled) this.submissions.delete(settled[0]); else throw new Error("Unresolved submission capacity reached; reconcile existing requests first."); }
+    const identity = this.identity;
+    const controller = new SubmissionController(async input => {
+      const result = await this.client.sendMessage(id, input);
+      if (result.commandId === input.commandId && result.status === "applied" && this.identity === identity && this.submissions.get(id) === controller && this.drafts.get(id) === input.text) {
+        this.drafts.set(id, ""); if (this.state.conversation?.snapshot.conversationId === id) this.publish({ ...this.state, draft: "" });
+      }
+      return result;
+    });
+    this.submissions.set(id, controller); return controller;
+  }
+  async cancel(runId: string): Promise<UiCommandResult> {
+    if (this.cancellations.size >= 100 && !this.cancellations.has(runId)) throw new Error("Reconcile uncertain cancellation requests first.");
+    const commandId = this.cancellations.get(runId) ?? crypto.randomUUID(); this.cancellations.set(runId, commandId);
+    const identity = this.identity;
+    const result = await this.client.cancelRun(runId, commandId);
+    if (result.commandId !== commandId) throw new Error("Cancellation acknowledgement identity mismatch");
+    if (this.identity === identity && this.cancellations.get(runId) === commandId) this.cancellations.delete(runId);
+    return result;
+  }
   setDraft(draft: string) { const id = this.state.conversation?.snapshot.conversationId; if (id) { if (this.drafts.size >= 100 && !this.drafts.has(id)) this.drafts.delete(this.drafts.keys().next().value!); this.drafts.set(id, draft.slice(0, 1048576)); } this.publish({ ...this.state, draft: draft.slice(0, 1048576) }); }
-  clear() { this.generation++; this.controller?.abort(); this.controller = null; this.identity = null; this.drafts.clear(); this.publish(empty()); }
+  clear() { this.generation++; this.controller?.abort(); this.controller = null; this.identity = null; this.drafts.clear(); this.submissions.clear(); this.cancellations.clear(); this.publish(empty()); }
   disconnect() { this.generation++; this.controller?.abort(); this.controller = null; this.publish({ ...this.state, connection: "disconnected" }); }
   async open(conversationId: string) {
     this.controller?.abort(); const generation = ++this.generation;
@@ -31,7 +57,7 @@ export class ChatStore {
     try {
       const session = await this.client.getMe(); if (!current()) return;
       const identity = JSON.stringify([session.workspaceId, session.subjectId]);
-      if (this.identity !== identity) this.drafts.clear();
+      if (this.identity !== identity) { this.drafts.clear(); this.submissions.clear(); this.cancellations.clear(); }
       this.identity = identity;
       const value = await this.client.getSnapshot(conversationId); if (!current()) return;
       if (value.workspaceId !== session.workspaceId || value.conversationId !== conversationId) throw new GatewayError(403, "Conversation ownership does not match this workspace.");
@@ -41,7 +67,7 @@ export class ChatStore {
   }
   private failure(error: unknown) {
     if (error instanceof GatewayError && [401, 403].includes(error.status)) {
-      this.controller?.abort(); this.identity = null; this.drafts.clear(); this.publish({ ...empty(), connection: "unauthenticated", error: "Sign in or request access before reconnecting." });
+      this.controller?.abort(); this.identity = null; this.drafts.clear(); this.submissions.clear(); this.cancellations.clear(); this.publish({ ...empty(), connection: "unauthenticated", error: "Sign in or request access before reconnecting." });
     } else this.publish({ ...this.state, connection: "disconnected", error: "Connection unavailable. Refresh to reconnect." });
   }
   private async pump(id: string, generation: number, controller: AbortController) {

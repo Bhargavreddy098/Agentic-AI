@@ -7,6 +7,7 @@ export default defineConfig({
     passWithNoTests: true,
     projects: [
       {
+        oxc: { jsx: { runtime: "automatic" } },
         test: {
           name: "unit",
           environment: "node",

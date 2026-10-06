@@ -19,6 +19,7 @@ export interface GatewayClient {
   beginUpload(input: UploadIntent): Promise<UploadView>;
   uploadContent(id: string, file: File, signal: AbortSignal): Promise<void>;
   completeUpload(id: string, commandId: string): Promise<UploadView>;
+  getUpload(id: string, signal: AbortSignal): Promise<UploadView>;
   getModels(): Promise<Catalog<ModelView>>;
   getProviders(): Promise<Catalog<ProviderView>>;
   getSkills(): Promise<Catalog<SkillView>>;
@@ -36,7 +37,7 @@ export const gatewayEndpoints = {
   sendMessage: ["POST", "/conversations/:id/messages"], events: ["GET", "/conversations/:id/events"],
   cancelRun: ["POST", "/runs/:id/cancel"], answerClarification: ["POST", "/clarifications/:id/answers"],
   decideApproval: ["POST", "/approvals/:id/decisions"], uploads: ["POST", "/uploads"],
-  uploadContent: ["PUT", "/uploads/:id/content"], completeUpload: ["POST", "/uploads/:id/complete"],
+  uploadContent: ["PUT", "/uploads/:id/content"], completeUpload: ["POST", "/uploads/:id/complete"], getUpload: ["GET", "/uploads/:id"],
   models: ["GET", "/models"], providers: ["GET", "/providers"], skills: ["GET", "/skills"],
   connections: ["GET", "/connections"], memory: ["GET", "/memory"], activity: ["GET", "/activity"],
   settings: ["GET", "/settings"], commands: ["POST", "/commands"],

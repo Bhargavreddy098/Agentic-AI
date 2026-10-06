@@ -145,8 +145,14 @@
         "F14"
       ],
       "stage": "chat",
-      "status": "pending",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        "RED to GREEN: missing submission helper, stale post-unmount draft write and resubmission before canonical revision catch-up. Eleven composer/lifecycle/submission tests pass.",
+        "Fresh review found remount retry identity loss, incomplete scanning continuation and cancellation identity mismatch. Store-owned bounded caches, command-bound acknowledgements, run-scoped retries and GET upload status polling resolve these findings.",
+        "Actual production-browser flow passes message submission, navigation draft retention, Stop after reload and file upload through public client transport. MIME/count/size/quarantine/rejection/ownership cases pass; synthetic scanning is not real malware qualification.",
+        "2026-10-06: 170 unit tests across15 files pass; four production-browser tests pass; lint, root/UI types, full production builds, architecture, dependency, traceability and UI source/boundary verifiers pass. Protected drift awaits this reviewed explicit commit.",
+        "Additive activeRunId snapshot and GET uploads/:id contract corrections documented in UI-0004; old snapshots remain valid, unknown run IDs cannot enable Stop. No live backend/credential/storage claim."
+      ]
     },
     {
       "id": "U07",
