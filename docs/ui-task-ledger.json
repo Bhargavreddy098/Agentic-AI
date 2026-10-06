@@ -23,8 +23,15 @@
         "F17"
       ],
       "stage": "foundation",
-      "status": "pending",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        "AI Elements and shadcn upstream source/license inspected at pinned revisions; local subset, wrappers and source digests recorded in docs/ui-component-inventory.json. All eleven catalog sources accounted for; others explicitly reference/alternative/pending.",
+        "RED→GREEN source-boundary test reproduces VENDOR_IMPORT_BYPASS, MULTIPLE_CHAT_OWNERS and UNQUALIFIED_SOURCE.",
+        "Strict pnpm install succeeded; pnpm install --frozen-lockfile exited0 with resolution skipped; exact direct versions/integrities/licenses/peers captured. Installer added explicit release-age exclusions for Radix transitive pins; no floating package range introduced.",
+        "pnpm ui:typecheck exit0; pnpm ui:build Next16.3.8 production compilation/typecheck/prerender succeeded. UI exports compiled JavaScript/declarations to avoid Turbopack source .js resolution failures.",
+        "Headless Playwright browser smoke1/1 passed: pinned Message/Button/Textarea render, tokens applied, execution controls disabled, no browser page errors. CUA in-app browser failed Windows startup1056; Playwright provided actual independent browser evidence.",
+        "130 unit tests pass, lint/typecheck and architecture/dependency/UI-source/UI-boundary checks pass. No live model/service or full frontend feature claim."
+      ]
     },
     {
       "id": "U02",

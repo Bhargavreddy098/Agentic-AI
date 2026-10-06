@@ -42,6 +42,7 @@ const SKIP_DIRECTORIES = new Set([
   ".git",
   "dist",
   "build",
+  ".next",
   "coverage",
 ]);
 const SCAN_EXCLUSIONS = ["tests/fixtures"];
