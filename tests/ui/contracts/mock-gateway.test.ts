@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { beforeAll, afterAll, expect, it } from "vitest";
 import { serve } from "@hono/node-server";
 import { createDemoGateway } from "../../../apps/gateway-fixture/src/scenarios.js";

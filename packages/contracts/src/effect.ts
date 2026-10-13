@@ -27,6 +27,7 @@ export const EffectRequestSchema = z.strictObject({
   runContext: RunContextSchema,
   idempotencyKey: OpaqueIdSchema,
   traceId: OpaqueIdSchema,
+  requiredCapabilities: z.array(OpaqueIdSchema).min(1).max(128).optional(),
 });
 
 export type EffectRequest = z.infer<typeof EffectRequestSchema>;

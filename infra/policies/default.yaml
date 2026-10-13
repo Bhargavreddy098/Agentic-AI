@@ -1,0 +1,165 @@
+version: "1"
+defaultEffect: "deny"
+maxEffectCostMicroUsd: 1000000
+approvalExpirySeconds: 300
+protectedPaths:
+  - "tenant:"
+  - "admin:"
+  - "system:"
+  - "policy:"
+  - "audit:"
+  - "secrets:"
+  - "keys:"
+
+modeCapabilities:
+  observe:
+    - "read:session"
+    - "read:memory"
+    - "read:tools"
+    - "read:models"
+    - "read:policy"
+  assist:
+    - "read:session"
+    - "read:memory"
+    - "read:tools"
+    - "read:models"
+    - "read:policy"
+    - "write:session"
+    - "write:memory"
+    - "invoke:tool"
+    - "invoke:model"
+  execute:
+    - "read:session"
+    - "read:memory"
+    - "read:tools"
+    - "read:models"
+    - "read:policy"
+    - "write:session"
+    - "write:memory"
+    - "invoke:tool"
+    - "invoke:model"
+    - "publish:effect"
+    - "request:approval"
+    - "manage:budget"
+
+rules:
+  - capability: "invoke:model"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "invoke:model"
+      - field: "runMode"
+        operator: "equals"
+        value: "execute"
+
+  - capability: "invoke:tool"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "invoke:tool"
+      - field: "runMode"
+        operator: "equals"
+        value: "execute"
+
+  - capability: "publish:effect"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "publish:effect"
+      - field: "runMode"
+        operator: "equals"
+        value: "execute"
+
+  - capability: "request:approval"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "request:approval"
+      - field: "runMode"
+        operator: "equals"
+        value: "execute"
+
+  - capability: "manage:budget"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "manage:budget"
+      - field: "runMode"
+        operator: "equals"
+        value: "execute"
+
+  - capability: "read:session"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "read:session"
+
+  - capability: "read:memory"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "read:memory"
+
+  - capability: "read:tools"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "read:tools"
+
+  - capability: "read:models"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "read:models"
+
+  - capability: "read:policy"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "read:policy"
+
+  - capability: "write:session"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "write:session"
+      - field: "runMode"
+        operator: "equals"
+        value: "assist"
+
+  - capability: "write:memory"
+    effect: "allow"
+    conditions:
+      - field: "principal.capabilities"
+        operator: "contains"
+        value: "write:memory"
+      - field: "runMode"
+        operator: "equals"
+        value: "assist"
+
+  - capability: "admin:*"
+    effect: "deny"
+    conditions:
+      - field: "principal.roles"
+        operator: "contains"
+        value: "admin"
+
+approvalRequired:
+  - "tool:*"
+  - "model:*"
+  - "effect:publish"
+  - "budget:manage"
+  - "approval:request"
+  - "write:*"
+  - "admin:*"

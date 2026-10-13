@@ -12,6 +12,7 @@
  *   PACKAGE_IMPORTS_APP         a package imports an app
  *   CONTRACTS_INFRASTRUCTURE_IMPORT  packages/contracts production code imports non-contract
  *                                     infrastructure (zod only; vitest allowed under test paths)
+ *   PRODUCTION_IMPORTS_TEST    production code imports a test-only helper, fixture or mock
  *   UNMAPPED_COMPONENT_PATH     a source path under apps/ or packages/ is not declared in the baseline
  *   BASELINE_INCONSISTENT       the machine-readable baseline lost a pictured component or flow
  *
@@ -29,6 +30,7 @@
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(scriptDirectory, "..");
@@ -127,27 +129,25 @@ const EXPECTED_PRIMARY_FLOW = [
   "sandbox",
 ];
 
-const IMPORT_PATTERNS = [
-  /(?:^|[;\s])(?:import|export)\s+(?:type\s+)?[\s\S]*?from\s*["']([^"']+)["']/g,
-  /(?:^|[;\s])import\s*["']([^"']+)["']/g,
-  /(?:^|[;\s])import\s*\(\s*["']([^"']+)["']\s*\)/g,
-  /(?:^|[;\s])require\s*\(\s*["']([^"']+)["']\s*\)/g,
-];
-
 function toPosix(path) {
   return path.replaceAll("\\", "/");
 }
 
-function extractImportSpecifiers(source) {
+function extractImportSpecifiers(source, filePath) {
   const specifiers = new Set();
-  for (const pattern of IMPORT_PATTERNS) {
-    pattern.lastIndex = 0;
-    let match = pattern.exec(source);
-    while (match) {
-      specifiers.add(match[1]);
-      match = pattern.exec(source);
-    }
-  }
+  // Parse actual syntax so comments/quoted examples cannot create imports,
+  // and comments between import tokens cannot conceal forbidden edges.
+  const tree = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true);
+  const add = node => { if (node && ts.isStringLiteralLike(node)) specifiers.add(node.text); };
+  const visit = node => {
+    if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) add(node.moduleSpecifier);
+    if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference)) add(node.moduleReference.expression);
+    if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument)) add(node.argument.literal);
+    if (ts.isCallExpression(node) && (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
+        (ts.isIdentifier(node.expression) && node.expression.text === "require"))) add(node.arguments[0]);
+    ts.forEachChild(node, visit);
+  };
+  visit(tree);
   return [...specifiers];
 }
 
@@ -394,7 +394,22 @@ function verifyArchitecture(target, baseline) {
       continue;
     }
 
-    for (const specifier of extractImportSpecifiers(source)) {
+    for (const specifier of extractImportSpecifiers(source, filePath)) {
+      // Test-only database fixtures must never become a production driver bypass.
+      const importPath = specifier.startsWith(".")
+        ? toPosix(relative(target, resolve(dirname(filePath), specifier)))
+        : specifier;
+      if ((relativePath.startsWith("apps/") || relativePath.startsWith("packages/")) &&
+          isProductionSourcePath(relativePath) && !isProductionSourcePath(importPath)) {
+        violations.push({
+          code: "PRODUCTION_IMPORTS_TEST",
+          rule: "ARCH-015",
+          file: relativePath,
+          specifier,
+          component,
+          detail: "Production code must use its reviewed owner port, never test-only helpers, fixtures or mocks",
+        });
+      }
       const packageName = packageNameOf(specifier);
 
       if (specifier === "node:sqlite") {

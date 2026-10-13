@@ -5,6 +5,12 @@ import {
   OpaqueIdSchema,
   SchemaVersionSchema,
   Sha256HexSchema,
+  PolicyVersionSchema,
+  PolicyConfigSchema,
+  SensitivitySchema,
+  ModelClassSchema,
+  FinishReasonSchema,
+  ProviderModelRevisionSchema,
 } from "./primitives.js";
 
 export * from "./primitives.js";
@@ -18,6 +24,23 @@ export * from "./memory.js";
 export * from "./audit.js";
 export * from "./delivery.js";
 export * from "./ui/index.js";
+export * from "./goal.js";
+export * from "./plan.js";
+export * from "./evidence.js";
+export * from "./project.js";
+
+export { PolicyVersionSchema, PolicyConfigSchema, OpaqueIdSchema, Sha256HexSchema, MicroUsdSchema, SensitivitySchema, ModelClassSchema, FinishReasonSchema, ProviderModelRevisionSchema } from "./primitives.js";
+export type PolicyVersion = z.infer<typeof PolicyVersionSchema>;
+export type PolicyConfig = z.infer<typeof PolicyConfigSchema>;
+export { PolicyDecisionSchema } from "./effect.js";
+export type { PolicyDecision } from "./effect.js";
+export type OpaqueId = z.infer<typeof OpaqueIdSchema>;
+export type Sha256Hex = z.infer<typeof Sha256HexSchema>;
+export type MicroUsd = z.infer<typeof MicroUsdSchema>;
+export type SensitivityLevel = z.infer<typeof SensitivitySchema>;
+export type ModelClass = z.infer<typeof ModelClassSchema>;
+export type FinishReason = z.infer<typeof FinishReasonSchema>;
+export type ProviderModelRevision = z.infer<typeof ProviderModelRevisionSchema>;
 
 export const CandidateSchema = z.strictObject({
   schemaVersion: SchemaVersionSchema,

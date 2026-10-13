@@ -1,3 +1,5 @@
+> **V2 consolidation (2026-10-07):** Read [the unified V2 build guide](../../v2-build-guide.md) for the combined target, completed-task migrations and extension task cards. This file remains a source record; its historical status prose is not current completion evidence. New V2 boundaries await recorded review.
+
 # ASI TypeScript Agent System — Architecture Analysis and Proposed Specification
 
 Date: 2026-10-06 (user timezone: Asia/Calcutta)

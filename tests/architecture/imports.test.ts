@@ -56,7 +56,28 @@ describe("architecture boundary enforcement", () => {
     expect(dependencies.violations).toHaveLength(0);
   });
 
-  it("reports zero violations for the repository import graph and manifests", () => {
+  it("does not interpret documentation, comments or quoted program text as executing imports", () => {
+    const architecture = runVerifier("verify-architecture.mjs", join(fixturesRoot, "import-text"));
+    expect(architecture.violations).toHaveLength(0);
+  });
+
+  it("detects real imports across comments, re-exports, require calls and literal templates", () => {
+    const architecture = runVerifier("verify-architecture.mjs", join(fixturesRoot, "import-forms"));
+    const imports = architecture.violations.map(violation => (violation as Violation & { specifier: string }).specifier);
+    expect(imports).toEqual(expect.arrayContaining(["openai", "anthropic", "@ai-sdk/openai", "pg"]));
+    expect(architecture.violations.map(v => v.code)).toContain("CHANNEL_MODEL_BYPASS");
+    expect(architecture.violations.map(v => v.code)).toContain("STORE_DRIVER_BYPASS");
+  });
+
+  it("denies production use of test database construction while preserving owner fixture access", () => {
+    const architecture = runVerifier("verify-architecture.mjs", join(fixturesRoot, "fixture-boundary"));
+    expect(architecture.violations.filter(v => v.code === "PRODUCTION_IMPORTS_TEST").map(v => v.file)).toEqual([
+      "apps/tool-engine/src/main.ts",
+    ]);
+    expect(architecture.violations.filter(v => v.code === "STORE_DRIVER_BYPASS")).toHaveLength(0);
+  });
+
+  it("reports zero violations for the repository import graph and manifests", { timeout: 30000 }, () => {
     const architecture = runVerifier("verify-architecture.mjs", repositoryRoot);
     const dependencies = runVerifier("verify-dependencies.mjs", repositoryRoot);
     expect(architecture.violations).toHaveLength(0);

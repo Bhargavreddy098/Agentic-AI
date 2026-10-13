@@ -39,6 +39,9 @@ export const RunContextSchema = z.strictObject({
   deadlineAt: FutureUtcTimestampSchema,
   budgetRef: BudgetRefSchema,
   parentRunId: OpaqueIdSchema.optional(),
+  goalRef: OpaqueIdSchema.optional(),
+  projectRef: OpaqueIdSchema.optional(),
+  verificationRef: OpaqueIdSchema.optional(),
 });
 
 export type RunContext = z.infer<typeof RunContextSchema>;
@@ -87,6 +90,9 @@ const TaskResultBase = {
   traceId: OpaqueIdSchema,
   usage: UsageSchema,
   evidenceRefs: z.array(ArtifactReferenceSchema).max(64),
+  goalRef: OpaqueIdSchema.optional(),
+  projectRef: OpaqueIdSchema.optional(),
+  verificationRef: OpaqueIdSchema.optional(),
 } as const;
 
 export const TaskResultSchema = z.discriminatedUnion("status", [
@@ -135,6 +141,9 @@ export const TaskEnvelopeSchema = z.strictObject({
   input: boundedJsonObjectSchema(1048576),
   principalGrant: PrincipalSchema,
   idempotencyKey: OpaqueIdSchema,
+  goalRef: OpaqueIdSchema.optional(),
+  projectRef: OpaqueIdSchema.optional(),
+  verificationRef: OpaqueIdSchema.optional(),
 }).refine(task => task.principalGrant.tenantId === task.runContext.budgetRef.tenantId, {
   message: "delegated principal and root budget must share a tenant",
   path: ["principalGrant", "tenantId"],
