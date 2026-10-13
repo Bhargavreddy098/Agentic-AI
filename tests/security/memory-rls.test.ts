@@ -22,7 +22,7 @@ function createPublishConfig(): PublishMemoryConfig {
   return { pool };
 }
 
-function createPrincipal(overrides: Partial<Principal> = {}): Principal {
+function createPrincipal(overrides: Partial<Principal & { ownerAgentId?: string }> = {}): Principal & { ownerAgentId?: string } {
   return {
     tenantId: TEST_TENANT_A,
     subjectId: "subject-1",
@@ -42,46 +42,44 @@ function createMemoryQuery(tenantId: string, text: string, scope: MemoryQuery['r
  return {schemaVersion:1,query:{type:'text',text},requestedScopes:[scope],limit:10,runContext:createQueryContext(tenantId)};
 }
 
-function createMemoryWrite(overrides: Partial<MemoryWrite> = {}): MemoryWrite {
+function createMemoryWrite(recordOverrides: Partial<Omit<MemoryWrite["record"], "schemaVersion">> = {}, writeOverrides: Partial<Omit<MemoryWrite, "record" | "schemaVersion">> = {}): MemoryWrite {
   const baseRecord = {
-    schemaVersion: 1,
-    memoryId: undefined,
+    schemaVersion: 1 as const,
+    memoryId: undefined as string | undefined,
     tenantId: TEST_TENANT_A,
     scope: "Global" as const,
-    roleId: undefined,
-    ownerAgentId: undefined,
+    roleId: undefined as string | undefined,
+    ownerAgentId: undefined as string | undefined,
     version: 1,
     value: "test memory",
     confidence: 0.9,
-    sourceEpisodeIds: [],
+    sourceEpisodeIds: [] as string[],
     authority: "consolidation" as const,
     sensitivity: "internal" as const,
   };
 
-  const { record, ...restOverrides } = overrides;
-
   return {
-    schemaVersion: 1,
+    schemaVersion: 1 as const,
     record: {
       ...baseRecord,
-      ...(record || {}),
-    },
+      ...recordOverrides,
+    } as MemoryWrite["record"],
     runContext: {
       runId: "run-1",
       sessionId: "session-1",
       writerEpoch: 1,
-      mode: "execute",
+      mode: "execute" as const,
       deadlineAt: new Date(Date.now() + 3600000).toISOString(),
       budgetRef: {
         tenantId: TEST_TENANT_A,
         accountId: "account-1",
         rootRunId: "root-1",
       },
+      ...writeOverrides.runContext,
     },
-    effectRequest: undefined,
-    sourceEpisodeIds: [],
-    ...restOverrides,
-  } as unknown as MemoryWrite;
+    effectRequest: writeOverrides.effectRequest,
+    sourceEpisodeIds: writeOverrides.sourceEpisodeIds ?? [],
+  } as MemoryWrite;
 }
 
 beforeAll(async () => {
@@ -104,7 +102,7 @@ beforeEach(async () => {
 describe("Memory RLS", () => {
   it("inserts and queries Global scope memory", async () => {
     const principal = createPrincipal({ tenantId: TEST_TENANT_A, roles: ["user"] });
-    const write = createMemoryWrite({ record: { scope: "Global", value: "global memory" } });
+    const write = createMemoryWrite({ scope: "Global", value: "global memory" });
 
     const publishConfig = createPublishConfig();
     const result = await publishMemory(publishConfig, { principal, write, expectedVersion: null });
@@ -126,7 +124,7 @@ describe("Memory RLS", () => {
 
   it("inserts and queries Role scope memory", async () => {
     const principal = createPrincipal({ tenantId: TEST_TENANT_A, roles: ["user", "role-a"] });
-    const write = createMemoryWrite({ record: { scope: "Role", roleId: "role-a", value: "role memory" } });
+    const write = createMemoryWrite({ scope: "Role", roleId: "role-a", value: "role memory" });
 
     const publishConfig = createPublishConfig();
     const result = await publishMemory(publishConfig, { principal, write, expectedVersion: null });
@@ -147,7 +145,7 @@ describe("Memory RLS", () => {
 
   it("denies Role scope access to principals without the role", async () => {
     const principalA = createPrincipal({ tenantId: TEST_TENANT_A, roles: ["user", "role-a"] });
-    const write = createMemoryWrite({ record: { scope: "Role", roleId: "role-a", value: "role-a secret" } });
+    const write = createMemoryWrite({ scope: "Role", roleId: "role-a", value: "role-a secret" });
 
     await publishMemory(createPublishConfig(), { principal: principalA, write, expectedVersion: null });
 
@@ -165,8 +163,8 @@ describe("Memory RLS", () => {
   it("inserts and queries Private scope memory", async () => {
     const principal = createPrincipal({ tenantId: TEST_TENANT_A, subjectId: "subject-1", ownerAgentId: "agent-1" });
     const write = createMemoryWrite({
-      record: { scope: "Private", ownerAgentId: "agent-1", value: "private memory" },
-    });
+      scope: "Private", ownerAgentId: "agent-1", value: "private memory" },
+    );
 
     const publishConfig = createPublishConfig();
     const result = await publishMemory(publishConfig, { principal, write, expectedVersion: null });
@@ -186,7 +184,7 @@ describe("Memory RLS", () => {
 
   it("denies Private scope access to other agents", async () => {
     const principalA = createPrincipal({ tenantId: TEST_TENANT_A, subjectId: "subject-1", ownerAgentId: "agent-1" });
-    const write = createMemoryWrite({ record: { scope: "Private", ownerAgentId: "agent-1", value: "agent-1 private" } });
+    const write = createMemoryWrite({ scope: "Private", ownerAgentId: "agent-1", value: "agent-1 private" });
 
     await publishMemory(createPublishConfig(), { principal: principalA, write, expectedVersion: null });
 
@@ -204,8 +202,8 @@ describe("Memory RLS", () => {
     const principalA = createPrincipal({ tenantId: TEST_TENANT_A });
     const principalB = createPrincipal({ tenantId: TEST_TENANT_B });
 
-    const writeA = createMemoryWrite({ record: { scope: "Global", value: "tenant A global" } });
-    const writeB = createMemoryWrite({ record: { scope: "Global", value: "tenant B global" } });
+    const writeA = createMemoryWrite({ scope: "Global", value: "tenant A global" });
+    const writeB = createMemoryWrite({ scope: "Global", value: "tenant B global" });
 
     await publishMemory(createPublishConfig(), { principal: principalA, write: writeA, expectedVersion: null });
     await publishMemory(createPublishConfig(), { principal: principalB, write: writeB, expectedVersion: null });
@@ -227,7 +225,7 @@ describe("Memory RLS", () => {
 
   it("CAS on publish prevents lost updates", async () => {
     const principal = createPrincipal();
-    const write = createMemoryWrite({ record: { scope: "Global", value: "original" } });
+    const write = createMemoryWrite({ scope: "Global", value: "original" });
 
     const publishConfig = createPublishConfig();
     const result1 = await publishMemory(publishConfig, { principal, write, expectedVersion: null });
@@ -235,14 +233,14 @@ describe("Memory RLS", () => {
 
     // Update with correct version
     const write2 = createMemoryWrite({
-      record: { ...write.record, memoryId, version: 1, value: "updated" },
-    });
+      scope: "Global", memoryId, version: 1, value: "updated" },
+    );
     await publishMemory(publishConfig, { principal, write: write2, expectedVersion: 1 });
 
     // Attempt to update with stale version should fail
     const write3 = createMemoryWrite({
-      record: { ...write.record, memoryId, version: 1, value: "stale update" },
-    });
+      scope: "Global", memoryId, version: 1, value: "stale update" },
+    );
 
     await expect(
       publishMemory(publishConfig, { principal, write: write3, expectedVersion: 1 }),
@@ -253,12 +251,12 @@ describe("Memory RLS", () => {
     const principal = createPrincipal();
 
     // Create initial record
-    const write1 = createMemoryWrite({ record: { scope: "Global", value: "v1" } });
+    const write1 = createMemoryWrite({ scope: "Global", value: "v1" });
     const result1 = await publishMemory(createPublishConfig(), { principal, write: write1, expectedVersion: null });
     const memoryId = result1.record.memoryId;
 
     // Update to v2
-    const write2 = createMemoryWrite({ record: { ...write1.record, memoryId, version: 1, value: "v2" } });
+    const write2 = createMemoryWrite({ scope: "Global", memoryId, version: 1, value: "v2" });
     await publishMemory(createPublishConfig(), { principal, write: write2, expectedVersion: 1 });
 
     // Get revisions (should have 1 revision for v1)
@@ -286,8 +284,8 @@ describe("Memory RLS", () => {
   it("scope escalation rejects (Private -> Global)", async () => {
     const principal = createPrincipal({ tenantId: TEST_TENANT_A, ownerAgentId: "agent-1" });
     const write = createMemoryWrite({
-      record: { scope: "Private", ownerAgentId: "agent-1", value: "private" },
-    });
+      scope: "Private", ownerAgentId: "agent-1", value: "private" },
+    );
 
     const publishConfig = createPublishConfig();
     const result1 = await publishMemory(publishConfig, { principal, write, expectedVersion: null });
@@ -295,8 +293,8 @@ describe("Memory RLS", () => {
 
     // Try to update the same memory to Global scope - scope should remain Private (immutable)
     const write2 = createMemoryWrite({
-      record: { scope: "Global", memoryId, version: 1, value: "escalated" },
-    });
+      scope: "Global", memoryId, version: 1, value: "escalated" },
+    );
 
     const result2 = await publishMemory(publishConfig, { principal, write: write2, expectedVersion: 1 });
     // Scope should remain Private (scope is immutable)
@@ -306,15 +304,15 @@ describe("Memory RLS", () => {
 
   it("two writers with same expectedVersion cannot both succeed", async () => {
     const principal = createPrincipal();
-    const write = createMemoryWrite({ record: { scope: "Global", value: "concurrent" } });
+    const write = createMemoryWrite({ scope: "Global", value: "concurrent" });
 
     const publishConfig = createPublishConfig();
     const result1 = await publishMemory(publishConfig, { principal, write, expectedVersion: null });
     const memoryId = result1.record.memoryId;
 
     // Two concurrent updates with same expected version
-    const write2 = createMemoryWrite({ record: { ...write.record, memoryId, version: 1, value: "update-1" } });
-    const write3 = createMemoryWrite({ record: { ...write.record, memoryId, version: 1, value: "update-2" } });
+    const write2 = createMemoryWrite({ scope: "Global", memoryId, version: 1, value: "update-1" });
+    const write3 = createMemoryWrite({ scope: "Global", memoryId, version: 1, value: "update-2" });
 
     const [result2, result3] = await Promise.allSettled([
       publishMemory(publishConfig, { principal, write: write2, expectedVersion: 1 }),
