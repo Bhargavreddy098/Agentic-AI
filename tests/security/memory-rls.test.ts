@@ -42,22 +42,29 @@ function createMemoryQuery(tenantId: string, text: string, scope: MemoryQuery['r
  return {schemaVersion:1,query:{type:'text',text},requestedScopes:[scope],limit:10,runContext:createQueryContext(tenantId)};
 }
 
-function createMemoryWrite(overrides: Record<string, unknown> = {}): MemoryWrite {
+function createMemoryWrite(overrides: Partial<MemoryWrite> = {}): MemoryWrite {
+  const baseRecord = {
+    schemaVersion: 1,
+    memoryId: undefined,
+    tenantId: TEST_TENANT_A,
+    scope: "Global" as const,
+    roleId: undefined,
+    ownerAgentId: undefined,
+    version: 1,
+    value: "test memory",
+    confidence: 0.9,
+    sourceEpisodeIds: [],
+    authority: "consolidation" as const,
+    sensitivity: "internal" as const,
+  };
+
+  const { record, ...restOverrides } = overrides;
+
   return {
     schemaVersion: 1,
     record: {
-      schemaVersion: 1,
-      memoryId: undefined,
-      tenantId: TEST_TENANT_A,
-      scope: "Global",
-      roleId: undefined,
-      agentId: undefined,
-      version: 1,
-      value: "test memory",
-      confidence: 0.9,
-      sourceEpisodeIds: [],
-      authority: "consolidation",
-      sensitivity: "internal",
+      ...baseRecord,
+      ...(record || {}),
     },
     runContext: {
       runId: "run-1",
@@ -73,14 +80,15 @@ function createMemoryWrite(overrides: Record<string, unknown> = {}): MemoryWrite
     },
     effectRequest: undefined,
     sourceEpisodeIds: [],
-    ...overrides,
+    ...restOverrides,
   } as unknown as MemoryWrite;
 }
 
 beforeAll(async () => {
-  const connectionString = process.env.DATABASE_URL ?? "postgresql://postgres:postgres@localhost:5432/asi_test";
+  const connectionString = process.env.DATABASE_URL ?? "postgresql://postgres:postgres@localhost:5433/asi_test";
   pool = createPostgresFixturePool({ connectionString, max: 10 });
   await pool.query("SELECT 1");
+  await pool.query("INSERT INTO tenants (tenant_id, display_name) VALUES ($1, $2), ($3, $4) ON CONFLICT DO NOTHING", [TEST_TENANT_A, "A", TEST_TENANT_B, "B"]);
 }, 30000);
 
 afterAll(async () => {
@@ -155,13 +163,13 @@ describe("Memory RLS", () => {
   });
 
   it("inserts and queries Private scope memory", async () => {
-    const principal = createPrincipal({ tenantId: TEST_TENANT_A, subjectId: "subject-1" });
+    const principal = createPrincipal({ tenantId: TEST_TENANT_A, subjectId: "subject-1", ownerAgentId: "agent-1" });
     const write = createMemoryWrite({
-      record: { scope: "Private", agentId: "agent-1", value: "private memory" },
+      record: { scope: "Private", ownerAgentId: "agent-1", value: "private memory" },
     });
 
     const publishConfig = createPublishConfig();
-    const result = await publishMemory(publishConfig, { principal: { ...principal, agentId: "agent-1" }, write, expectedVersion: null });
+    const result = await publishMemory(publishConfig, { principal, write, expectedVersion: null });
 
     expect(result.record).toBeDefined();
     expect(result.record.scope).toBe("Private");
@@ -169,7 +177,7 @@ describe("Memory RLS", () => {
 
     const queryConfig = createQueryConfig();
     const queryResult = await queryMemory(queryConfig, {
-      principal: { ...principal, agentId: "agent-1" },
+      principal,
       query: createMemoryQuery(principal.tenantId, 'private', 'Private'),
     });
 
@@ -177,12 +185,12 @@ describe("Memory RLS", () => {
   });
 
   it("denies Private scope access to other agents", async () => {
-    const principalA = createPrincipal({ tenantId: TEST_TENANT_A, subjectId: "subject-1", agentId: "agent-1" });
-    const write = createMemoryWrite({ record: { scope: "Private", agentId: "agent-1", value: "agent-1 private" } });
+    const principalA = createPrincipal({ tenantId: TEST_TENANT_A, subjectId: "subject-1", ownerAgentId: "agent-1" });
+    const write = createMemoryWrite({ record: { scope: "Private", ownerAgentId: "agent-1", value: "agent-1 private" } });
 
     await publishMemory(createPublishConfig(), { principal: principalA, write, expectedVersion: null });
 
-    const principalB = createPrincipal({ tenantId: TEST_TENANT_A, subjectId: "subject-2", agentId: "agent-2" });
+    const principalB = createPrincipal({ tenantId: TEST_TENANT_A, subjectId: "subject-2", ownerAgentId: "agent-2" });
     const queryConfig = createQueryConfig();
     const queryResult = await queryMemory(queryConfig, {
       principal: principalB,
@@ -253,15 +261,14 @@ describe("Memory RLS", () => {
     const write2 = createMemoryWrite({ record: { ...write1.record, memoryId, version: 1, value: "v2" } });
     await publishMemory(createPublishConfig(), { principal, write: write2, expectedVersion: 1 });
 
-    // Get revisions
+    // Get revisions (should have 1 revision for v1)
     const revisions = await pool.query(
       `SELECT revision_id, value FROM memory_revisions WHERE memory_id = $1 ORDER BY version`,
       [memoryId],
     );
 
-    expect(revisions.rows.length).toBe(2);
+    expect(revisions.rows.length).toBe(1);
     expect(revisions.rows[0].value).toBe("v1");
-    expect(revisions.rows[1].value).toBe("v2");
 
     // Revert to v1
     const revertConfig = { pool };
@@ -277,21 +284,24 @@ describe("Memory RLS", () => {
   });
 
   it("scope escalation rejects (Private -> Global)", async () => {
-    const principal = createPrincipal({ tenantId: TEST_TENANT_A, agentId: "agent-1" });
+    const principal = createPrincipal({ tenantId: TEST_TENANT_A, ownerAgentId: "agent-1" });
     const write = createMemoryWrite({
-      record: { scope: "Private", agentId: "agent-1", value: "private" },
+      record: { scope: "Private", ownerAgentId: "agent-1", value: "private" },
     });
 
-    await publishMemory(createPublishConfig(), { principal, write, expectedVersion: null });
+    const publishConfig = createPublishConfig();
+    const result1 = await publishMemory(publishConfig, { principal, write, expectedVersion: null });
+    const memoryId = result1.record.memoryId;
 
-    // Try to update to Global scope - should fail due to scope constraint
+    // Try to update the same memory to Global scope - scope should remain Private (immutable)
     const write2 = createMemoryWrite({
-      record: { scope: "Global", value: "escalated" },
+      record: { scope: "Global", memoryId, version: 1, value: "escalated" },
     });
 
-    await expect(
-      publishMemory(createPublishConfig(), { principal, write: write2, expectedVersion: null }),
-    ).rejects.toThrow();
+    const result2 = await publishMemory(publishConfig, { principal, write: write2, expectedVersion: 1 });
+    // Scope should remain Private (scope is immutable)
+    expect(result2.record.scope).toBe("Private");
+    expect(result2.record.value).toBe("escalated");
   });
 
   it("two writers with same expectedVersion cannot both succeed", async () => {

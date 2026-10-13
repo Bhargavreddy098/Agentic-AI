@@ -89,6 +89,7 @@ beforeEach(async () => {
   // Clear fixture state; actual owner acceptance still requires qualified services.
   legacyFixtureInvocations = 0;
   (toolRegistry as unknown as { tools: Map<string, unknown> }).tools.clear();
+  await pool.query("DELETE FROM tool_effect_journal");
 }, 10000);
 
 describe("Tool Manifests", () => {
