@@ -2184,15 +2184,36 @@
         "R23"
       ],
       "stage": "C",
-      "status": "pending",
+      "status": "in_progress",
       "optional": false,
-      "evidence": [],
+      "evidence": [
+        {
+          "date": "2026-10-14",
+          "kind": "integration-test",
+          "command": "pnpm exec vitest run --project integration tests/integration/heartbeat.test.ts",
+          "result": "7/10 passed; 3 failed (budget integration, quiet hours details, budget exceeded error matching)",
+          "scope": "Core heartbeat scheduling, cancellation, noop execution work; budget integration and quiet hours details need fixes"
+        },
+        {
+          "date": "2026-10-14",
+          "kind": "static",
+          "command": "node node_modules/typescript/bin/tsc -p packages/gateway/tsconfig.json",
+          "result": "package build passed"
+        },
+        {
+          "date": "2026-10-14",
+          "kind": "static",
+          "command": "node node_modules/eslint/bin/eslint.js packages/gateway/src/heartbeat.ts",
+          "result": "passed"
+        }
+      ],
       "v2ProposalIds": [
         "V2-F08",
         "V2-F09",
         "V2-F10",
         "V2-F25"
-      ]
+      ],
+      "notes": "Core heartbeat scheduling, cancellation, and noop execution working (7/10 tests pass). Remaining issues: (1) Budget integration fails due to UUID/text type mismatch in migration SQL (budget system expects UUID but context passes text); (2) Quiet hours details not returned in execution result; (3) Budget exceeded error message matching needs adjustment. Requires migration SQL fix for UUID/text casting in budget system functions."
     },
     {
       "id": "22",
