@@ -28,28 +28,37 @@
     "ui:build": "pnpm --filter @asi/contracts build && pnpm --filter @asi/ui build && pnpm --filter @asi/web build",
     "ui:test": "vitest run --project unit tests/ui",
     "ui:test:e2e": "playwright test tests/ui/e2e",
-    "ui:test:security": "vitest run --project security tests/ui/security",
+    "ui:gateway:build": "pnpm --filter @asi/contracts build && pnpm --filter @asi/policy build && pnpm --filter @asi/gateway-app build",
+    "ui:test:e2e:live": "pnpm ui:gateway:build && playwright test -c playwright.live.config.ts",
+    "ui:test:security": "vitest run --project unit tests/ui/security",
     "ui:test:a11y": "playwright test tests/ui/accessibility",
+    "ui:test:visual": "playwright test tests/ui/visual",
     "ui:verify:boundaries": "node scripts/verify-ui-boundaries.mjs .",
     "ui:verify:sources": "node scripts/verify-ui-sources.mjs .",
-    "ui:verify": "pnpm ui:typecheck && pnpm ui:build && pnpm ui:test && pnpm ui:verify:boundaries && pnpm ui:verify:sources"
+    "ui:verify": "pnpm ui:typecheck && pnpm ui:build && pnpm ui:test && pnpm ui:test:security && pnpm ui:verify:boundaries && pnpm ui:verify:sources"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@eslint/js": "10.0.1",
     "@hono/node-server": "2.1.3",
     "@playwright/test": "1.63.0",
     "@testing-library/dom": "10.4.2",
+    "@testing-library/jest-dom": "6.5.0",
     "@testing-library/react": "16.3.3",
     "@types/node": "24.19.1",
+    "@types/pg": "8.11.10",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "better-sqlite3": "13.0.3",
     "eslint": "10.12.0",
     "globals": "17.13.0",
     "jsdom": "30.1.2",
+    "pg": "8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.71.1",
-    "vitest": "5.0.3"
+    "vitest": "5.0.3",
+    "zod": "4.6.5"
   }
 }

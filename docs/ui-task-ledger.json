@@ -33,7 +33,16 @@
         "130 unit tests pass, lint/typecheck and architecture/dependency/UI-source/UI-boundary checks pass. No live model/service or full frontend feature claim."
       ],
       "v2ProposalIds": [],
-      "v2MigrationTaskId": "M05"
+      "v2MigrationTaskId": "M05",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U02",
@@ -105,7 +114,16 @@
         "V2-F39",
         "V2-F40"
       ],
-      "v2MigrationTaskId": "M06"
+      "v2MigrationTaskId": "M06",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U03",
@@ -170,7 +188,16 @@
         "V2-F39",
         "V2-F40"
       ],
-      "v2MigrationTaskId": "M07"
+      "v2MigrationTaskId": "M07",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U04",
@@ -196,7 +223,16 @@
       "v2ProposalIds": [
         "V2-F25"
       ],
-      "v2MigrationTaskId": "M08"
+      "v2MigrationTaskId": "M08",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U05",
@@ -228,7 +264,16 @@
         "V2-F34",
         "V2-F35"
       ],
-      "v2MigrationTaskId": "M09"
+      "v2MigrationTaskId": "M09",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U06",
@@ -259,7 +304,16 @@
         "V2-F06",
         "V2-F25"
       ],
-      "v2MigrationTaskId": "M10"
+      "v2MigrationTaskId": "M10",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U07",
@@ -292,7 +346,16 @@
         "V2-F31",
         "V2-F34"
       ],
-      "v2MigrationTaskId": "M11"
+      "v2MigrationTaskId": "M11",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U08",
@@ -311,12 +374,27 @@
         "F14"
       ],
       "stage": "chat",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/clarification/card.test.tsx (12/12) covering single/multiple choice and free text against the reviewed ClarificationAnswer schema, required-empty blocking, stable option IDs, radio/checkbox semantics, bounded free text, and the full pending/submitting/answered/expired/cancelled lifecycle.",
+        "RED then GREEN: two contract assertions failed first (jsdom does not reflect a disabled fieldset on the inner control; a definitive conflict should use a fresh command identity while a transport error reuses the same identity), which clarified the effective-disabled and command-identity behaviour before the suite passed.",
+        "Confirmed a yes answer routes through answerClarification exactly once with decideApproval expected zero times, and the card renders no preselect, no invented consent, no Send control and no approval endpoint.",
+        "Tested deadline expiry, version conflict (refreshes the canonical question and retains valid draft choices) and reconnect while waiting (retains still-valid selections, drops removed options, and submits against the advanced canonical version).",
+        "Named checks pass: clarification unit 12/12, tests/ui unit 100/100, ui:typecheck, eslint, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (270 files, 0 violations), verify-traceability (0)."
+      ],
       "v2ProposalIds": [
         "V2-F01",
         "V2-F25"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U09",
@@ -335,12 +413,28 @@
         "F15"
       ],
       "stage": "chat",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/approval/card.test.tsx (6/6) and tests/ui/approval/routing.test.tsx (3/3); both were run for RED first (the referenced modules did not resolve) before the implementation passed.",
+        "ApprovalCard sends only { commandId, expectedVersion, decision } to decideApproval with the approvalId as the addressed id; controls disable while submitting, a double click cannot send twice, and the post-decision text is 'Decision recorded; awaiting the run.' with no action-completed claim.",
+        "Authority guards covered: expired or already-decided proposals render read-only with no Approve control; a 403/transport failure refreshes canonical status before the retry and reuses the same command identity; a conflict creates a fresh request and re-fetches the canonical state; an expired server clock surfaces the rejection without a decision claim.",
+        "New lib/management.ts handleManagementResult routes a Skills/Models/Memory approval_required response to navigateToInteraction(conversationId, interactionId) (the exact owning Chat) and reports applied/error outcomes without inventing a decision control; approvalForInteraction resolves exactly one canonical approval interaction. The existing lib/navigation.ts helper is reused unchanged (qualified reuse).",
+        "The browser creates no second approval modal/page/control: the routing test resolves the interaction through the helper, renders the single ApprovalCard, and asserts exactly one approval card node.",
+        "Named checks pass: approval unit 9/9, tests/ui unit 109/109, ui:typecheck, eslint, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (274 files, 0 violations), verify-traceability (0)."
+      ],
       "v2ProposalIds": [
         "V2-F11",
         "V2-F13"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U10",
@@ -358,14 +452,30 @@
         "F17"
       ],
       "stage": "chat",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/chat/results.test.tsx (9/9) plus the new lib/artifacts.ts helper; the suite was run for RED first against the missing cards/helpers before the implementation passed.",
+        "TaskProgressCard renders queued/running/completed/failed/cancelled/unknown distinctly, points to the correct run (data-run-id), and bounds long output behind a keyboard-operable Show full summary expander.",
+        "ToolActivityCard renders planned/executing/succeeded/failed/unknown distinctly and never converts approval acceptance into tool success: an executing tool stays executing and a reduced approval.resolved event leaves the tool status unchanged; excessive output becomes a bounded summary plus an artifact reference/link keyed to the correct run.",
+        "ArtifactCard previews only explicitly supported media types (text/plain, text/markdown); other types, including HTML, render an isolated-unavailable notice with no iframe, no allow-same-origin and no app credentials; preview content is bounded and rendered as inert text so raw scripts and JSX cannot execute (the window mutation stays undefined).",
+        "Download/view affordances are gated on artifact.allowedActions; an unauthorized artifact renders no link, and the download href is a same-origin content path with rel=noopener and no token/credential/csrf material in the URL.",
+        "Named checks pass: results unit 9/9, tests/ui unit 118/118, ui:typecheck, eslint, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (279 files, 0 violations), verify-traceability (0)."
+      ],
       "v2ProposalIds": [
         "V2-F02",
         "V2-F04",
         "V2-F27",
         "V2-F34"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U11",
@@ -383,11 +493,27 @@
         "F17"
       ],
       "stage": "sections",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/catalogs/models.test.tsx (10/10) and tests/ui/security/provider-key.test.tsx (4/4); both were run for RED first (models.test.tsx failed to resolve the not-yet-created src/features/models modules) before the implementation passed.",
+        "ModelCatalog shows backend-authorized models only, marks locality (local/cloud) and status (available/unavailable/blocked) accurately, and enables 'Set as default' only for permitted+available models; blocked and no-permission models are disabled, and a cloud model is disabled under local-only routing policy with an explicit local-only reason.",
+        "Requested preference is displayed beside the backend effective model with a visible data-mismatch marker; prices/context limits/capabilities are never invented (ModelView/ProviderView carry none) and unknown detail is labeled 'Not provided by the backend'.",
+        "A shared CatalogProvider serves the page and any composer consumer from one getModels/getProviders query result (single fetch, two consumers), and useCatalogs exposes that same result.",
+        "preferModel submits {type:'model.preference.set', modelId, expectedRevision} and maps outcomes through handleManagementResult: approval_required navigates to the owning Chat (/chat/<conversation>?interaction=<id>), applied reports the revision, and rejected/conflict surface the safe message. ConnectionForm submits provider.connect through the same handler and clearly separates demo vs live credential submission; the provider key is an uncontrolled password input cleared after submit (including on rejection) and appears in no URL, localStorage, sessionStorage, DOM, or console output.",
+        "Named checks pass: catalogs unit 10/10, security unit 4/4, tests/ui unit 132/132 (20 files), ui:typecheck, eslint on changed files, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (286 files, 0 violations), verify-traceability (0), verify-v2-guide (0), ui:build compiled successfully."
+      ],
       "v2ProposalIds": [
         "V2-F39"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U12",
@@ -405,14 +531,30 @@
         "F17"
       ],
       "stage": "sections",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/catalogs/skills.test.tsx (8/8); it was run for RED first (failed to resolve the not-yet-created src/features/skills modules) before the implementation passed.",
+        "SkillCatalog renders enabled/disabled/unavailable and verified/pending/revoked distinctly (data-status/data-trust); available selection checkboxes are enabled only for verified+enabled skills, and disabled, revoked, pending-trust and unavailable skills can never be selected and show an explicit reason.",
+        "Installation never executes scripts: a skill whose description embeds <script>window.__sk_executed = true</script> is rendered as inert text, the window canary stays undefined, and installSkill only submits one skill.install command with no script evaluation.",
+        "Permission expansion routes to Chat approval: installSkill/enableSkill build typed {type:'skill.install'|'skill.enable', skillId, (skillVersion), expectedRevision} commands, and an approval_required result navigates to the owning Chat (/chat/<conversation>?interaction=<id>); permissionExpansion reports ungranted permissions.",
+        "Selection is scoped to the next run and reconciles safely on revoke: reconcileSelection drops skills that are no longer verified+enabled, and revoked skills render read-only as historical references with no selection control. Applied/conflict/rejected outcomes map through handleManagementResult without navigating.",
+        "SkillsProvider serves the page and any composer consumer from one getSkills query result (single fetch, two consumers). Named checks pass: skills unit 8/8, tests/ui unit 140/140 (21 files), ui:typecheck, eslint on changed files, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (290 files, 0 violations), verify-traceability (0), ui:build compiled successfully."
+      ],
       "v2ProposalIds": [
         "V2-F05",
         "V2-F06",
         "V2-F07",
         "V2-F37"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U13",
@@ -429,14 +571,30 @@
         "F17"
       ],
       "stage": "sections",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/catalogs/connections.test.tsx (8/8); it was run for RED first (failed to resolve the not-yet-created src/features/connections modules) before the implementation passed.",
+        "ConnectionCatalog renders tool/MCP server/remote A2A/messaging kinds and connected/disconnected/unavailable/blocked statuses distinctly (data-kind/data-status plus kind, status, revision and permission/capability text); a disconnected or unavailable entry never shows an invented 'Connected' badge.",
+        "Connect requests go through the GatewayClient only: ConnectionForm submits a typed connection.connect command and never opens the entered server URL; a stubbed global fetch is asserted not called, and the backend (not the browser) performs DNS/SSRF/egress authorization.",
+        "Server-rejected URL/auth/permission checks surface only the normalized error safeMessage (e.g. 'Host blocked by egress policy.'); no connection secret is ever rendered (asserted absent from the DOM).",
+        "A pending grant routes to the owning Chat approval: connection.connect/connection.disconnect map outcomes through handleManagementResult, approval_required navigates to /chat/<conversation>?interaction=<id>, and applied/conflict/rejected are reported without navigating. typed commands carry expectedRevision.",
+        "ConnectionsProvider serves the page and any composer consumer from one getConnections query result (single fetch, two consumers). Named checks pass: connections unit 8/8, tests/ui unit 148/148 (22 files), ui:typecheck, eslint on changed files, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (295 files, 0 violations), verify-traceability (0), ui:build compiled successfully."
+      ],
       "v2ProposalIds": [
         "V2-F09",
         "V2-F12",
         "V2-F24",
         "V2-F28"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U14",
@@ -453,13 +611,29 @@
         "F13"
       ],
       "stage": "sections",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/catalogs/memory.test.tsx (8/8); it was run for RED first (failed to resolve the not-yet-created src/features/memory modules) before the implementation passed.",
+        "Only backend-returned authorized records render: availableScopes/narrowScopes restrict the scope filter to the authorized set (a filter can only narrow, never expand backend authorization), and the panel renders exactly the records the Gateway authorized for the selected scope.",
+        "A workspace switch clears previous results: the effect on workspaceId resets the page/selection (resetOnWorkspaceChange unit-verified), so the previous workspace's records disappear immediately.",
+        "Corrections and deletions use expectedRevision and typed commands: correctMemory submits {type:'memory.correct', memoryId, value, expectedRevision} and deleteMemory {type:'memory.delete', memoryId, expectedRevision}; a deletion approval_required navigates to the owning Chat (/chat/<conversation>?interaction=<id>).",
+        "Provenance labels stay visible (Sources, Confidence/Confirmed/Uncertain/Hypothesis, Contradiction flagged) in both the list and detail; memory content renders as inert text (an embedded <script> does not execute and a Private value never enters the URL, localStorage or sessionStorage). On conflict after opening detail the correction form refreshes and shows the safe message instead of persisting optimistically.",
+        "Unresolved limitation recorded: this UI demonstrates safe projection behavior only; it does not verify PostgreSQL row-level-security correctness (existing system task 09 remains required). Named checks pass: memory unit 8/8, tests/ui unit 156/156 (23 files), ui:typecheck, eslint on changed files, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (301 files, 0 violations), verify-traceability (0), ui:build compiled successfully."
+      ],
       "v2ProposalIds": [
         "V2-F21",
         "V2-F22",
         "V2-F23"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U15",
@@ -476,8 +650,15 @@
         "F13"
       ],
       "stage": "sections",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/catalogs/activity.test.tsx (7/7); it was run for RED first (failed to resolve the not-yet-created src/features/activity modules) before the implementation passed.",
+        "Tasks filter/page/status correctly: filterTasks narrows by the backend status vocabulary and paginateTasks returns deterministic pages with a nextCursor; ActivityTasks renders queued/running/completed/failed/cancelled/unknown distinctly (data-status) with safe tool/summary text (an embedded <script> stays inert) and receipt references from evidenceRefs.",
+        "Unknown usage is never displayed as zero: usageLabel(null) is 'Not reported' while usageLabel(0) is '0 tokens'; ActivityUsage shows all three metrics as Not reported when the backend omits them and real values otherwise.",
+        "One interaction has one canonical Chat decision and opens the exact original card: canonicalDecision deduplicates by interactionId keeping the highest version and only pending entries, and clicking the single control navigates to navigateToInteraction(conversationId, interactionId) (/chat/<conversation>?interaction=<id>).",
+        "No Approve/Reject controls render on this page; cancellation is gated on the run.cancel allowedAction and cancelTask maps applied/conflict/rejected through handleManagementResult. reconcileTasks prevents duplicate entries (taskId) and regressions (terminal status never reverts to an active one) while allowing forward version progress.",
+        "Named checks pass: activity unit 7/7, tests/ui unit 163/163 (24 files), ui:typecheck, eslint on changed files, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (306 files, 0 violations), verify-traceability (0), ui:build compiled successfully."
+      ],
       "v2ProposalIds": [
         "V2-F01",
         "V2-F08",
@@ -486,7 +667,16 @@
         "V2-F25",
         "V2-F35",
         "V2-F40"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U16",
@@ -504,12 +694,28 @@
         "F14"
       ],
       "stage": "sections",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/catalogs/settings.test.tsx (7/7); it was run for RED first (failed to resolve the not-yet-created src/features/settings modules) before the implementation passed.",
+        "Appearance changes locally: applyAppearance/readAppearance write documentElement theme/reduced-motion and localStorage (asi.ui.appearance) without contacting the Gateway; toggling theme in SettingsPanel does not call submitCommand. readAppearance is SSR-safe (returns defaults when window is undefined) so the settings route prerenders.",
+        "Privacy/budget/retention/schedule changes use a versioned Gateway command: buildSettingsCommand produces {type:'settings.update', expectedRevision, changes}, SettingsPanel submits with the current settings.revision, and submitSettings maps outcomes through handleManagementResult so an approval_required change navigates to the owning Chat (/chat/<conversation>?interaction=<id>).",
+        "A mode preference does not assign a capability in client state: deriveCapabilities returns only the server-granted allowedActions, and applyLocalPreference of privacyMode:local_only leaves the derived capabilities unchanged.",
+        "Validation preserves originals and surfaces unsaved state: validateDraft requires integer, non-negative spendLimitMicroUsd/retentionDays and at least one change; SettingsPanel shows an 'Unsaved changes' marker and, on a conflicting/rejected save, refreshes and resets the draft so the original server values remain (no optimistic persistence). Unsupported administration settings render as unavailable with no fake controls.",
+        "Demo gate passed on Windows: with the mock Gateway (port 4300) and demo web server (port 3000), the e2e suite ran 9/9 (seven-section navigation + persistent DEMO label, composer, canonical messages, foundation). The navigation spec's obsolete 'Backend integration pending' placeholders were updated to the implemented Models & Providers and Activity & Tasks content. Named checks pass: settings unit 7/7, tests/ui unit 170/170 (25 files), ui:typecheck, eslint on changed files, ui:verify:boundaries (0), ui:verify:sources (0), verify-architecture (310 files, 0), verify-traceability (0), ui:build compiled successfully."
+      ],
       "v2ProposalIds": [
         "V2-F10",
         "V2-F19"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U17",
@@ -534,8 +740,15 @@
         "F16"
       ],
       "stage": "live",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/contracts/real-gateway.test.ts (10/10): it calls the unchanged U02 harness runGatewayContractTests against the real apps/gateway/src/ui Hono app over an HTTP socket, then exercises two principals/workspaces (ownership isolation), stale expected-conversation revision conflicts, session/origin/CSRF enforcement, ordered SSE cursor replay that stops past the tail, upload quarantine/limits/ownership, fail-closed upload authorization, logout and idle-session expiry.",
+        "Implemented apps/gateway/src/ui as the browser-facing Gateway module: ports.ts (control/episode/upload/auth/catalog port contracts and record types), session.ts (httpOnly cookie sessions with random CSRF tokens, TTL expiry, revoke), uploads.ts (UploadQuarantine), project.ts (safe WorkspaceSession/ConversationSummary/ConversationSnapshot projections with no credentials or chain-of-thought), stream.ts (event encoding + cursor replay), app.ts (createUiGateway Hono routes for auth, conversations, snapshot, messages, events, runs/clarifications/approvals, uploads, catalogs, memory, activity, settings, commands).",
+        "Safe projections and browser-session mapping are expressed over injected control/episode APIs; production wiring of the real services remains owned by U18/U19 while U17 validates the adapter against a qualified in-memory port double (createMemoryUiPorts) with workspace-a and workspace-b.",
+        "Uploads are quarantined: begin/write compute a SHA-256 digest and enforce declared size, workspace maxAttachmentBytes and a blocked MIME list; complete only releases an attachmentId when the backend scan returns ready, discards retained bytes afterwards, and fails closed (rejected) when the scan is unavailable or absent. Messages refuse attachment IDs that were not released for run input.",
+        "Authentication/CSRF/Origin: GETs require a valid session (401 otherwise); mutations additionally require an allowed Origin (same-host or configured allowlist) and a CSRF token matching the session, otherwise 403 with a NormalizedError. No SQL credentials, provider endpoints or new agent loop were added to the UI gateway.",
+        "Gate evidence on Windows: eslint clean on apps/gateway/src/ui and the new test; pnpm typecheck and @asi/gateway-app typecheck clean; ui:typecheck clean; ui:build (contracts+ui+web) compiled successfully; ui:verify:boundaries 0; ui:verify:sources 0; verify-architecture 320 files/0 violations; verify-traceability 0; verify-v2-guide 0; pnpm ui:test 180/180 across 26 files. apps/gateway/package.json gained @asi/contracts and hono workspace dependencies."
+      ],
       "v2ProposalIds": [
         "V2-F01",
         "V2-F02",
@@ -577,7 +790,16 @@
         "V2-F38",
         "V2-F39",
         "V2-F40"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U18",
@@ -597,8 +819,15 @@
         "F17"
       ],
       "stage": "live",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/contracts/catalog-ports.test.ts (6/6) on top of the U17 HTTP harness: every implemented port returns an authorized safe projection that validates against the strict V2 view schemas and carries no secret keys; unimplemented ports return availability 'unavailable'; a workspace without the read action returns 'permission_denied'; server commands return applied/conflict/approval_required/rejected with stable ids and commandId idempotency.",
+        "Implemented apps/gateway/src/ui/projections/catalogs.ts: createCatalogPorts(adapters, {authorization}) maps owning-service records (BackendProviderRecord/BackendModelRecord/BackendSkillRecord/BackendConnectionRecord/BackendMemoryRecord/BackendSettingsRecord) to safe ProviderView/ModelView/SkillView/ConnectionView/MemoryView/SettingsView projections, explicitly omitting credentialRef, apiKey, endpoint, signingKeyRef, tokenRef, secret, embedding and encryptionKeyRef so the strict schemas reject any leak.",
+        "Implemented apps/gateway/src/ui/commands/management.ts: createManagementCommands({control, authorization, credentials}) enforces the catalog.manage action, treats provider.connect/provider.disconnect/skill.install/connection.connect/settings.update as policy-gated (delegated to the control port, which creates the owning configuration conversation and approval interaction), and exposes redactCommand so provider credentials are stored only through the server-side UiCredentialPort and the approval preview keeps a redacted reference rather than the secret.",
+        "Credentials fail closed: a provider.connect whose credential service is unavailable is rejected with DEPENDENCY_UNAVAILABLE (no partial store), and a workspace lacking catalog.manage is rejected with POLICY_DENIED before any backend call. Browser approval cannot bypass identity/version checks: a stale expectedVersion returns conflict, the current version applies, and an unauthenticated command POST returns 401.",
+        "Recorded the port-to-system-task availability matrix in PORT_TASK_MATRIX (providers 06/07/11; models 06/11; skills 07/13/18; connections 07/13/20 with MCP 22 and A2A 23 marked unavailable until those tasks pass; memory 07/09; activity 04/05/10; settings 06/07/21/25). Each screen returns 'unavailable' with a reason while its owning adapter is not configured rather than serving fake entries.",
+        "Gate evidence on Windows: eslint clean on apps/gateway/src/ui and the new test; pnpm typecheck and @asi/gateway-app typecheck clean; ui:typecheck clean; ui:build (contracts+ui+web) compiled successfully; ui:verify:boundaries 0; ui:verify:sources 0; verify-architecture 323 files/0 violations; verify-traceability 0; verify-v2-guide 0; pnpm ui:test 186/186 across 27 files. Real service adapters (live PostgreSQL/SQLite) and the protected cross-system flow remain owned by U19."
+      ],
       "backendPortDependencies": {
         "models": [
           "06",
@@ -638,7 +867,16 @@
         "V2-F10",
         "V2-F21",
         "V2-F39"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U19",
@@ -676,8 +914,21 @@
         "F18"
       ],
       "stage": "live",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "U19 recorded BLOCKED, not completed: the live protected runtime (Windows-hosted policy/privacy, bounded budgets, qualified isolation, applied PostgreSQL/SQLite migrations and a running orchestrator) is unavailable in this environment, so the brief's live-flow gate ('demonstrable real protected action and denial, refresh recovery, receipt verification and accurate UI status') is unmet. No fixture/live substitution is claimed and the Commit step is outstanding.",
+        "Added one qualified protected-flow scenario to apps/gateway-fixture/src/scenarios.ts (`/protected`): assistant streamed message -> clarification.requested (run suspended) -> answering resumes the same run -> approval.requested (waiting_approval) -> on approve a delayed tool executing/succeeded, task running/completed with evidenceRefs, artifact.ready (text/plain receipt) and a verified verification.completed before run completed; reject/cancel emit no execution. Existing `/approval`, `/goal` and unknown-outcome behaviour is preserved by branching on the protected run set.",
+        "Added tests/ui/e2e/protected-flow.spec.ts (8 browser scenarios) driving the flow through the browser's authenticated same-origin session (Next rewrite -> fixture): golden path, rejection, expiry, cancel, stale-epoch conflict, unknown tool outcome, revoked principal (401) and a second tab. Asserts zero tools/tasks/artifacts before a valid approval, that approving does not report 'completed' at click time, that execution/artifact/receipt are observed only afterward, and that reconnect and a second tab replay with no duplicate effects (single assistant message).",
+        "RED then GREEN with named commands: against the pre-change fixture the spec failed 5/8 (runStatus reported 'completed' instead of 'suspended'; captured after `git stash` of the fixture change and rebuilding). After the fixture change, protected-flow 8/8 and the full suite `pnpm ui:test:e2e` 17/17 pass against the qualified demo double (fixture :4300 + demo web :3000).",
+        "Named checks pass: eslint (changed files), pnpm typecheck, ui:typecheck, @asi/gateway-app typecheck, ui:build, ui:verify:boundaries (0 violations), ui:verify:sources (0 violations), verify-architecture (324 files, 0 violations), verify-traceability (0), verify-v2-guide (0), ui:test (186/186).",
+        "Discovered gap recorded but not fixed here (outside U19 ownership): ClarificationCard/ApprovalCard/TaskProgressCard/ToolActivityCard/ArtifactCard are unit-tested but not rendered by Chat (ConversationPanel draws messages only, and decideApproval/answerClarification are never invoked from the UI). The browser therefore exercises the authenticated Gateway/stream surface and the rendered message log, not in-page Approve/answer controls; a separate task must wire the cards before the live gate can be satisfied through the UI.",
+        "PROGRESS (status kept blocked): implemented a real Gateway protected flow in apps/gateway/src/ui/protected-ports.ts (createProtectedUiPorts), replacing the response stub. '/protected' -> streamed assistant message -> clarification.requested (run suspended) -> answer resumes the same run -> approval.requested (waiting_approval) -> on approve the effect is authorized by the real policy kernel (@asi/policy evaluatePolicy, policy-protected-v1 with a deny rule on resource 'protected/denied') -> tool executing/succeeded, task running/completed with evidenceRefs, artifact.ready (text/plain HMAC-signed receipt) and a verified verification.completed (criterion receipt-integrity) before run completed; reject/expire/cancel emit no execution. Added apps/gateway/src/ui-server.ts (real UI Gateway exposing /health and /api/ui/v1) and exported createProtectedUiPorts from apps/gateway/src/ui/index.ts.",
+        "Added tests/ui/e2e/protected-flow.live.spec.ts (9 browser scenarios) with playwright.live.config.ts and script `pnpm ui:test:e2e:live` (builds @asi/contracts, @asi/policy, @asi/gateway-app then runs the browser suite; the live web build is isolated via ASI_UI_DIST_DIR=.next-live so the running demo server is untouched). The spec signs in through the real browser session and drives the flow against the real Gateway. RED: against the pre-change memory-ports control port, '/protected' reported runStatus 'completed' with 0 interactions and assistant part 'Request accepted.' (no suspension/clarification), so the golden-path gate times out. GREEN: 9/9 (policy-authorized flow; policy denial; reject; expiry; cancel; stale decision conflict; unknown outcome; revoked session 401; second tab), with browser-to-Gateway correlation by runId across task/tool/artifact/verification, refresh recovery and accurate run status (approve does not report completed at click time).",
+        "Named checks pass on Windows: @asi/gateway-app typecheck 0; root typecheck 0; ui:typecheck 0; ui:gateway:build 0; eslint on changed files 0; verify-architecture 407 files / 0 violations; verify-traceability 0; verify-v2-guide 0; ui:verify:boundaries 0; ui:verify:sources 0; ui:test 192/192 across 28 files; demo ui:test:e2e 22/22; live ui:test:e2e:live 9/9.",
+        "REMAINING UNMET LIVE-FLOW GATE (reason status stays blocked, not completed): the approved effect is a governed in-process read, not a qualified-isolation execution (packages/sandbox/src/windows.ts still throws; isolation task 12 pending), so no executable tool effect runs; the receipt is HMAC-signed and verified in-process by the same Gateway (key id gateway-protected-receipt-v1) rather than by an independent verifier, and @asi/audit and @asi/budgets (PostgreSQL control plane) are not invoked; bounded budgets are carried only as a runContext.budgetRef reference; no model/privacy router or orchestrator is invoked; PostgreSQL/SQLite migrations and the running orchestrator are not exercised. The brief's gate ('actual Windows-hosted policy/privacy, bounded budgets and qualified isolation' and 'Commit; UI alone cannot establish this gate') is therefore unmet. No fixture/live substitution is claimed.",
+        "The previously recorded U19 gap is now closed: ConversationPanel renders the interaction/activity cards and ChatFrame wires onAnswer/onDecide, exercised by tests/ui/e2e/conversation-cards.spec.ts and the live spec (the in-chat approve/answer controls are driven, not prose). Note this wiring pre-existed the current change.",
+        "U19 marked completed by recorded human decision in this chat, after the agent surfaced that the brief's live-flow gate is not fully met and the human directed completing the current task. Accepted deliverable: the review-approved real-Gateway protected flow above (real policy-kernel authorization + in-process signed receipt, proven end-to-end through the browser in live mode). EXPLICITLY RETAINED LIMITATION (not claimed as passed): the approved effect is a governed in-process read with an in-process HMAC receipt; it does not run a qualified-isolation execution, does not invoke @asi/audit / @asi/budgets / PostgreSQL control state, the privacy router, or the orchestrator; and docs/v2-task-ledger.json taskPreflight still records upstream tasks 12 (isolation runner/image/resource qualification), 13 and 19 as 'blocked'. The Commit step remains outstanding (no commit requested)."
+      ],
       "v2ProposalIds": [
         "V2-F01",
         "V2-F02",
@@ -685,7 +936,16 @@
         "V2-F11",
         "V2-F25",
         "V2-F27"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U20",
@@ -702,9 +962,28 @@
         "F15"
       ],
       "stage": "quality",
-      "status": "pending",
-      "evidence": [],
-      "v2ProposalIds": []
+      "status": "completed",
+      "evidence": [
+        "Added tests/ui/accessibility/workspace.spec.ts (16 tests): axe critical/serious check on /chat,/models,/skills,/connections,/memory,/activity,/settings plus a dark-theme pass; keyboard focus ring on the sidebar and composer; mobile drawer focus return; pending-decision live announcement; media and in-app reduced-motion; no horizontal overflow at 390/768/1440. RED before implementation was 11 failed / 5 passed; GREEN is 16/16.",
+        "Added dev dependency @axe-core/playwright@4.14.0 (root devDependencies + pnpm-workspace minimumReleaseAgeExclude) and tests/ui/visual/workspace.spec.ts (6 matrix tests) plus the ui:test:visual script; captured 30 reviewed screenshots at 390/768/1440 in light and dark for empty Chat and Memory, a long code+table conversation, a failure notice and the streaming/pending state under docs/evidence/ui/u20.",
+        "Implemented dark theme tokens in packages/ui/src/tokens.css plus '@custom-variant dark' and dark shell overrides; unlayered ':focus-visible' ring; '[data-reduced-motion=\"true\"]' and safe-area composer padding; list/table/blockquote/img normalization in apps/web/src/app/globals.css.",
+        "Fixed contrast without hiding regressions: raised light --muted-foreground to #4b5563 and routed muted caption/helper colors to the token, and darkened the amber demo badge to #7a5c14 (axe color-contrast now reports zero serious nodes on covered routes and in dark theme).",
+        "Added a pre-paint appearance bootstrap in apps/web/src/app/layout.tsx (suppressHydrationWarning) and extended resolveTheme/applyAppearance so data-theme resolves 'system' on load and data-theme-preference/data-reduced-motion are applied before hydration.",
+        "Removed axe label-content-name-mismatch (voice-control name match) without altering the seven nav labels: sidebar marks and the pending-count badge render through CSS content while the badge keeps its aria-label, and AppShell.tsx gained an sr-only role=status pending-decision region. tests/ui/e2e/navigation.spec.ts still asserts the exact ordered labels.",
+        "Extended Chat's qualified renderer apps/web/src/features/chat/SafeMarkdown.tsx additively (tables, lists, blockquotes as safe React elements, no HTML injection) so the brief's table/code visual state renders; added an additive assertion in tests/ui/chat/messages.test.tsx.",
+        "Gate evidence on Windows: eslint clean on changed files; pnpm typecheck, ui:typecheck and @asi/gateway-app typecheck clean; ui:build compiled (contracts+ui+web); ui:verify:boundaries 0; ui:verify:sources 0; verify-architecture 326 files / 0 violations; verify-traceability 0; verify-v2-guide 0; ui:test 187/187 across 27 files; ui:test:e2e 17/17; ui:test:a11y 16/16; ui:test:visual 6/6.",
+        "Manual review of the rendered screenshots confirmed light/dark and mobile/tablet/desktop layout, code+table wrapping without horizontal overflow, the failure notice and dark-theme contrast. Limitation: the brief's 'long approval preview' state is not capturable because the in-chat interaction cards remain unmounted (the U19 recorded gap); the Next.js devtools badge appears in dev-build screenshots only. Commit step outstanding (no commit requested)."
+      ],
+      "v2ProposalIds": [],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U21",
@@ -737,7 +1016,16 @@
       "stage": "quality",
       "status": "pending",
       "evidence": [],
-      "v2ProposalIds": []
+      "v2ProposalIds": [],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "U22",
@@ -800,7 +1088,16 @@
         "V2-F38",
         "V2-F39",
         "V2-F40"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     }
   ],
   "v2Planning": {
@@ -809,5 +1106,21 @@
     "ledger": "docs/v2-task-ledger.json",
     "reviewStatus": "pending",
     "historicalCompletionPreserved": true
+  },
+  "platformPolicy": {
+    "date": "2026-10-15",
+    "decidedBy": "user",
+    "status": "approved",
+    "decision": "docs/decisions/0004-windows-only-current-release.md",
+    "humanRequest": "update all the tasks by removing the linux completely for now we can build only windows version only for vms if needed linux is okay",
+    "developmentHost": "Windows",
+    "deploymentHost": "Windows",
+    "linuxScope": "No active Linux implementation or host requirement; future guest only if mandatory for a specific VM feature",
+    "standaloneLinuxRelease": "deferred",
+    "services": "Real PostgreSQL, SQLite and Redis qualification on Windows; services may run natively or in a suitable local VM. Database/schema/role/environment setup remains required.",
+    "isolation": "Qualify the selected backend on the Windows host or an optional VM. No automatic equivalence between native Windows protections and Linux seccomp/Landlock/KVM. Unqualified executable effects remain disabled; generated/untrusted code still requires qualified VM isolation.",
+    "acceptance": "Preserve architecture, authorization, tenant isolation, budget, audit, cancellation, durability and test assertions. A platform decision is not executed acceptance evidence.",
+    "runtimeImplementation": "Linux execution/deployment artifacts removed. Native Windows identity restart tests exist; executable Windows sandbox is explicitly unavailable until Task12 qualifies it.",
+    "implementationRule": "Continue Windows task implementation without waiting for Linux; preserve real owner dependencies and security/runtime acceptance. A conditional future VM feature cannot block unrelated Windows work."
   }
 }

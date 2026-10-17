@@ -89,7 +89,7 @@ const PROVIDER_SDK_PACKAGES = new Set([
 ]);
 
 const STORE_DRIVER_ALLOWANCE = {
-  pg: ["memStore", "govKernel", "control"],
+  pg: ["memStore", "govKernel", "control", "supervisor"],
   "@pgvector/pg": ["memStore", "control"],
   pgvector: ["memStore", "control"],
   "better-sqlite3": ["sessionFTS"],

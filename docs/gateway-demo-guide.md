@@ -1,3 +1,5 @@
+> **V2 consolidation (2026-10-07):** Read [the unified V2 build guide](v2-build-guide.md) for the combined target, completed-task migrations and extension task cards. This file remains a source record; its historical status prose is not current completion evidence. New V2 boundaries await recorded review.
+
 # Gateway demo and current implementation
 
 This fixture exercises the approved UI contract. It never invokes a model, tool, database, real credential or sandbox. Production mode refuses to start. All state is in memory and disappears on restart.

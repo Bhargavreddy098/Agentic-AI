@@ -17,6 +17,13 @@ export function reduceConversation(state: ConversationState, value: unknown): Co
     if (index < 0) items.push(incoming);
     else if (incoming.version > items[index]!.version) items[index] = incoming;
   };
+  const projection = <T extends { revision: number }>(items: T[] | undefined, incoming: T, matches: (item: T) => boolean) => {
+    const list = items ?? [];
+    const index = list.findIndex(matches);
+    if (index < 0) list.push(incoming);
+    else if (incoming.revision > list[index]!.revision) list[index] = incoming;
+    return list;
+  };
   switch (event.eventType) {
     case "message.created":
       if (!snapshot.messages.some(item => item.messageId === event.payload.messageId)) snapshot.messages.push(event.payload);
@@ -38,6 +45,10 @@ export function reduceConversation(state: ConversationState, value: unknown): Co
     case "task.updated": upsert(snapshot.tasks, event.payload, item => item.taskId === event.payload.taskId); break;
     case "tool.updated": upsert(snapshot.tools, event.payload, item => item.toolId === event.payload.toolId); break;
     case "artifact.ready": upsert(snapshot.artifacts, event.payload, item => item.artifactId === event.payload.artifactId); break;
+    case "goal.updated": snapshot.goals = projection(snapshot.goals, event.payload, item => item.goalId === event.payload.goalId); break;
+    case "plan.updated": snapshot.plans = projection(snapshot.plans, event.payload, item => item.planId === event.payload.planId); break;
+    case "verification.completed": snapshot.verifications = projection(snapshot.verifications, event.payload, item => item.reportId === event.payload.reportId); break;
+    case "project.updated": snapshot.projects = projection(snapshot.projects, event.payload, item => item.projectId === event.payload.projectId); break;
     case "model.effective": snapshot.effectiveModel = event.payload.modelId; break;
     case "usage.updated": snapshot.usage = event.payload; break;
     case "notice": next.notice = event.payload.summary; break;

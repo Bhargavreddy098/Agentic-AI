@@ -1,6 +1,8 @@
 export {
   authorizeEffect,
+  evaluatePolicy,
   loadPolicyConfig,
+  PolicyConfigSchema,
   type PolicyConfig,
   type PolicyRule,
   type PolicyCondition,

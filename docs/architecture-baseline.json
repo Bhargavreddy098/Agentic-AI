@@ -11,7 +11,7 @@
       "executionMethod": "native-sequential",
       "buildOrder": "interleave UI early: system 01-02, then U01-U03; backend 03-16 while UI U04-U16 proceeds; real integration U17-U19 after system 01-16 and 19 pass",
       "primaryUiLibrary": "AI Elements",
-      "deployment": "single-tenant Linux host; Windows development workstation"
+      "deployment": "Windows is the only current development and deployment target; Linux is permitted only inside a VM when required for qualified isolation. Standalone Linux deployment and native Linux release-host qualification are deferred."
     },
     "pendingDecisions": {
       "firstRealTasks": "blocks the Task 10 evaluation corpus",
@@ -22,21 +22,74 @@
     "recordedIn": "docs/decisions/0001-runtime-and-dependencies.md"
   },
   "componentPaths": {
-    "channels": ["apps/web", "apps/cli", "apps/gateway-fixture", "packages/channels", "packages/ui"],
-    "gateway": ["apps/gateway", "packages/gateway"],
-    "supervisor": ["apps/orchestrator", "packages/orchestrator", "packages/context", "packages/skills"],
-    "specialists": ["apps/specialist", "packages/specialists"],
-    "toolRuntime": ["apps/tool-engine", "packages/tools", "packages/protocols"],
-    "govKernel": ["apps/policy-kernel", "packages/policy", "packages/identity", "packages/audit", "packages/budgets"],
-    "privRouter": ["apps/privacy-router", "packages/privacy"],
-    "frontierModels": ["packages/models"],
-    "sandbox": ["packages/sandbox", "infra/sandbox"],
-    "sessionFTS": ["apps/episodic-owner", "packages/episodic"],
-    "consolidation": ["apps/consolidator", "packages/consolidation"],
-    "memStore": ["apps/memory-broker", "packages/memory"],
-    "contracts": ["packages/contracts"],
-    "control": ["packages/control"],
-    "supporting": ["packages/telemetry", "packages/evolution", "apps/evolution-engine", "packages/observations"]
+    "channels": [
+      "apps/web",
+      "apps/cli",
+      "apps/gateway-fixture",
+      "packages/channels",
+      "packages/ui"
+    ],
+    "gateway": [
+      "apps/gateway",
+      "packages/gateway"
+    ],
+    "supervisor": [
+      "apps/orchestrator",
+      "packages/orchestrator",
+      "packages/context",
+      "packages/skills"
+    ],
+    "specialists": [
+      "apps/specialist",
+      "packages/specialists"
+    ],
+    "toolRuntime": [
+      "apps/tool-engine",
+      "packages/tools",
+      "packages/protocols"
+    ],
+    "govKernel": [
+      "apps/policy-kernel",
+      "packages/policy",
+      "packages/identity",
+      "packages/audit",
+      "packages/budgets"
+    ],
+    "privRouter": [
+      "apps/privacy-router",
+      "packages/privacy"
+    ],
+    "frontierModels": [
+      "packages/models"
+    ],
+    "sandbox": [
+      "packages/sandbox",
+      "infra/sandbox"
+    ],
+    "sessionFTS": [
+      "apps/episodic-owner",
+      "packages/episodic"
+    ],
+    "consolidation": [
+      "apps/consolidator",
+      "packages/consolidation"
+    ],
+    "memStore": [
+      "apps/memory-broker",
+      "packages/memory"
+    ],
+    "contracts": [
+      "packages/contracts"
+    ],
+    "control": [
+      "packages/control"
+    ],
+    "supporting": [
+      "packages/telemetry",
+      "packages/evolution",
+      "apps/evolution-engine",
+      "packages/observations"
+    ]
   },
   "componentPathNotes": "R01 refinement with traceability: the 12 pictured component IDs and primary flow are unchanged. Supporting packages are declared owners, not new components: contracts is pure zod schemas; control owns PostgreSQL control state and the outbox relay; identity/audit/budgets are governance infrastructure under the policy kernel boundary; skills and context belong to supervisor context assembly (skill scripts still execute only through the tool engine in isolation); telemetry/evolution/observations are supporting mechanisms with no special import allowances. Any new apps/* or packages/* source path is a UNMAPPED_COMPONENT_PATH violation until changed through an approved ADR.",
   "date": "2026-10-06",
@@ -529,7 +582,7 @@
     "unqualified runtime -> generated code"
   ],
   "workingChoices": {
-    "deployment": "single-tenant Linux host; Windows development",
+    "deployment": "Windows host; no Linux runtime required. Future VM guest considered only if mandatory for a scoped feature",
     "queue": "BullMQ/Redis",
     "firstSurfaces": [
       "Web Chat",
@@ -543,10 +596,9 @@
     "contractLibrary": "Zod 4.6.5",
     "mcpTarget": "2026-07-28, subject to SDK qualification",
     "a2aTarget": "1.0.0",
-    "generatedCodeIsolation": "qualified microVM; otherwise disabled"
+    "generatedCodeIsolation": "Qualified VM/microVM backend hosted from Windows; optional Linux guest; otherwise disabled"
   },
   "enforcementStatus": "Task 01 enforcement landed: verify-architecture, verify-dependencies, verify-traceability, and verify-protected-files gate the workspace now; CI and runtime enforcement continue in Tasks 03, 07, 13, and 30.",
-  "approvedByHuman": true,
   "frontend": {
     "status": "proposed",
     "surfaceComponentId": "channels",
@@ -556,5 +608,28 @@
     "ledger": "docs/ui-task-ledger.json",
     "primarySectionCount": 7,
     "canonicalDecisionSurface": "Chat"
+  },
+  "platformDecisionHistory": [
+    {
+      "date": "2026-10-06",
+      "deployment": "single-tenant Linux host; Windows development",
+      "supersededBy": "docs/decisions/0004-windows-only-current-release.md"
+    }
+  ],
+  "platformPolicy": {
+    "date": "2026-10-15",
+    "decidedBy": "user",
+    "status": "approved",
+    "decision": "docs/decisions/0004-windows-only-current-release.md",
+    "humanRequest": "update all the tasks by removing the linux completely for now we can build only windows version only for vms if needed linux is okay",
+    "developmentHost": "Windows",
+    "deploymentHost": "Windows",
+    "linuxScope": "No active Linux implementation or host requirement; future guest only if mandatory for a specific VM feature",
+    "standaloneLinuxRelease": "deferred",
+    "services": "Real PostgreSQL, SQLite and Redis qualification on Windows; services may run natively or in a suitable local VM. Database/schema/role/environment setup remains required.",
+    "isolation": "Qualify the selected backend on the Windows host or an optional VM. No automatic equivalence between native Windows protections and Linux seccomp/Landlock/KVM. Unqualified executable effects remain disabled; generated/untrusted code still requires qualified VM isolation.",
+    "acceptance": "Preserve architecture, authorization, tenant isolation, budget, audit, cancellation, durability and test assertions. A platform decision is not executed acceptance evidence.",
+    "runtimeImplementation": "Linux execution/deployment artifacts removed. Native Windows identity restart tests exist; executable Windows sandbox is explicitly unavailable until Task12 qualifies it.",
+    "implementationRule": "Continue Windows task implementation without waiting for Linux; preserve real owner dependencies and security/runtime acceptance. A conditional future VM feature cannot block unrelated Windows work."
   }
 }

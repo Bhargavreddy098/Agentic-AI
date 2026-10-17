@@ -1,3 +1,7 @@
+> **V2 consolidation (2026-10-07):** Read [the unified V2 build guide](../../v2-build-guide.md) for the combined target, completed-task migrations and extension task cards. This file remains a source record; its historical status prose is not current completion evidence. New V2 boundaries await recorded review.
+
+> **Current platform scope — 2026-10-15:** Build and deploy the Windows version only. Linux is allowed only as an optional VM guest for qualified isolation; standalone Linux hosts/releases are deferred. This supersedes earlier platform assumptions in this document. PostgreSQL/Redis and ordinary integration/security tests remain in the Windows work queue. Preserve required protections and tests; unsupported executable paths stay disabled. See ADR 0004.
+
 # Agent Workspace Frontend — Step-by-Step Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans for native execution or superpowers:subagent-driven-development if the human authorizes task agents. Read both specs and the machine baselines before editing. Complete checkbox steps task-by-task; this file authorizes no implementation by itself.
@@ -167,6 +171,8 @@ For each task: read deps/spec → add the named behavior tests → run and obser
 
 ### U01: Freeze frontend stack, component sources and workspace scripts
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on: review of this proposed design/plan and primary-library choice; reuse system task 01 workspace qualification. Owns packages/ui setup, apps/web manifests, source inventory, verification scripts. Requirements: F05/F11/F15/F16/F17.
 
 - [ ] Record the selected primary chat layer. Default proposal: AI Elements. If assistant-ui is chosen, update only the presentation adapter/inventory through a reviewed decision; preserve store/wire/card semantics.
@@ -178,6 +184,8 @@ Depends on: review of this proposed design/plan and primary-library choice; reus
 
 ### U02: Define UI DTOs, commands, events and mock/live contract suite
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U01 + existing system task 02. Owns `packages/contracts/src/ui/*`, GatewayClient interface, tests/ui/contracts. Requirements: F04/F06/F07/F08/F09/F10/F16.
 
 - [ ] Add schemas for every type in section 4 and UI spec sections 5–7. Questions and approvals use distinct discriminants, IDs/statuses and commands. Catalog projections expose allowedActions/status rather than raw service/database objects.
@@ -187,6 +195,8 @@ Depends on U01 + existing system task 02. Owns `packages/contracts/src/ui/*`, Ga
 - [ ] Commit contracts before any page agent starts. Contract changes after this step require the named owner/review.
 
 ### U03: Simulated HTTP/SSE Gateway and deterministic scenarios
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U02. Owns `apps/gateway-fixture/src/*`, HTTP test harness. Requirements: F07/F08/F09/F12/F13.
 
@@ -200,6 +210,8 @@ Depends on U02. Owns `apps/gateway-fixture/src/*`, HTTP test harness. Requiremen
 
 ### U04: Seven-section shell and secondary conversation rail
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U03. Owns AppShell/AppSidebar/navigation and route composition. Requirements: F01/F02/F03/F13/F15.
 
 - [ ] Add `tests/ui/navigation.test.tsx` assertions: labels equal the exact ordered seven-label array; there is no primary Approvals/Questions/Agents/Dashboard link; recent chat items are under a secondary Chat rail; deep-linked interaction opens its owning Chat.
@@ -208,6 +220,8 @@ Depends on U03. Owns AppShell/AppSidebar/navigation and route composition. Requi
 - [ ] Run for GREEN; clicking sections keeps shared shell/draft ownership intact. Commit. Remaining pages show labeled unavailable/empty scaffolds until their tasks implement them.
 
 ### U05: One chat store, event reducer, snapshots and reconnection
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U04. Owns src/lib/chat and src/lib/gateway SSE transport. Requirements: F05/F07/F08/F10/F12.
 
@@ -218,6 +232,8 @@ Depends on U04. Owns src/lib/chat and src/lib/gateway SSE transport. Requirement
 
 ### U06: Composer, message submission, attachments and cancellation
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U05. Owns Composer and upload UI. Requirements: F06/F07/F08/F10/F13/F14.
 
 - [ ] Add `tests/ui/chat/composer.test.tsx`: Enter sends once, Shift+Enter/IME composition does not send, whitespace is disabled, double-submit reuses command ID, requested model/skill IDs are preferences only. Draft editing stays available during a run; new Send is disabled until the current run finishes/suspends according to backend capabilities.
@@ -226,6 +242,8 @@ Depends on U05. Owns Composer and upload UI. Requirements: F06/F07/F08/F10/F13/F
 - [ ] Run for GREEN: UI click shows cancellation requested; only server event shows cancelled. Network retry cannot create a duplicate message. Upload bytes/keys are not stored in localStorage; commit.
 
 ### U07: Conversation viewport, messages and safe streaming presentation
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U06. Owns MessageRenderer/ConversationPanel/markdown/status-summary. Requirements: F02/F05/F07/F13/F14/F17.
 
@@ -236,6 +254,8 @@ Depends on U06. Owns MessageRenderer/ConversationPanel/markdown/status-summary. 
 
 ### U08: Inline clarification questions and answer submission
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U07. Owns ClarificationCard only. Requirements: F02/F03/F04/F07/F09/F13/F14.
 
 - [ ] Add `tests/ui/clarification/card.test.tsx`: single/multiple choices and free text obey request schema; required empty answer cannot submit; a yes answer calls answerClarification exactly once and decideApproval zero times.
@@ -244,6 +264,8 @@ Depends on U07. Owns ClarificationCard only. Requirements: F02/F03/F04/F07/F09/F
 - [ ] Run for GREEN; ordinary Send is not reused as an implicit approval endpoint. Commit independently from approval logic.
 
 ### U09: Canonical inline action approvals and management-to-chat flow
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U08. Owns ApprovalCard, interaction navigation helper and management result handler. Requirements: F02/F03/F04/F07/F09/F10/F15.
 
@@ -254,6 +276,8 @@ Depends on U08. Owns ApprovalCard, interaction navigation helper and management 
 - [ ] Run for GREEN; decisions remain historical and execution follows with separate task/tool events. Commit after a reviewer checks that the browser has no authority bypass.
 
 ### U10: Task/tool progress, safe artifacts and conversation results
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U09. Owns task/tool/artifact cards and preview policies. Requirements: F02/F07/F08/F13/F14/F17.
 
@@ -266,6 +290,8 @@ Depends on U09. Owns task/tool/artifact cards and preview policies. Requirements
 
 ### U11: Models & Providers page and chat model preference
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U10. Owns src/features/models; uses shared approval navigation. Requirements: F03/F06/F07/F10/F13/F17.
 
 - [ ] Add `tests/ui/catalogs/models.test.tsx`: backend-authorized models only; disconnected/unavailable/local/cloud displayed accurately; requested model differs visibly from backend effective model; unpermitted preference is disabled.
@@ -276,6 +302,8 @@ Depends on U10. Owns src/features/models; uses shared approval navigation. Requi
 
 ### U12: Skills management and composer skill selection
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U11. Owns src/features/skills. Requirements: F03/F06/F07/F11/F13/F17.
 
 - [ ] Add `tests/ui/catalogs/skills.test.tsx`: verified/available/revoked/disabled are distinct; unavailable/revoked skill cannot be selected; installation never executes scripts; permission expansion goes to Chat approval.
@@ -284,6 +312,8 @@ Depends on U11. Owns src/features/skills. Requirements: F03/F06/F07/F11/F13/F17.
 - [ ] Run for GREEN across empty/denied/failed/conflict/install-pending cases. Commit.
 
 ### U13: Tools & Connections for MCP, A2A and messaging
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U12. Owns src/features/connections. Requirements: F03/F06/F07/F13/F17.
 
@@ -294,6 +324,8 @@ Depends on U12. Owns src/features/connections. Requirements: F03/F06/F07/F13/F17
 
 ### U14: Authorized Memory search, provenance and revision requests
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U13. Owns src/features/memory. Requirements: F03/F06/F07/F10/F13.
 
 - [ ] Add `tests/ui/catalogs/memory.test.tsx`: only returned authorized scopes/records render; a workspace switch clears previous results; correction uses expectedRevision; deletion approval opens Chat; source/hypothesis/contradiction labels remain visible.
@@ -303,6 +335,8 @@ Depends on U13. Owns src/features/memory. Requirements: F03/F06/F07/F10/F13.
 
 ### U15: Activity & Tasks projection and original-conversation links
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U14. Owns src/features/activity. Requirements: F02/F03/F07/F08/F13.
 
 - [ ] Add `tests/ui/catalogs/activity.test.tsx`: tasks filter/page/status correctly; usage unknown is not displayed as zero; one interaction has one canonical Chat decision; clicking pending decision opens exact original card.
@@ -311,6 +345,8 @@ Depends on U14. Owns src/features/activity. Requirements: F02/F03/F07/F08/F13.
 - [ ] Run for GREEN with cancellation/reconnect/denied metrics. Commit.
 
 ### U16: Settings and explicit local-versus-server preferences
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U15. Owns src/features/settings. Requirements: F03/F06/F07/F10/F13/F14.
 
@@ -323,6 +359,8 @@ Depends on U15. Owns src/features/settings. Requirements: F03/F06/F07/F10/F13/F1
 
 ### U17: Authenticated UI Gateway adapter and real transcript stream
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U16; existing system 01–04 (workspace/contracts/identity/durable control), 07 (policy) and 08 (episodes). Implements the browser-facing Gateway module associated with system task 16; the full system task 16 remains pending until orchestrator task 15 and its protected slice pass. Owns apps/gateway/src/ui routes/auth/stream/uploads.
 Requirements: F06/F07/F08/F10/F12/F16.
 
@@ -332,6 +370,8 @@ Requirements: F06/F07/F08/F10/F12/F16.
 - [ ] Run for GREEN with two principals/workspaces and browser refresh/logout/cookie expiry. Live error stays live error; mock data never replaces it. Commit.
 
 ### U18: Real catalog/configuration ports and management approval integration
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U17. Backend prerequisites by screen: Models system 06/07/11; Skills 07/13/18; Connections 07/13/20/22/23 as applicable; Memory 07/09; Activity 04/05/10; Settings 06/07/21/25 as applicable.
 Owns apps/gateway/src/ui/projections/commands and integration adapters, not service implementation. Requirements: F03/F06/F07/F10/F12/F13/F16/F17.
@@ -343,18 +383,22 @@ Owns apps/gateway/src/ui/projections/commands and integration adapters, not serv
 
 ### U19: Real streaming run, clarification, approval, execution and recovery
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U18; existing system protected slice 01–16 and recovery 19. Owns cross-system browser e2e harness plus narrow Gateway projection corrections. Requirements: F02/F04/F07/F08/F09/F12/F16/F18.
 
 - [ ] Add `tests/ui/e2e/protected-flow.spec.ts`: submit → streamed safe response → question → answer → proposed tool action → approve → separately observed task execution → result/artifact/receipt.
 - [ ] Add rejection/expiry/revoked principal/double tab/reconnect/cancel/stale epoch/failure/unknown outcome scenarios. Assertions include zero tool execution before valid approval, no “complete” status on approval click, no duplicate effect after reconnect.
 - [ ] Run for RED; integrate existing backend state mappings and typed interaction requests. Actual question suspension/answer resume and effect approvals are persisted by Gateway/orchestrator/policy, not inferred from rendered prose.
-- [ ] Run for GREEN with actual Linux isolation/policy/privacy and bounded budgets. Record browser-to-Gateway-to-component trace IDs and service evidence.
+- [ ] Run for GREEN with actual Windows-hosted policy/privacy, bounded budgets and qualified isolation (optional Linux VM guest). Record browser-to-Gateway-to-component trace IDs and service evidence.
 - [ ] System task 16 proves the protected backend slice through its authenticated contract client first; U19 adds the real browser interaction test afterward. Do not create a dependency cycle by making system task 16 wait for U19.
 - [ ] **Live flow gate:** demonstrable real protected action and denial, refresh recovery, receipt verification, and accurate UI status. Commit; UI alone cannot establish this gate.
 
 ## 10. Quality, conformance and handoff
 
 ### U20: Responsive layout, accessibility and visual verification
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U16 (may run before U17–U19). Owns shared tokens/adapters and visual/accessibility harness; coordinated review for page adjustments. Requirements: F01/F11/F13/F14/F15.
 
@@ -365,6 +409,8 @@ Depends on U16 (may run before U17–U19). Owns shared tokens/adapters and visua
 
 ### U21: Frontend architecture, secret, race and API-drift protection
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
+
 Depends on U19/U20. Owns tests/ui/security, boundary/source scripts and protected UI baseline review. Requirements: F01–F18.
 
 - [ ] Add `tests/ui/security/conformance.test.ts`: eighth navigation/approval route, feature-owned question-as-approval handler, direct provider import, Next generation route, competing chat store, missing wrapper/license, or modified wire schema without compatibility evidence fails.
@@ -374,6 +420,8 @@ Depends on U19/U20. Owns tests/ui/security, boundary/source scripts and protecte
 - [ ] Wire checks into provider-neutral system verify/release CI; no critical live check is skipped. Commit with task-to-F-requirement evidence.
 
 ### U22: Release evidence, integration matrix and agent handoff
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. Preserve all required backend/service acceptance checks.
 
 Depends on U21 and existing system release task 25 for a production claim. Owns docs/release-evidence/frontend.md, UI ledger/source inventory, operator handoff. Requirements: F11/F12/F15/F16/F17/F18.
 

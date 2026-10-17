@@ -1,5 +1,7 @@
 > **V2 consolidation (2026-10-07):** Read [the unified V2 build guide](../../v2-build-guide.md) for the combined target, completed-task migrations and extension task cards. This file remains a source record; its historical status prose is not current completion evidence. New V2 boundaries await recorded review.
 
+> **Current platform scope — 2026-10-15:** Build and deploy the Windows version only. Linux is allowed only as an optional VM guest for qualified isolation; standalone Linux hosts/releases are deferred. This supersedes earlier platform assumptions in this document. PostgreSQL/Redis and ordinary integration/security tests remain in the Windows work queue. Preserve required protections and tests; unsupported executable paths stay disabled. See ADR 0004.
+
 # ASI TypeScript Agent System — Architecture Analysis and Proposed Specification
 
 Date: 2026-10-06 (user timezone: Asia/Calcutta)
@@ -13,7 +15,7 @@ The user requested workspace analysis first, image analysis second, and an end-t
 
 Success means: every pictured component has an owner, typed boundary, implementation task, dependency order, verification gate, and failure behavior. The plan must retain governance outside the agent, deterministic orchestration, isolated tools, episodic and hierarchical memory, offline consolidation, and protocol interoperability. Changes to the architecture must be visible and reviewed.
 
-Working assumptions pending review: one tenant on one Linux host initially; Windows is the development workstation; web Chat is now the prioritized Client Surface following the user's frontend planning request, with CLI/Slack as additional adapters; one specialist initially; BullMQ/Redis is the initial queue backend; containers for reviewed tools, a qualified microVM backend before executing generated or untrusted code. These are proposed implementation choices, not facts supplied by the user.
+Working assumptions pending review: one tenant on one Windows host for development and deployment; Linux is permitted only inside an optional VM; web Chat is now the prioritized Client Surface following the user's frontend planning request, with CLI/Slack as additional adapters; one specialist initially; BullMQ/Redis is the initial queue backend; containers for reviewed tools, a qualified microVM backend before executing generated or untrusted code. These are proposed implementation choices, not facts supplied by the user.
 
 Frontend extension: `2026-10-06-agent-workspace-ui-design.md` and `../plans/2026-10-06-agent-workspace-ui-build.md` specify seven sections and inline Chat questions/approvals. Shared contracts and a simulated Gateway precede frontend work; real operations still require this spec's backend security gates. The web client remains within `channels`, preserving all 12 architecture components.
 
@@ -58,7 +60,7 @@ The graph omits return traffic, cancellation, approvals, identity, budgets, cred
 |---|---|
 | PII stripping is labeled “differential privacy” | Implement and measure redaction/classification. Do not claim differential privacy unless a defined mechanism, privacy budget, and composition analysis are added through a separate decision. |
 | Diagram perimeter can be mistaken for an actual isolation mechanism | Require separate processes/identities, read-only policy assets, restricted mounts, and enforced network routes. A diagram boundary or Node worker thread is not isolation. |
-| Landlock/seccomp are specified on a Windows workspace | Build/test enforcement in a qualified Linux runtime. Probe support; fail closed for executable tools when required controls are unavailable. |
+| Isolation controls depend on the execution backend | Qualify a Windows-hosted backend or optional Linux VM guest. Linux-only controls apply inside that guest, never as claimed native Windows controls. Fail closed when required protections are unavailable. |
 | “Deterministic loop” can imply deterministic model answers | Deterministic means code owns transitions, routing tie-breaks, budgets, retries, and replay decisions. Persist nondeterministic model/tool results. |
 | “50%/85% compression” is placed on the store | The context manager owns thresholds. SQLite stores raw episodes and compression lineage; compression never rewrites original episodes. |
 | Prefix preservation can imply guaranteed cache hits | Preserve the stable prefix bytes and record provider-specific cache behavior. Cache hits remain provider-dependent. |
@@ -76,7 +78,7 @@ The graph omits return traffic, cancellation, approvals, identity, budgets, cred
 
 ## 5. Options and recommendation
 
-1. **Recommended: one TypeScript monorepo on one Linux host, with explicit service boundaries.** Keep the pictured flow; deploy only the necessary instances. Policy, inference credentials, memory access, episodic file ownership, and tool isolation remain outside untrusted execution. Lowest operational burden while preserving security boundaries.
+1. **Recommended: one TypeScript monorepo on one Windows host, with explicit service boundaries.** Keep the pictured flow; deploy only the necessary instances. Policy, inference credentials, memory access, episodic file ownership, and tool isolation remain outside untrusted execution. Lowest operational burden while preserving security boundaries.
 2. **Distributed services from day one.** Preserves the graph but introduces partition handling, certificates, placement, and storage coordination before a working assistant exists. Appropriate only if initial multi-tenant availability requirements justify it.
 3. **Single in-process prototype.** Fast to demonstrate but cannot satisfy the out-of-process enforcement requirement for executable tools. Suitable only for a clearly labeled throwaway experiment with fake tools; not the target build.
 
@@ -192,7 +194,7 @@ Return edges omitted in the image are therefore explicit: sandbox/MCP/A2A result
 
 PostgreSQL tables: `ingress_events`, `sessions`, `runs`, `tasks`, `checkpoints`, `outbox`, `effect_journal`, `budget_accounts`, `budget_reservations`, `approvals`, `audit_receipts`, `delivery_outbox`, `memory_records`, `memory_sources`, `memory_revisions`, `skill_versions`, `evolution_candidates`, `eval_results`. Tenant-qualified uniqueness applies to external IDs and idempotency keys. Only designated trusted services have write privileges on their tables.
 
-SQLite tables: `episodes`, `episode_fts`, `compression_records`, `command_dedup`. Local Linux volume only; WAL, busy timeout, explicit checkpoint monitoring, `synchronous=FULL` for acknowledged writes. Select a bundled SQLite build with required bug fixes during qualification. Only episodic-owner opens the file; other services use its authenticated API.
+SQLite tables: `episodes`, `episode_fts`, `compression_records`, `command_dedup`. Local owner-exclusive filesystem on Windows, or local guest storage when the owner runs in a VM; no network/synchronized SQLite WAL volume. WAL, busy timeout, explicit checkpoint monitoring, `synchronous=FULL` for acknowledged writes. Select a bundled SQLite build with required bug fixes during qualification. Only episodic-owner opens the file; other services use its authenticated API.
 
 Fenced append procedure: episodic-owner acquires the PostgreSQL session row lock, checks principal/run/epoch/lease using server time, commits an idempotent SQLite command, then advances PostgreSQL projection metadata and commits the PostgreSQL transaction. No model or remote tool runs while that lock is held. Crash after the SQLite commit is repaired by command ID dedup and projection reconciliation. This is not an atomic transaction across both databases. Integration tests must cover both commit boundaries and lease takeover.
 
@@ -211,7 +213,7 @@ Backups cover PostgreSQL, a SQLite backup API snapshot/WAL-consistent export, ma
 - PostgreSQL 17 supported patch + pgvector; SQLite FTS5/WAL behind owner service; BullMQ/Redis initial backend. No alternate database or queue without a reviewed decision.
 - MCP target revision 2026-07-28 after SDK qualification; A2A target 1.0.0. If SDK does not implement required behavior, stop that integration at the compatibility gate and present a concrete supported-version decision.
 - OpenTelemetry through one internal facade to Langfuse. Collector/exporter failure does not lose durable audit records.
-- Linux enforcement runtime; Windows may run editing/type/unit work, but sandbox/security integration and release checks run on Linux. Containers and microVMs have separate qualifications.
+- Windows is the development, service-integration and release host. Qualify executable isolation on Windows or in an optional VM; Linux is permitted only as that guest. Containers and VM/microVM profiles have separate qualifications. Missing isolation disables affected effects rather than moving the entire release to Linux.
 - pnpm workspaces proposed; qualify/pin a package-manager version rather than silently assume the installed version is compatible.
 
 The dependency inventory gate records exact versions, artifact/image digests, license, provenance, peer compatibility, bundled SQLite version, and support windows. “Latest-pinned” is not a usable version specification. No installs were performed for this planning task.
@@ -242,7 +244,7 @@ Prompts/AGENTS.md alone cannot guarantee zero drift. Enforcement comes from revi
 | Decision | Working assumption | Blocking point |
 |---|---|---|
 | First users/product tasks | Developer/research assistant with web Chat and approved read tools | Before defining real-world eval corpus in Task 01 |
-| Deployment | Single-tenant Linux host, Windows development | Before sandbox qualification/production rollout |
+| Deployment | Single-tenant Windows host; optional Linux VM guest for isolation | Before sandbox qualification/production rollout |
 | First messaging channel | Slack after the protected Gateway/web Chat slice | Before channel implementation |
 | Model/data policy | Cloud for approved nonsensitive data; local-only route or denial for sensitive data | Before credentials/real data are used |
 | Spend and retention | Required explicit tenant quotas and retention settings | Before first real inference and release |

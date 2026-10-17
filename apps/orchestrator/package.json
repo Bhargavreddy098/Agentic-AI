@@ -1,0 +1,22 @@
+{
+  "name": "@asi/orchestrator-app",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "tsx watch src/main.ts"
+  },
+  "dependencies": {
+    "@asi/orchestrator": "workspace:*",
+    "@asi/contracts": "workspace:*",
+    "@asi/tools": "workspace:*",
+    "@asi/telemetry": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "tsx": "4.23.15"
+  }
+}

@@ -8,10 +8,33 @@
     "sourceMap": false,
     "allowJs": true,
     "checkJs": false,
-    "types": ["node"]
-    ,"jsx": "react-jsx"
-    ,"lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "types": [
+      "node"
+    ],
+    "jsx": "react-jsx",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "paths": {
+      "@asi/*": [
+        "./packages/*/src/index.ts"
+      ]
+    }
   },
-  "include": ["tests/**/*.ts", "scripts/**/*.mjs", "packages/**/*.ts", "vitest.config.ts", "eslint.config.js"],
-  "exclude": ["tests/fixtures/**"]
+  "include": [
+    "tests/**/*.ts",
+    "scripts/**/*.mjs",
+    "packages/**/*.ts",
+    "vitest.config.ts",
+    "eslint.config.js",
+    "apps/**/*.ts",
+    "apps/**/*.tsx"
+  ],
+  "exclude": [
+    "tests/fixtures/**",
+    "apps/web/**",
+    "apps/gateway-fixture/**"
+  ]
 }

@@ -1,14 +1,18 @@
-# Start Here — Frontend Build Guide
+# Frontend entry point
 
-The backend/system guide already exists. The dedicated frontend guide now specifies all seven sections, shared contracts, simulated Gateway, streaming Chat, inline questions/approvals, management pages, real backend integration, and validation.
+> **Current platform scope — 2026-10-15:** Build and deploy the Windows version only. Linux is allowed only as an optional VM guest for qualified isolation; standalone Linux hosts/releases are deferred. This supersedes earlier platform assumptions in this document. PostgreSQL/Redis and ordinary integration/security tests remain in the Windows work queue. Preserve required protections and tests; unsupported executable paths stay disabled. See ADR 0004.
 
-1. Read [Frontend design](docs/superpowers/specs/2026-10-06-agent-workspace-ui-design.md).
-2. Follow [Frontend step-by-step plan — U01–U22](docs/superpowers/plans/2026-10-06-agent-workspace-ui-build.md).
-3. Track [UI task ledger](docs/ui-task-ledger.json) and [UI baseline](docs/ui-baseline.json).
-4. Use the [system plan](docs/superpowers/plans/2026-10-06-asi-agent-build.md) for backend/security dependencies.
+Start with [the consolidated V2 build guide](docs/v2-build-guide.md#start-here). It is the combined backend/frontend roadmap and agent handoff. The current human order is backend first, then frontend, then remaining V2 work.
 
-Order: workspace + shared contracts → simulated Gateway → Chat → six management sections → real Gateway/read ports → protected real run flow → release checks.
+When assigned frontend work, run these read-only commands from the workspace root:
 
-The seven primary sections are Chat, Models & Providers, Skills, Tools & Connections, Memory, Activity & Tasks, and Settings. Questions, approvals, tool progress, and results render inside Chat. Pending management approvals link to their owning conversation. Conversation history is secondary navigation inside Chat.
+```powershell
+node scripts/v2-task.mjs next
+node scripts/v2-task.mjs show U08
+```
 
-All implementation tasks are pending. AI Elements is the proposed primary presentation layer; the user's eleven UI-library sources are mapped in the design and qualified at U01. No packages or product code were installed for this planning request. An agent should implement only its assigned ready task after the human reviews the proposed plan and authorizes execution.
+Replace U08 with the assigned exact task ID. Check [the UI ledger](docs/ui-task-ledger.json), [V2 qualification ledger](docs/v2-task-ledger.json) and [approved UI baseline](docs/ui-baseline.json) before editing. U01–U07 are recorded completed; U08–U22 are pending as of 2026-10-10. Completed labels still require the applicable M05–M11 reuse qualification; the navigator does not certify runtime acceptance. The original UI plan remains a task-brief source, not a second execution roadmap.
+
+Keep exactly seven sections: Chat, Models & Providers, Skills, Tools & Connections, Memory, Activity & Tasks, Settings. Questions, approvals and their canonical decision controls belong inside Chat. Management requests and Activity links open the owning conversation. Use one conversation store, one GatewayClient and qualified vendor wrappers; mock/live modes are explicit. AI Elements is the approved presentation choice; qualify its consumed subset through the owning migration card.
+
+Implement one assigned, reviewed, qualified task at a time. Record fresh acceptance evidence in the owning ledger. See root AGENTS.md for all architecture and approval rules.

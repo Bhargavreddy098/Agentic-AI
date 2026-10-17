@@ -17,4 +17,12 @@ export function runGatewayContractTests(createClient: () => Promise<GatewayClien
     expect(ConversationSummarySchema.safeParse(first).success).toBe(true);
     expect(ConversationSnapshotSchema.safeParse(await client.getSnapshot(first.conversationId)).success).toBe(true);
   });
+  it("scopes any V2 goal/plan/verification/project projections to the same conversation", async () => {
+    const client = await createClient();
+    const created = await client.createConversation("contract-projections");
+    const snapshot = ConversationSnapshotSchema.parse(await client.getSnapshot(created.conversationId));
+    for (const item of [...(snapshot.goals ?? []), ...(snapshot.plans ?? []), ...(snapshot.verifications ?? []), ...(snapshot.projects ?? [])]) {
+      expect(item.conversationId).toBe(created.conversationId);
+    }
+  });
 }

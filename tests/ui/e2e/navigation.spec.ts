@@ -19,13 +19,26 @@ test("seven sections share one shell and desktop collapse retains accessible lab
   await page.goto("/chat");
   const navigation = page.getByRole("navigation", { name: "Primary navigation" });
   await expect(navigation.getByRole("link")).toHaveCount(7);
+  await expect(page.getByText("DEMO", { exact: true })).toBeVisible();
   await expect(page.getByLabel("Conversation history")).toBeVisible();
   await page.getByRole("button", { name: "Collapse navigation" }).click();
   expect(await page.locator(".workspace-sidebar").evaluate(el => el.getBoundingClientRect().width)).toBe(64);
   await navigation.getByRole("link", { name: "Models & Providers" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Models & Providers");
-  await expect(page.getByText("Backend integration pending")).toBeVisible();
+  await expect(page.getByText("Select a backend-authorized model", { exact: false })).toBeVisible();
   await expect(navigation.getByRole("link", { name: "Models & Providers" })).toHaveAttribute("aria-current", "page");
+});
+test("exactly seven ordered sections exclude approval and agent pages", async ({ page }) => {
+  await page.goto("/chat");
+  const navigation = page.getByRole("navigation", { name: "Primary navigation" });
+  const links = navigation.getByRole("link");
+  await expect(links).toHaveCount(7);
+  expect(await links.evaluateAll(elements => elements.map(element => element.getAttribute("aria-label")))).toEqual(["Chat", "Models & Providers", "Skills", "Tools & Connections", "Memory", "Activity & Tasks", "Settings"]);
+  expect(await links.evaluateAll(elements => elements.map(element => element.getAttribute("href")))).toEqual(["/chat", "/models", "/skills", "/connections", "/memory", "/activity", "/settings"]);
+  await navigation.getByRole("link", { name: "Activity & Tasks" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Activity & Tasks");
+  await expect(page.getByText("Decisions are made in the owning Chat", { exact: false })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Approve|Reject|Approval/ })).toHaveCount(0);
 });
 test("mobile navigation supports Escape and restores focus without horizontal overflow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 }); await page.goto("/chat");

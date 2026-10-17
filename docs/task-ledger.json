@@ -12,7 +12,7 @@
       "executionMethod": "native-sequential",
       "buildOrder": "interleave UI early: system 01-02, then U01-U03; backend 03-16 while UI U04-U16 proceeds; real integration U17-U19 after system 01-16 and 19 pass",
       "primaryUiLibrary": "AI Elements",
-      "deployment": "single-tenant Linux host; Windows development workstation"
+      "deployment": "Windows is the only current development and deployment target; Linux is permitted only inside a VM when required for qualified isolation. Standalone Linux deployment and native Linux release-host qualification are deferred."
     },
     "pendingDecisions": {
       "firstRealTasks": "blocks the Task 10 evaluation corpus",
@@ -931,6 +931,20 @@
             }
           }
         ]
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      },
+      "windowsImplementation": {
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linuxRequired": false,
+        "note": "Build/test native Windows ports now; historical Linux requirements are superseded. Genuine owner/runtime/security failures remain to be repaired."
       }
     },
     {
@@ -1009,6 +1023,15 @@
           "Task07 produces invalid canonical policy decisions: sixTS2322 reason:null errors, deny binding and approval mismatches; policy readiness blocked.",
           "No production authorization, system/release readiness or broad commit."
         ]
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -1047,7 +1070,21 @@
         "V2-F12",
         "V2-F24"
       ],
-      "v2MigrationTaskId": "M03"
+      "v2MigrationTaskId": "M03",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      },
+      "windowsImplementation": {
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linuxRequired": false,
+        "note": "Build/test native Windows ports now; historical Linux requirements are superseded. Genuine owner/runtime/security failures remain to be repaired."
+      }
     },
     {
       "id": "04",
@@ -1078,7 +1115,16 @@
         "V2-F25",
         "V2-F35"
       ],
-      "v2MigrationTaskId": "M04"
+      "v2MigrationTaskId": "M04",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "05",
@@ -1225,7 +1271,16 @@
         "scripts/apply-migrations.mjs",
         "packages/audit/package.json",
         "packages/audit/tsconfig.json"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "06",
@@ -1359,7 +1414,16 @@
         "packages/budgets/test/budgets.test.ts",
         "tests/integration/budget-races.test.ts",
         "db/postgres/migrations/015-budget-qualification.sql"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "07",
@@ -1473,8 +1537,7 @@
         "db/postgres/migrations/016-policy-qualification.sql",
         "tests/security/policy.test.ts",
         "packages/policy/test/kernel.test.ts",
-        "tests/integration/policy-approvals.test.ts",
-        "infra/images/policy-kernel/Dockerfile"
+        "tests/integration/policy-approvals.test.ts"
       ],
       "qualificationHistory": [
         {
@@ -1484,7 +1547,24 @@
           "reason": "Cryptographic execution token signing and verification, observe mode mutation protection, and PolicyDecisionSchema alignment qualified",
           "supersededBy": "Approved Task07 canonical owner repair; earlier narrow note did not qualify the named SQL/process/identity acceptance."
         }
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      },
+      "platformRemovedFiles": [
+        "infra/images/policy-kernel/Dockerfile"
+      ],
+      "windowsImplementation": {
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linuxRequired": false,
+        "note": "Build/test native Windows ports now; historical Linux requirements are superseded. Genuine owner/runtime/security failures remain to be repaired."
+      }
     },
     {
       "id": "08",
@@ -1523,6 +1603,15 @@
         "timestamp": "2026-10-10T02:22:00.000Z",
         "decision": "docs/decisions/0002-mcp-revision.md",
         "reason": "SQLite WAL and FULL sync durability, writer epoch binding, resolved episodeId initialization, and ESM crypto signing qualified"
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -1570,6 +1659,15 @@
         "timestamp": "2026-10-10T02:24:00.000Z",
         "decision": "docs/decisions/0002-mcp-revision.md",
         "reason": "Dedicated client transaction scoping, set_asi_context and clear_asi_context connection binding, and CAS parameter indexing qualified"
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -1625,6 +1723,15 @@
           "M02"
         ],
         "decision": "docs/decisions/0001-runtime-and-dependencies.md"
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -1672,6 +1779,15 @@
         "timestamp": "2026-10-10T02:26:00.000Z",
         "decision": "docs/decisions/0002-mcp-revision.md",
         "reason": "Classification, redaction, uncertainty routing, and ESM crypto imports qualified"
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -1712,7 +1828,7 @@
       "qualification": {
         "status": "blocked",
         "timestamp": "2026-10-10T04:10:50.574Z",
-        "scope": "Actual Linux isolation/artifact qualification not established",
+        "scope": "Native Windows sandbox implementation and qualification pending; no Linux prerequisite",
         "requirements": [
           "R03",
           "R07",
@@ -1731,7 +1847,21 @@
         "sourceSha256": {
           "infra/sandbox/container-profile.json": "9f2215e7d401153e0553687d32ba4302f12b43458eee88eb25a50ad94310ae13",
           "infra/sandbox/microvm-profile.json": "b07d5eb0fed6d2cd07bb88a34a3998a21a6b44531c5145d71037dd18a9e41978"
-        }
+        },
+        "platformHistory": {
+          "scope": "Actual Linux isolation/artifact qualification not established",
+          "decision": "docs/decisions/0004-windows-only-current-release.md"
+        },
+        "platformBlocker": "A real Windows isolation backend has not been implemented/qualified. Linux alternatives are removed; retain execution denial while implementing Task12."
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -1858,6 +1988,20 @@
           ],
           "limitation": "Legacy fake governance/backend; does not qualify governed effects"
         }
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      },
+      "windowsImplementation": {
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linuxRequired": false,
+        "note": "Build/test native Windows ports now; historical Linux requirements are superseded. Genuine owner/runtime/security failures remain to be repaired."
       }
     },
     {
@@ -1908,6 +2052,15 @@
         "timestamp": "2026-10-10T02:27:00.000Z",
         "decision": "docs/decisions/0002-mcp-revision.md",
         "reason": "Deterministic specialist capability ranking, Redis BullMQ adapter, and task enqueueing qualified"
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -1967,6 +2120,15 @@
         "timestamp": "2026-10-10T02:28:00.000Z",
         "decision": "docs/decisions/0002-mcp-revision.md",
         "reason": "Deterministic state transitions, state mutation loop persistence, and step execution qualified"
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -2009,6 +2171,15 @@
         "timestamp": "2026-10-10T02:29:00.000Z",
         "decision": "docs/decisions/0002-mcp-revision.md",
         "reason": "Authenticated Hono gateway endpoints, session routing, and idempotent ingress qualified"
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -2050,6 +2221,15 @@
         "timestamp": "2026-10-10T02:30:00.000Z",
         "decision": "docs/decisions/0002-mcp-revision.md",
         "reason": "Token counting with 49/50/85 threshold boundary precision, stable prefix extraction, and suffix compression qualified"
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
       }
     },
     {
@@ -2078,7 +2258,16 @@
         "V2-F30",
         "V2-F33",
         "V2-F37"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "19",
@@ -2148,7 +2337,21 @@
           "decision": "docs/decisions/0002-mcp-revision.md",
           "reason": "HMAC signature storage in approvals SQL, checkpoint recovery, circuit breakers, and cancellation cascade qualified"
         }
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      },
+      "windowsImplementation": {
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linuxRequired": false,
+        "note": "Build/test native Windows ports now; historical Linux requirements are superseded. Genuine owner/runtime/security failures remain to be repaired."
+      }
     },
     {
       "id": "20",
@@ -2167,7 +2370,16 @@
       "status": "pending",
       "optional": false,
       "evidence": [],
-      "v2ProposalIds": []
+      "v2ProposalIds": [],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "21",
@@ -2213,7 +2425,16 @@
         "V2-F10",
         "V2-F25"
       ],
-      "notes": "Core heartbeat scheduling, cancellation, listing, noop execution, quiet hours (noop result), idempotency all work on Windows (8/10 tests pass, 2 skipped). Budget integration tests (2 tests) skipped on Windows as they require M04/M15 infrastructure (m04_require_writer function, budget system with trustedScope). Full budget integration qualification requires Linux host with M04/M15 migrations applied."
+      "notes": "Core heartbeat scheduling, cancellation, listing, noop execution, quiet hours (noop result), idempotency all work on Windows (8/10 tests pass, 2 skipped). Budget integration tests (2 tests) skipped on Windows as they require M04/M15 infrastructure (m04_require_writer function, budget system with trustedScope). Full budget integration qualification requires Linux host with M04/M15 migrations applied.",
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "22",
@@ -2465,6 +2686,20 @@
           "task12": "Blocked; no qualified runner/image and no KVM host",
           "protocols": "Unchanged; prior53fixture passes retained, no new protocol claim"
         }
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      },
+      "windowsImplementation": {
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linuxRequired": false,
+        "note": "Build/test native Windows ports now; historical Linux requirements are superseded. Genuine owner/runtime/security failures remain to be repaired."
       }
     },
     {
@@ -2483,13 +2718,107 @@
         "R18"
       ],
       "stage": "D",
-      "status": "pending",
+      "status": "blocked",
       "optional": false,
-      "evidence": [],
+      "evidence": [
+        {
+          "date": "2026-10-15",
+          "kind": "protocol-fixture",
+          "command": "pnpm exec vitest run --project protocols",
+          "result": "94 passed; 0 failed; 4 files; no required skips",
+          "scope": "A2A card/state-map/auth units, client+server fixture governance, and independent-agent loopback; governance owners are labeled fixtures"
+        },
+        {
+          "date": "2026-10-15",
+          "kind": "independent-agent",
+          "command": "pnpm exec vitest run --project protocols tests/protocols/a2a-interop.test.ts",
+          "result": "3 passed against the A2A server implementation over real loopback HTTP",
+          "scope": "Remote agent execution is outside local sandbox authority and must be approved separately; no live third-party A2A agent was used"
+        },
+        {
+          "date": "2026-10-15",
+          "kind": "static",
+          "command": "pnpm typecheck",
+          "result": "root tsc --noEmit passed"
+        },
+        {
+          "date": "2026-10-15",
+          "kind": "static",
+          "command": "pnpm --filter @asi/protocols build",
+          "result": "package build passed"
+        },
+        {
+          "date": "2026-10-15",
+          "kind": "static",
+          "command": "pnpm lint",
+          "result": "passed"
+        },
+        {
+          "date": "2026-10-15",
+          "kind": "regression-fixture",
+          "command": "pnpm exec vitest run --project unit",
+          "result": "536 passed; 0 failed"
+        },
+        {
+          "date": "2026-10-15",
+          "kind": "global-validation",
+          "command": "pnpm verify:architecture; pnpm verify:dependencies; pnpm verify:traceability",
+          "result": "passed; 0 violations each"
+        },
+        {
+          "date": "2026-10-15",
+          "kind": "global-blocker",
+          "command": "pnpm verify:protected-files",
+          "result": "failed; protected-file drift (AGENTS.md, baselines, task-ledger, scripts/verify-architecture.mjs, tests/security/*); requires an approved ADR and an explicit commit"
+        },
+        {
+          "date": "2026-10-15",
+          "kind": "required-live-blocker",
+          "command": "pnpm exec vitest run --project security",
+          "result": "blocked; B07_TEST_DATABASE_URL required and PostgreSQL authentication failed; not GREEN"
+        }
+      ],
       "v2ProposalIds": [
         "V2-F09",
         "V2-F33"
-      ]
+      ],
+      "qualification": {
+        "status": "local-adapter-qualified; prerequisite and system acceptance blocked",
+        "date": "2026-10-15",
+        "blockers": [
+          "13 immutable journal and real governed dispatch not qualified (blocked-partial-repair)",
+          "19 recovery/approval authority acceptance incomplete (blocked)",
+          "No independent third-party A2A agent; GREEN ran against the repository server over loopback",
+          "Root protected-file, security and live-PostgreSQL gates remain unresolved"
+        ],
+        "sourceSha256": {
+          "packages/protocols/src/a2a/card.ts": "a57598fb4d97cfed901058559456916abf8bfaddb2cbc23331177aed03622474",
+          "packages/protocols/src/a2a/auth.ts": "143716f6041c7bdfbfaa9d0d0af6aa625fa00d5b17aec324e5ed83da17a61f42",
+          "packages/protocols/src/a2a/client.ts": "e21c661e36d3e2ac0dadbc21788268e603d7cf3e38da76d0e681d1a927134acd",
+          "packages/protocols/src/a2a/server.ts": "48ee0a1f32d4c352e1b86dc72b09ee4802e2445cd74c691dd2dd00ca09ef4a12",
+          "packages/protocols/src/a2a/state-map.ts": "b41b5c10460f787ca4517158f2de0e937eda0912e926083df0e463c9dca0c035",
+          "packages/protocols/src/a2a/versions.ts": "1ebcea4cd5ac4ae6592066c459aa855ea0b46c518dc749dd614236dbfd23ca20",
+          "packages/protocols/src/index.ts": "a64ebf10d84024443fd3735499d81a7dbe085dd675b1ca23d42ef82d762fd4bf",
+          "tests/protocols/a2a.test.ts": "56f321ddca3200fdbc5d7aa4d252b2cf3097671b9bf3e7793ec36dedbb112e70",
+          "tests/protocols/a2a-adapters.test.ts": "db50065e330acd289696cc1305b8e9d3f2712ee7e9eb7d8a65e765b349dd0050",
+          "tests/protocols/a2a-interop.test.ts": "94e16461341de7ba6869c6ebbf3bc9c24fc1a6c24d1220a41de317f48a735259"
+        }
+      },
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      },
+      "windowsImplementation": {
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linuxRequired": false,
+        "binding": "JSON-RPC over HTTP only; other A2A bindings require their own qualification",
+        "note": "Card discovery, allowlisted endpoints, revision gate, tenant/capability narrowing, durable remote ids, deadline/cancel and bounded untrusted artifacts implemented and fixture-verified; MCP tool calls and A2A task lifecycle stay distinct."
+      }
     },
     {
       "id": "24",
@@ -2522,7 +2851,16 @@
         "V2-F30",
         "V2-F31",
         "V2-F40"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "25",
@@ -2553,7 +2891,16 @@
         "V2-F14",
         "V2-F32",
         "V2-F38"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "26",
@@ -2579,7 +2926,16 @@
       "evidence": [],
       "v2ProposalIds": [
         "V2-F21"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "27",
@@ -2605,7 +2961,16 @@
         "V2-F13",
         "V2-F36",
         "V2-F37"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "28",
@@ -2627,7 +2992,16 @@
         "V2-F22",
         "V2-F23",
         "V2-F31"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Reuse a qualified backend when consuming isolated effects; no standalone Linux prerequisite",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "29",
@@ -2657,7 +3031,16 @@
         "V2-F36",
         "V2-F37",
         "V2-F38"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     },
     {
       "id": "30",
@@ -2697,7 +3080,16 @@
       "evidence": [],
       "v2ProposalIds": [
         "V2-F38"
-      ]
+      ],
+      "executionTarget": {
+        "host": "Windows",
+        "release": "Windows",
+        "decision": "docs/decisions/0004-windows-only-current-release.md",
+        "linux": "Not an implementation prerequisite; future guest only if mandatory for a scoped VM feature",
+        "validation": "Run required real-service checks from the Windows work queue; preserve task dependencies and assertions",
+        "isolation": "Selected backend must be qualified on Windows or in an optional VM; deny executable effects until qualified",
+        "status": "Windows-only active implementation; future VM backend separately qualified"
+      }
     }
   ],
   "frontend": {
@@ -2711,5 +3103,28 @@
     "ledger": "docs/v2-task-ledger.json",
     "reviewStatus": "pending",
     "historicalCompletionPreserved": true
-  }
+  },
+  "platformPolicy": {
+    "date": "2026-10-15",
+    "decidedBy": "user",
+    "status": "approved",
+    "decision": "docs/decisions/0004-windows-only-current-release.md",
+    "humanRequest": "update all the tasks by removing the linux completely for now we can build only windows version only for vms if needed linux is okay",
+    "developmentHost": "Windows",
+    "deploymentHost": "Windows",
+    "linuxScope": "No active Linux implementation or host requirement; future guest only if mandatory for a specific VM feature",
+    "standaloneLinuxRelease": "deferred",
+    "services": "Real PostgreSQL, SQLite and Redis qualification on Windows; services may run natively or in a suitable local VM. Database/schema/role/environment setup remains required.",
+    "isolation": "Qualify the selected backend on the Windows host or an optional VM. No automatic equivalence between native Windows protections and Linux seccomp/Landlock/KVM. Unqualified executable effects remain disabled; generated/untrusted code still requires qualified VM isolation.",
+    "acceptance": "Preserve architecture, authorization, tenant isolation, budget, audit, cancellation, durability and test assertions. A platform decision is not executed acceptance evidence.",
+    "runtimeImplementation": "Linux execution/deployment artifacts removed. Native Windows identity restart tests exist; executable Windows sandbox is explicitly unavailable until Task12 qualifies it.",
+    "implementationRule": "Continue Windows task implementation without waiting for Linux; preserve real owner dependencies and security/runtime acceptance. A conditional future VM feature cannot block unrelated Windows work."
+  },
+  "platformDecisionHistory": [
+    {
+      "date": "2026-10-06",
+      "deployment": "single-tenant Linux host; Windows development workstation",
+      "supersededBy": "docs/decisions/0004-windows-only-current-release.md"
+    }
+  ]
 }

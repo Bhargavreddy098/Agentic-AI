@@ -28,6 +28,8 @@ export * from "./goal.js";
 export * from "./plan.js";
 export * from "./evidence.js";
 export * from "./project.js";
+export * from "./v2/feature-01.js";
+export * from "./v2/feature-04.js";
 
 export { PolicyVersionSchema, PolicyConfigSchema, OpaqueIdSchema, Sha256HexSchema, MicroUsdSchema, SensitivitySchema, ModelClassSchema, FinishReasonSchema, ProviderModelRevisionSchema } from "./primitives.js";
 export type PolicyVersion = z.infer<typeof PolicyVersionSchema>;

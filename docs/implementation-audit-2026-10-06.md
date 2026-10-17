@@ -1,3 +1,5 @@
+> **V2 consolidation (2026-10-07):** Read [the unified V2 build guide](v2-build-guide.md) for the combined target, completed-task migrations and extension task cards. This file remains a source record; its historical status prose is not current completion evidence. New V2 boundaries await recorded review.
+
 # Implementation audit and next build sequence
 
 The approved system plan has 30 tasks and the UI plan has 22. At this checkpoint **8 of 52 are completed**: system 01–02 and UI U01–U06. Source presence is not completion; both ledgers hold the evidence.

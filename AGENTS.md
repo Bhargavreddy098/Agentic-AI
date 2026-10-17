@@ -1,5 +1,7 @@
 # Architecture and planning rules
 
+> **Current platform scope — 2026-10-15:** Build and deploy the Windows version only. Linux is allowed only as an optional VM guest for qualified isolation; standalone Linux hosts/releases are deferred. This supersedes earlier platform assumptions in this document. PostgreSQL/Redis and ordinary integration/security tests remain in the Windows work queue. Preserve required protections and tests; unsupported executable paths stay disabled. See ADR 0004.
+
 This workspace contains research, approved baselines and implementation in progress. Task ledgers and fresh validation evidence determine completion; do not infer it from source existence or old planning prose.
 
 Read before work:

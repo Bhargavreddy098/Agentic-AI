@@ -455,5 +455,21 @@
       "U21",
       "U22"
     ]
+  },
+  "platformPolicy": {
+    "date": "2026-10-15",
+    "decidedBy": "user",
+    "status": "approved",
+    "decision": "docs/decisions/0004-windows-only-current-release.md",
+    "humanRequest": "update all the tasks by removing the linux completely for now we can build only windows version only for vms if needed linux is okay",
+    "developmentHost": "Windows",
+    "deploymentHost": "Windows",
+    "linuxScope": "No active Linux implementation or host requirement; future guest only if mandatory for a specific VM feature",
+    "standaloneLinuxRelease": "deferred",
+    "services": "Real PostgreSQL, SQLite and Redis qualification on Windows; services may run natively or in a suitable local VM. Database/schema/role/environment setup remains required.",
+    "isolation": "Qualify the selected backend on the Windows host or an optional VM. No automatic equivalence between native Windows protections and Linux seccomp/Landlock/KVM. Unqualified executable effects remain disabled; generated/untrusted code still requires qualified VM isolation.",
+    "acceptance": "Preserve architecture, authorization, tenant isolation, budget, audit, cancellation, durability and test assertions. A platform decision is not executed acceptance evidence.",
+    "runtimeImplementation": "Linux execution/deployment artifacts removed. Native Windows identity restart tests exist; executable Windows sandbox is explicitly unavailable until Task12 qualifies it.",
+    "implementationRule": "Continue Windows task implementation without waiting for Linux; preserve real owner dependencies and security/runtime acceptance. A conditional future VM feature cannot block unrelated Windows work."
   }
 }

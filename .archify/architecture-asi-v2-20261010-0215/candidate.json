@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "type": "architecture",
+    "slug": "asi-v2-failure-map",
+    "title": "ASI V2 Architecture — Failure Points (Tasks 01/12/13/22)",
+    "description": "Component map of the 12 pictured component IDs from docs/architecture-baseline.json with failure annotations for Task 01 (8 arch + 20 dep violations), Task 12 (sandbox unqualified), Task 13 (journal/dispatch unfinished), Task 22 (MCP blocked by 13/19). Database: PostgreSQL 17 running locally (admin123). All checks preserved; no weakening.",
+    "created": "2026-10-10T02:15:00+05:30",
+    "quality_profile": "showcase",
+    "animation": "none"
+  },
+  "nodes": [
+    {"id":"channels","label":"Channels (UI)","icon":"layout","group":"client"},
+    {"id":"gateway","label":"Gateway (U16/U19)","icon":"server","group":"gateway"},
+    {"id":"supervisor","label":"Supervisor (Orchestrator)","icon":"brain","group":"supervisor"},
+    {"id":"specialists","label":"Specialists (BullMQ)","icon":"users","group":"specialists"},
+    {"id":"toolRuntime","label":"Tool Runtime (13/22)","icon":"wrench","group":"toolRuntime"},
+    {"id":"sandbox","label":"Sandbox (12)","icon":"shield","group":"sandbox"},
+    {"id":"privRouter","label":"Privacy Router (11)","icon":"eye-off","group":"privRouter"},
+    {"id":"frontierModels","label":"Frontier Models (11)","icon":"sparkles","group":"frontierModels"},
+    {"id":"govKernel","label":"Gov Kernel (06/07)","icon":"scale","group":"govKernel"},
+    {"id":"memStore","label":"Memory Broker (09)","icon":"database","group":"memStore"},
+    {"id":"control","label":"Control (01/19)","icon":"lock","group":"control"},
+    {"id":"sessionFTS","label":"Session FTS (08)","icon":"file-text","group":"sessionFTS"}
+  ],
+  "relationships": [
+    {"from":"channels","to":"gateway","label":"requests"},
+    {"from":"gateway","to":"supervisor","label":"delegates"},
+    {"from":"supervisor","to":"specialists","label":"fans out"},
+    {"from":"specialists","to":"toolRuntime","label":"executes"},
+    {"from":"toolRuntime","to":"sandbox","label":"isolates"},
+    {"from":"privRouter","to":"supervisor","label":"routes inference"},
+    {"from":"frontierModels","to":"privRouter","label":"only via privRouter (ARCH-001)"},
+    {"from":"govKernel","to":"supervisor","label":"identity + budget + audit"},
+    {"from":"memStore","to":"supervisor","label":"memory + RLS"},
+    {"from":"control","to":"gateway","label":"leases + outbox"},
+    {"from":"sessionFTS","to":"supervisor","label":"episodic context"}
+  ],
+  "boundaries": [
+    {"id":"b-arch-01","from":"channels","to":"frontierModels","label":"ARCH-001: channels must not import provider SDK directly","kind":"forbidden"},
+    {"id":"b-store-01","from":"toolRuntime","to":"memStore","label":"STORE_DRIVER_BYPASS: tools must use memStore, not pg directly","kind":"forbidden"},
+    {"id":"b-store-02","from":"privRouter","to":"memStore","label":"Allowed: privRouter -> memStore via qualified wrapper","kind":"allowed"},
+    {"id":"b-queue-01","from":"specialists","to":"control","label":"QUEUE_PACKAGE: bullmq allowed for specialists + control outbox","kind":"allowed"}
+  ],
+  "failureAnnotations": [
+    {"id":"f-01","label":"Task 01 BLOCKED","node":"control","color":"red","detail":"8 arch violations (cross-boundary DB/stores/queues), 20 unpinned dependencies, 169 type errors, 792 lint errors. Checker enforced; checks not weakened. Evidence in docs/task-ledger.json (blocked qualification)."},
+    {"id":"f-12","label":"Task 12 BLOCKED","node":"sandbox","color":"red","detail":"Sandbox qualification unproven. Docker running but image/rootfs digests still contain placeholders. Tests at tests/security/sandbox.test.ts:42 allow false = pass; needs real Linux filesystem/network/credential/resource/cancellation/cleanup proof."},
+    {"id":"f-13","label":"Task 13 BLOCKED","node":"toolRuntime","color":"red","detail":"4 failing tests; journal overwrite fixed (writer_epoch + no ON CONFLICT) but governed dispatch unfinished. Needs real PostgreSQL reconciliation + budget/integration proof."},
+    {"id":"f-22","label":"Task 22 BLOCKED","node":"toolRuntime","color":"red","detail":"MCP fixtures pass (53 loopback). SDK @modelcontextprotocol/client 2.3.1 installed (ADR0002). Blocked by Task 13 + Task 19 integration: identity -> policy -> budget -> isolation -> receipt -> recovery."},
+    {"id":"f-db","label":"PostgreSQL 17 CONNECTED","node":"govKernel","color":"green","detail":"Local DB running (admin123); DATABASE_URL set; 113 qualification tests passed (identity + control). Used for budget/policy/memory/episodic integration."}
+  ]
+}

@@ -14,6 +14,7 @@ export function createDemoGateway() {
   const conversations = new Map<string, { summary: ConversationSummary; snapshot: ConversationSnapshot; events: UiEvent[]; activeRunId: string | null }>();
   const commands = new Map<string, { hash: string; result: unknown }>();
   const uploads = new Map<string, { view: UploadView; byteSize: number; uploaded: boolean }>();
+  const protectedRuns = new Set<string>();
   const error = (code: "INVALID_INPUT" | "UNAUTHENTICATED" | "POLICY_DENIED" | "UNKNOWN_OUTCOME" | "BUDGET_EXCEEDED" | "DEPENDENCY_UNAVAILABLE", safeMessage: string) => ({ error: { code, safeMessage, retryable: false } });
   const applied = (commandId: string, revision: number): UiCommandResult => ({ commandId, status: "applied", revision });
   const conflict = (commandId: string, revision: number): UiCommandResult => ({ commandId, status: "conflict", revision, error: { code: "INVALID_INPUT", safeMessage: "State or command changed; refresh and try again.", retryable: false } });
@@ -47,6 +48,11 @@ export function createDemoGateway() {
     }
     if (event.eventType === "task.updated") { const index = entry.snapshot.tasks.findIndex(item => item.taskId === event.payload.taskId); if (index < 0) entry.snapshot.tasks.push(event.payload); else entry.snapshot.tasks[index] = event.payload; }
     if (event.eventType === "tool.updated") { const index = entry.snapshot.tools.findIndex(item => item.toolId === event.payload.toolId); if (index < 0) entry.snapshot.tools.push(event.payload); else entry.snapshot.tools[index] = event.payload; }
+    if (event.eventType === "artifact.ready") { const index = entry.snapshot.artifacts.findIndex(item => item.artifactId === event.payload.artifactId); if (index < 0) entry.snapshot.artifacts.push(event.payload); else entry.snapshot.artifacts[index] = event.payload; }
+    if (event.eventType === "goal.updated") { const list = (entry.snapshot.goals ??= []); const index = list.findIndex(item => item.goalId === event.payload.goalId); if (index < 0) list.push(event.payload); else list[index] = event.payload; }
+    if (event.eventType === "plan.updated") { const list = (entry.snapshot.plans ??= []); const index = list.findIndex(item => item.planId === event.payload.planId); if (index < 0) list.push(event.payload); else list[index] = event.payload; }
+    if (event.eventType === "verification.completed") { const list = (entry.snapshot.verifications ??= []); const index = list.findIndex(item => item.reportId === event.payload.reportId); if (index < 0) list.push(event.payload); else list[index] = event.payload; }
+    if (event.eventType === "project.updated") { const list = (entry.snapshot.projects ??= []); const index = list.findIndex(item => item.projectId === event.payload.projectId); if (index < 0) list.push(event.payload); else list[index] = event.payload; }
     return event;
   };
   const create = (): ConversationSummary => {
@@ -66,6 +72,14 @@ export function createDemoGateway() {
     }
     const value: Interaction = { ...common, type, approvalId: id("approval"), effectId: id("effect"), status: "pending", action: "Simulated document read", target: "Synthetic example document", preview: "No file, network or provider action will occur.", expiresAt: expired ? "2020-01-01T00:00:00Z" : "2099-01-01T00:00:00Z", requiredActorRole: "user", actionRef: id("bound-action") };
     emit(conversationId, "approval.requested", value); emit(conversationId, "run.status", { runId, status: "waiting_approval" }); return value;
+  };
+  const runGoalScenario = (conversationId: string, runId: string, outcome: "verified" | "unmet") => {
+    const goalId = id("goal"), planId = id("plan"), artifactId = id("artifact"), reportId = id("report");
+    emit(conversationId, "goal.updated", { conversationId, revision: 1, allowedActions: [], goalId, runId, status: outcome === "verified" ? "verified" : "unmet", objective: "Produce one synthetic demo artifact and verify it.", criteria: [{ criterionId: "criterion-1", description: outcome === "verified" ? "The synthetic artifact satisfies the demo criterion." : "A criterion whose evaluator is unavailable in the demo.", required: true }] });
+    emit(conversationId, "plan.updated", { conversationId, revision: 2, allowedActions: [], planId, goalId, runId, goalRevision: 1, status: "completed", steps: [{ stepId: "step-1", summary: "Produce the synthetic demo artifact.", status: "completed", dependsOn: [] }] });
+    emit(conversationId, "artifact.ready", { artifactId, conversationId, runId, version: 1, title: "Synthetic demo artifact", mediaType: "text/plain", contentRef: id("content"), allowedActions: ["view"], preview: "Demo artifact; no real file was produced." });
+    emit(conversationId, "verification.completed", { conversationId, revision: 3, allowedActions: [], reportId, goalId, runId, goalRevision: 1, status: outcome === "verified" ? "verified" : "unmet", criterionResults: [{ criterionId: "criterion-1", satisfied: outcome === "verified" ? true : null, evidenceRefs: outcome === "verified" ? [artifactId] : [], safeReason: outcome === "verified" ? "Demo criterion satisfied by the synthetic artifact." : "No evaluator is available for this criterion in the demo." }], checkedAt: now, limitations: ["Demo only; criterion evaluation is synthetic."] });
+    emit(conversationId, "run.status", { runId, status: outcome === "verified" ? "completed" : "failed" });
   };
   app.use("*", bodyLimit({ maxSize: 262144, onError: c => c.json(error("INVALID_INPUT", "Demo request exceeds its limit."), 413) }));
   app.use("*", async (c, next) => {
@@ -106,8 +120,18 @@ export function createDemoGateway() {
       entry.activeRunId = runId;
       emit(conversationId, "message.created", { messageId: input.clientMessageId, role: "user", createdAt: now, parts: [{ type: "text", partId: id("part"), text: input.text }] });
       emit(conversationId, "run.status", { runId, status: "running" });
-      if (input.text === "/question") requestInteraction(conversationId, runId, "clarification");
+      if (input.text === "/protected") {
+        protectedRuns.add(runId);
+        const messageId = id("assistant"), partId = id("part");
+        emit(conversationId, "message.created", { messageId, role: "assistant", createdAt: now, parts: [{ type: "text", partId, text: "" }] });
+        ["Preparing the protected synthetic action. ", "No model or tool effect runs until you approve it."].forEach((text, deltaIndex) => emit(conversationId, "message.delta", { messageId, partId, deltaIndex, text }));
+        emit(conversationId, "message.completed", { messageId });
+        requestInteraction(conversationId, runId, "clarification");
+      }
+      else if (input.text === "/question") requestInteraction(conversationId, runId, "clarification");
       else if (["/approval", "/expired"].includes(input.text)) requestInteraction(conversationId, runId, "approval", input.text === "/expired");
+      else if (input.text === "/goal") runGoalScenario(conversationId, runId, "verified");
+      else if (input.text === "/unmet") runGoalScenario(conversationId, runId, "unmet");
       else if (["/error", "/unknown", "/budget"].includes(input.text)) {
         if (input.text !== "/budget") emit(conversationId, "tool.updated", { toolId: id("tool"), conversationId, runId, version: 1, status: input.text === "/unknown" ? "unknown" : "failed", summary: "Synthetic tool outcome; no real execution", allowedActions: [], evidenceRefs: [] });
         emit(conversationId, "error", error(input.text === "/budget" ? "BUDGET_EXCEEDED" : input.text === "/unknown" ? "UNKNOWN_OUTCOME" : "DEPENDENCY_UNAVAILABLE", "Synthetic failure scenario; no real action occurred.").error);
@@ -130,7 +154,9 @@ export function createDemoGateway() {
       if (item.version !== input.expectedVersion || item.status !== "pending" || entry.activeRunId !== item.runId || entry.snapshot.runStatus !== "suspended") return conflict(input.commandId, entry.snapshot.revision);
       if (new Set(input.optionIds).size !== input.optionIds.length || input.optionIds.some(id => !item.options.some(option => option.optionId === id)) || (!item.allowMultiple && input.optionIds.length > 1) || (!item.allowFreeText && input.text)) return rejected(input.commandId, entry.snapshot.revision, "Answer does not match the question options.");
       emit(item.conversationId, "clarification.resolved", { ...item, version: item.version + 1, status: "answered" });
-      emit(item.conversationId, "run.status", { runId: item.runId, status: "completed" }); return applied(input.commandId, entry.snapshot.revision);
+      if (protectedRuns.has(item.runId)) requestInteraction(item.conversationId, item.runId, "approval");
+      else emit(item.conversationId, "run.status", { runId: item.runId, status: "completed" });
+      return applied(input.commandId, entry.snapshot.revision);
     }, entry.snapshot.revision));
   });
   app.post(`${base}/approvals/:id/decisions`, async c => {
@@ -143,10 +169,21 @@ export function createDemoGateway() {
       emit(item.conversationId, "approval.resolved", { ...item, version: item.version + 1, status: input.decision === "approve" ? "approved" : "rejected" });
       emit(item.conversationId, "run.status", { runId: item.runId, status: input.decision === "approve" ? "queued" : "cancelled" });
       if (input.decision === "approve") {
+        const protectedFlow = protectedRuns.has(item.runId);
         const timer = setTimeout(() => {
           if (entry.activeRunId !== item.runId || entry.snapshot.runStatus !== "queued") return;
           emit(item.conversationId, "run.status", { runId: item.runId, status: "running" });
-          emit(item.conversationId, "task.updated", { taskId: id("task"), conversationId: item.conversationId, runId: item.runId, version: 1, status: "completed", summary: "Synthetic result only; no document was accessed", allowedActions: [], evidenceRefs: [] });
+          if (protectedFlow) {
+            const toolId = id("tool"), taskId = id("task"), artifactId = id("artifact"), reportId = id("report");
+            emit(item.conversationId, "tool.updated", { toolId, conversationId: item.conversationId, runId: item.runId, version: 1, status: "executing", summary: "Synthetic protected tool action executing; no real effect", allowedActions: [], evidenceRefs: [] });
+            emit(item.conversationId, "task.updated", { taskId, conversationId: item.conversationId, runId: item.runId, version: 1, status: "running", summary: "Applying the approved synthetic action", allowedActions: [], evidenceRefs: [] });
+            emit(item.conversationId, "artifact.ready", { artifactId, conversationId: item.conversationId, runId: item.runId, version: 1, title: "Protected action receipt", mediaType: "text/plain", contentRef: id("content"), allowedActions: ["view"], preview: "Synthetic receipt; no real action occurred." });
+            emit(item.conversationId, "tool.updated", { toolId, conversationId: item.conversationId, runId: item.runId, version: 2, status: "succeeded", summary: "Synthetic protected tool action succeeded; no real effect", allowedActions: [], evidenceRefs: [artifactId] });
+            emit(item.conversationId, "verification.completed", { conversationId: item.conversationId, revision: 3, allowedActions: [], reportId, goalId: id("goal"), runId: item.runId, goalRevision: 1, status: "verified", criterionResults: [{ criterionId: "criterion-1", satisfied: true, evidenceRefs: [artifactId], safeReason: "Receipt verified against the synthetic artifact." }], checkedAt: now, limitations: ["Demo only; no real effect."] });
+            emit(item.conversationId, "task.updated", { taskId, conversationId: item.conversationId, runId: item.runId, version: 2, status: "completed", summary: "Protected synthetic action completed after approval", allowedActions: [], evidenceRefs: [artifactId] });
+          } else {
+            emit(item.conversationId, "task.updated", { taskId: id("task"), conversationId: item.conversationId, runId: item.runId, version: 1, status: "completed", summary: "Synthetic result only; no document was accessed", allowedActions: [], evidenceRefs: [] });
+          }
           emit(item.conversationId, "run.status", { runId: item.runId, status: "completed" });
         }, 500);
         timer.unref();

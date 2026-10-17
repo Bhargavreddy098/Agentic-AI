@@ -1,0 +1,49 @@
+{
+  "name": "@asi/control",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./ingress": {
+      "types": "./dist/ingress.d.ts",
+      "import": "./dist/ingress.js"
+    },
+    "./leases": {
+      "types": "./dist/leases.d.ts",
+      "import": "./dist/leases.js"
+    },
+    "./outbox": {
+      "types": "./dist/outbox.d.ts",
+      "import": "./dist/outbox.js"
+    },
+    "./checkpoints": {
+      "types": "./dist/checkpoints.d.ts",
+      "import": "./dist/checkpoints.js"
+    },
+    "./effects": {
+      "types": "./dist/effects.d.ts",
+      "import": "./dist/effects.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@asi/contracts": "workspace:*",
+    "@asi/identity": "workspace:*",
+    "pg": "8.23.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/pg": "8.11.10",
+    "vitest": "5.0.3"
+  }
+}

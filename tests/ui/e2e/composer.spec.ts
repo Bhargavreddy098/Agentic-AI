@@ -16,3 +16,15 @@ test("demo composer submits, survives navigation, restores Stop after reload and
   await expect(page.getByText("demo.txt · ready")).toBeVisible();
   await page.getByRole("button", { name: "Send", exact: true }).click(); await expect(input).toHaveValue("");
 });
+test("plain text stays an unstructured message with no goal control or client-built objective", async ({ page }) => {
+  await page.goto("/chat"); await page.getByRole("button", { name: "New conversation" }).click();
+  await expect(page).toHaveURL(/\/chat\/conversation-/);
+  const id = page.url().split("/").at(-1)!;
+  await expect(page.getByRole("button", { name: /goal|objective|criterion/i })).toHaveCount(0);
+  await expect(page.getByRole("combobox", { name: /goal|objective/i })).toHaveCount(0);
+  const input = page.getByRole("textbox", { name: "Message" });
+  await input.fill("describe a goal in plain text"); await input.press("Enter");
+  await expect.poll(async () => (await (await page.request.get(`/api/ui/v1/conversations/${id}/snapshot`)).json()).runStatus).toBe("completed");
+  const snapshot = await (await page.request.get(`/api/ui/v1/conversations/${id}/snapshot`)).json();
+  expect(snapshot.goals ?? []).toEqual([]);
+});

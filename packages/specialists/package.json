@@ -1,0 +1,35 @@
+{
+  "name": "@asi/specialists",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@asi/contracts": "workspace:*",
+    "@asi/tools": "workspace:*",
+    "@asi/sandbox": "workspace:*",
+    "@asi/telemetry": "workspace:*",
+    "bullmq": "6.3.11",
+    "ioredis": "6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "5.0.3",
+    "@types/node": "24.19.1"
+  },
+  "peerDependencies": {
+    "@asi/contracts": "workspace:*"
+  }
+}

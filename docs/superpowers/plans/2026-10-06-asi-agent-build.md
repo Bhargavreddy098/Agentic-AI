@@ -1,12 +1,16 @@
+> **V2 consolidation (2026-10-07):** Read [the unified V2 build guide](../../v2-build-guide.md) for the combined target, completed-task migrations and extension task cards. This file remains a source record; its historical status prose is not current completion evidence. New V2 boundaries await recorded review.
+
+> **Current platform scope — 2026-10-15:** Build and deploy the Windows version only. Linux is allowed only as an optional VM guest for qualified isolation; standalone Linux hosts/releases are deferred. This supersedes earlier platform assumptions in this document. PostgreSQL/Redis and ordinary integration/security tests remain in the Windows work queue. Preserve required protections and tests; unsupported executable paths stay disabled. See ADR 0004.
+
 # ASI TypeScript Agent System Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox syntax for tracking. Execution method has not been selected; this request authorizes planning only.
 
 **Goal:** Build the pictured TypeScript agent architecture in verifiable increments, with enforced component boundaries and reviewable changes.
 
-**Architecture:** Preserve the 12 pictured components, use Mastra inside a deterministic shell, and keep policy, provider credentials, memory credentials, and executable tools behind distinct trusted boundaries. Start on one Linux host with the requested web Chat surface, one specialist, SQLite episodes, PostgreSQL curated memory/control state, and BullMQ/Redis. Add breadth and experimental learning only after the protected vertical slice passes.
+**Architecture:** Preserve the 12 pictured components, use Mastra inside a deterministic shell, and keep policy, provider credentials, memory credentials, and executable tools behind distinct trusted boundaries. Start on one Windows host with the requested web Chat surface, one specialist, SQLite episodes, PostgreSQL curated memory/control state, and BullMQ/Redis. Add breadth and experimental learning only after the protected vertical slice passes.
 
-**Tech Stack:** Proposed Node 24 LTS, TypeScript 5.9.x strict ESM, Zod 4.6.5, Mastra 1.x, Hono, AI SDK, PostgreSQL 17/pgvector, SQLite FTS5/WAL, BullMQ/Redis, OpenTelemetry/Langfuse, qualified Linux isolation, MCP and A2A.
+**Tech Stack:** Proposed Node 24 LTS, TypeScript 5.9.x strict ESM, Zod 4.6.5, Mastra 1.x, Hono, AI SDK, PostgreSQL 17/pgvector, SQLite FTS5/WAL, BullMQ/Redis, OpenTelemetry/Langfuse, qualified Windows-hosted isolation (optional Linux VM guest), MCP and A2A.
 
 **Spec:** `docs/superpowers/specs/2026-10-06-asi-agent-design.md` (PROPOSED; read it with this plan).
 
@@ -74,7 +78,7 @@ packages/*/package.json              # Explicit exports and permitted dependenci
 packages/*/test/                      # Unit/contract tests owned by the package
 db/postgres/migrations/              # Control, RLS, audit, memory, learning tables
 db/sqlite/migrations/                # Episode/FTS/lineage tables
-infra/compose.yaml                   # Private services and local Linux volume
+infra/compose.yaml                   # Windows-hosted private services; owner-exclusive Windows or optional VM-local volume
 infra/policies/                      # Versioned declarative policies
 infra/sandbox/                       # Qualified container/microVM profiles
 scripts/{verify-architecture,verify-dependencies,verify-manifests,
@@ -95,7 +99,7 @@ App files are composition roots; business logic lives in the owning package. Dir
 
 Task 01 creates these actual workspace scripts: `pnpm typecheck`, `pnpm lint`, `pnpm build`, `pnpm test:unit`, `pnpm test:integration`, `pnpm test:security`, `pnpm test:protocols`, `pnpm test:e2e`, `pnpm test:load`, `pnpm verify:architecture`, `pnpm verify:dependencies`, `pnpm verify:traceability`, and `pnpm verify`.
 
-Use Vitest for named test files: `pnpm exec vitest run <path>`. Unit tests use deterministic fake models. Integration/security/protocol tests use real Linux isolation and actual PostgreSQL runtime roles where applicable. Test service startup/teardown is owned by a test harness and cannot silently fall back to mocks when integration dependencies are missing. `pnpm verify` executes lint, typecheck, build, unit, architecture, dependency, and traceability checks; full release validation adds integration/security/protocol/e2e/load suites.
+Use Vitest for named test files: `pnpm exec vitest run <path>`. Unit tests use deterministic fake models. Integration/security/protocol tests use actual PostgreSQL runtime roles and real Windows-hosted isolation where applicable; a Linux guest is allowed only inside an optional VM. Database-only tests do not require Linux or KVM. Test service startup/teardown is owned by a test harness and cannot silently fall back to mocks when integration dependencies are missing. `pnpm verify` executes lint, typecheck, build, unit, architecture, dependency, and traceability checks; full release validation adds integration/security/protocol/e2e/load suites.
 
 Targeted run before implementation: named assertions FAIL. Run after implementation: all named assertions PASS, no skips, exit 0. Security gates fail if infrastructure is absent. Record platform/kernel/backend/version with results. Real model evals are separately budgeted; fake model tests establish control correctness, not model quality.
 
@@ -128,19 +132,23 @@ The `+` branches describe logically independent work after prerequisites. They d
 
 ### Task 01: Approve/freeze the baseline and create a reproducible workspace
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R01, R04, R20, R21, R24. Dependencies: user review of proposed spec/plan and selection of execution method.
 
 Files: create root manifests/compiler/version files; `scripts/verify-{architecture,dependencies,traceability,protected-files}.mjs`; `tests/architecture/imports.test.ts`; `docs/dependency-inventory.json`; `docs/decisions/0001-runtime-and-dependencies.md`. Modify baseline/ledger only to record approved choices.
 
 Interfaces: produces `pnpm verify` and the scripts in section 3; baseline task/component IDs remain stable.
 
-- [ ] Record approved deployment, first real tasks, model/data policy, and release scope. Freeze exact dependency/image versions by registry provenance + peer/API compatibility qualification; retain Zod 4.6.5 unless a reviewed change is necessary. Confirm Linux/Docker/kernel support before tool tasks.
+- [ ] Record approved deployment, first real tasks, model/data policy, and release scope. Freeze exact dependency/image versions by registry provenance + peer/API compatibility qualification; retain Zod 4.6.5 unless a reviewed change is necessary. Confirm the selected Windows-hosted isolation backend and any optional VM capabilities before executable tool tasks.
 - [ ] Add an architecture fixture where a channel imports provider SDK directly and a dependency manifest uses an unapproved range. Assert `violations` contains `CHANNEL_MODEL_BYPASS` and `UNPINNED_DEPENDENCY`; clean graph asserts `violations.length === 0`.
 - [ ] Run `pnpm exec vitest run tests/architecture/imports.test.ts` for RED; then implement strict ESM workspace, package exports, test harness, and verification scripts.
 - [ ] Run `pnpm verify`; frozen install must reproduce without lockfile mutation. Check a deliberate forbidden import fails `pnpm verify:architecture`.
 - [ ] Initialize Git only as part of implementation, if still absent; add safe ignores for data, secrets, caches, eval outputs. Commit foundation after review. No existing research assets are deleted or rewritten.
 
 ### Task 02: Versioned boundary schemas and fixtures
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R04, R12, R18. Dependencies: 01.
 
@@ -155,9 +163,11 @@ Interfaces: export schemas and `z.infer` types named exactly as the spec invento
 
 ### Task 03: Authenticated identities, reduced capabilities, and secret boundaries
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R02, R03, R06, R20, R22. Dependencies: 02.
 
-Files: `packages/identity/src/{verify,delegate,revoke}.ts`; `packages/identity/test/grants.test.ts`; `tests/security/credentials.test.ts`; `infra/compose.yaml` initial identities/mounts.
+Files: `packages/identity/src/{verify,delegate,revoke}.ts`; `packages/identity/test/grants.test.ts`; `tests/security/credentials.test.ts`; native Windows process bootstrap and protected service/file credentials; no container deployment file.
 
 Interfaces: `verifyPrincipal(token: string, audience: string): Promise<Principal>`; `delegatePrincipal(parent: Principal, capabilities: string[], audience: string, expiresAt: string): Promise<string>`; `revokeGrant(grantId: string): Promise<void>`.
 
@@ -167,6 +177,8 @@ Interfaces: `verifyPrincipal(token: string, audience: string): Promise<Principal
 - [ ] Document bootstrap/rotation in `docs/runbooks/identity.md`. Commit after boundary review.
 
 ### Task 04: PostgreSQL control state, leases, durable inbox, and outbox
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R08, R12, R15, R23. Dependencies: 03.
 
@@ -181,6 +193,8 @@ Interfaces: `acceptIngress(event: SessionEvent): Promise<{acceptedId: string; du
 
 ### Task 05: Signed audit receipts and independent verification
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R03, R15, R19, R23. Dependencies: 04.
 
 Files: `db/postgres/migrations/002-audit.sql`; `packages/audit/src/{append,verify,export}.ts`; `tests/integration/audit.test.ts`; `docs/runbooks/audit.md`.
@@ -194,6 +208,8 @@ Interfaces: `appendReceipt(receipt: Omit<AuditReceipt, 'sequence' | 'previousHas
 
 ### Task 06: Shared budgets, reservations, and self-state
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R14, R23. Dependencies: 05.
 
 Files: `db/postgres/migrations/003-budgets.sql`; `packages/budgets/src/{reserve,settle,self-state}.ts`; `packages/budgets/test/budgets.test.ts`; `tests/integration/budget-races.test.ts`.
@@ -206,6 +222,8 @@ Interfaces: `reserveBudget(ref: BudgetRef, tokens: number, maxCostMicroUsd: numb
 - [ ] Document overrun/unknown-provider-billing reconciliation and commit.
 
 ### Task 07: Out-of-process policy kernel and approval binding
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R02, R03, R08, R22, R24. Dependencies: 03–06.
 
@@ -222,6 +240,8 @@ Interfaces: `authorizeEffect(request: EffectRequest, principal: Principal): Prom
 
 ### Task 08: Single-owner SQLite episodes, FTS, fencing, lineage
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R08, R09, R11, R23. Dependencies: 04, 07.
 
 Files: `db/sqlite/migrations/001-episodes.sql`; `packages/episodic/src/{append,search,lineage,reconcile}.ts`; `apps/episodic-owner/src/main.ts`; `tests/integration/episodes.test.ts`.
@@ -234,6 +254,8 @@ Interfaces: `appendEpisode(command: EpisodeCommand): Promise<AppendReceipt>`; `s
 - [ ] Run for GREEN; add WAL checkpoint/backup/SQLITE_BUSY/disk-full runbook and commit. Never place the active file on network-shared or OneDrive-synced storage.
 
 ### Task 09: Hierarchical memory broker with real RLS enforcement
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R02, R06, R10, R11, R23. Dependencies: 04, 07, 08.
 
@@ -248,6 +270,8 @@ Interfaces: `queryMemory(principal: Principal, query: MemoryQuery): Promise<Memo
 
 ### Task 10: Redacted telemetry facade and basic eval corpus
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R19, R23. Dependencies: 02, 05.
 
 Files: `packages/telemetry/src/{spans,redaction,metrics}.ts`; `packages/telemetry/test/privacy.test.ts`; `evals/cases/control.jsonl`; `docs/runbooks/observability.md`.
@@ -261,6 +285,8 @@ Interfaces: `startRunSpan(context: RunContext): TraceHandle`; `recordUsage(conte
 
 ### Task 11: Privacy router, provider adapters, and inference accounting
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R02, R05, R14, R19, R22. Dependencies: 03, 05–07, 10.
 
 Files: `packages/privacy/src/{classify,redact,route}.ts`; `packages/models/src/{generate,embed,providers}.ts`; `apps/privacy-router/src/main.ts`; `tests/security/privacy-routing.test.ts`.
@@ -272,20 +298,24 @@ Interfaces: `routeInference(request: ModelRequest, principal: Principal): Promis
 - [ ] Run real private-network test proving orchestrator/specialist cannot reach provider directly. Router fallback rechecks sensitivity/destination/cost; redaction coverage measured with a seeded corpus.
 - [ ] Commit; document local hardware/model availability and no differential-privacy claim.
 
-### Task 12: Qualify isolated container and microVM execution ports
+### Task 12: Implement and qualify native Windows isolation
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R03, R07, R22, R23. Dependencies: 03, 07.
 
-Files: `packages/sandbox/src/{port,container,microvm,qualification}.ts`; `infra/sandbox/{container-profile,microvm-profile}.json`; `tests/security/sandbox.test.ts`.
+Files: `packages/sandbox/src/{port,windows,qualification,index}.ts`; `packages/sandbox/test/windows.test.ts`; `tests/security/sandbox.test.ts`.
 
 Interfaces: `executeIsolated(manifest: ToolManifest, input: unknown, context: RunContext, signal: AbortSignal): Promise<{exitCode: number; output: unknown; artifacts: string[]}>`; `qualifySandbox(backend: string): Promise<{qualified: boolean; checks: Record<string, boolean>}>`.
 
 - [ ] Assert denied filesystem path, network destination, cloud metadata endpoint, secret environment variable, privilege/syscall, and host/container socket are inaccessible. CPU/memory/output/time limits terminate the workload and descendants.
-- [ ] Run Linux sandbox suite for RED; implement backend adapters with fresh workspaces, read-only roots, dropped capabilities, seccomp/Landlock as qualified, egress fence/proxy, and manifest-bound mounts. No Node worker_threads substitute.
-- [ ] Qualify containers for reviewed built-ins. Qualify a chosen microVM backend against the same tests before generated/untrusted execution; if unavailable, keep those features disabled, not silently containerized.
+- [ ] Run the real sandbox suite against the selected Windows-hosted backend for RED; implement fresh workspaces, read-only roots, least privilege, resource limits, egress fence/proxy and manifest-bound mounts. Do not require Linux-specific controls for a native Windows implementation; prove actual Windows isolation, filesystem permissions, process-tree/resource and egress restrictions. No Node worker_threads substitute.
+- [ ] Implement and qualify the native Windows backend for reviewed built-ins. Generated/untrusted execution remains unavailable until qualified VM isolation is separately implemented; a future Linux guest is allowed only if mandatory for that scoped VM feature. Do not block unrelated Windows implementation on it.
 - [ ] Run for GREEN per backend and record kernel/runtime/image digest/evidence. Commit profiles; no approval of real tool effects is implied by sandbox availability.
 
 ### Task 13: Verified tool registry and durable effect execution
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R02, R07, R08, R11, R15, R22. Dependencies: 05–07, 12.
 
@@ -300,6 +330,8 @@ Interfaces: `registerTool(manifest: ToolManifest): Promise<void>`; `dispatchTool
 
 ### Task 14: Deterministic capability routing and BullMQ task transport
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R06, R12, R14, R23. Dependencies: 03, 04, 06, 13.
 
 Files: `packages/specialists/src/{rank,queue,worker}.ts`; `apps/specialist/src/main.ts`; `packages/specialists/test/rank.test.ts`; `tests/integration/tasks.test.ts`.
@@ -313,6 +345,8 @@ Interfaces: `rankWorkers(task: TaskEnvelope, workers: WorkerDescriptor[]): Worke
 
 ### Task 15: Mastra adapter inside deterministic run state machine
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R04, R05, R08, R12, R14, R23. Dependencies: 08–14.
 
 Files: `packages/orchestrator/src/{mastra-adapter,run,transitions,finalize}.ts`; `apps/orchestrator/src/main.ts`; `packages/orchestrator/test/run.test.ts`.
@@ -325,6 +359,8 @@ Interfaces: `startRun(event: SessionEvent): Promise<{runId: string}>`; `resumeRu
 - [ ] Commit deterministic orchestrator.
 
 ### Task 16: Gateway, web/CLI surfaces, return delivery, and vertical-slice acceptance
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R01, R02, R08, R12, R15, R21, R23. Dependencies: 15.
 
@@ -342,6 +378,8 @@ Interfaces: `handleIngress(event: SessionEvent, principal: Principal): Promise<{
 
 ### Task 17: Cache-aware context compression and authorized recall
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R05, R09–11, R13, R14. Dependencies: 16.
 
 Files: `packages/context/src/{assemble,tokens,compress,recall}.ts`; `packages/context/test/compression.test.ts`; `tests/integration/compression-lineage.test.ts`.
@@ -354,6 +392,8 @@ Interfaces: `assembleContext(context: RunContext): Promise<ModelRequest>`; `shou
 - [ ] Commit; include overlarge stable prefix and compression budget exhaustion fixtures.
 
 ### Task 18: Signed skill manifests, selective injection, and revocation
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R02, R03, R07, R11, R24. Dependencies: 16, 13.
 
@@ -368,6 +408,8 @@ Interfaces: `installSkill(manifest: SkillManifest, principal: Principal): Promis
 
 ### Task 19: Checkpoint recovery, approvals, cancellation, and dependency failure
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R08, R12, R15, R22, R23. Dependencies: 16, 07.
 
 Files: `packages/orchestrator/src/{recover,retry,circuit-breaker}.ts`; `packages/gateway/src/approvals.ts`; `tests/integration/recovery.test.ts`; `docs/runbooks/recovery.md`.
@@ -381,6 +423,8 @@ Interfaces: `recoverRuns(limit: number): Promise<number>`; `resumeApprovedRun(ru
 
 ### Task 20: Slack adapter through the gateway
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R01, R02, R15, R21. Dependencies: 16, 19.
 
 Files: `packages/channels/src/slack.ts`; `tests/integration/slack.test.ts`; `docs/runbooks/channels.md`.
@@ -393,6 +437,8 @@ Interfaces: implements ChannelAdapter; no new model/tool path.
 - [ ] Commit adapter and document exact supported message/attachment types.
 
 ### Task 21: Durable heartbeat scheduling with quiet/no-op behavior
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R02, R12, R14, R23. Dependencies: 06, 16, 19.
 
@@ -409,6 +455,8 @@ Interfaces: `scheduleHeartbeat(principal: Principal, sessionId: string, interval
 
 ### Task 22: MCP adapter and protocol/auth compatibility
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R02, R07, R11, R18, R22. Dependencies: 13, 19.
 
 Files: `packages/protocols/src/mcp/{client,server,auth,versions}.ts`; `tests/protocols/mcp.test.ts`; `docs/decisions/0002-mcp-revision.md`.
@@ -422,6 +470,8 @@ Interfaces: `connectMcpServer(endpoint: string, principal: Principal): Promise<{
 
 ### Task 23: A2A Agent Cards and bounded remote tasks
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R02, R06, R11, R12, R18. Dependencies: 13, 14, 19.
 
 Files: `packages/protocols/src/a2a/{card,client,server,state-map}.ts`; `tests/protocols/a2a.test.ts`.
@@ -434,6 +484,8 @@ Interfaces: `getAgentCard(principal: Principal): Promise<unknown>` (validate pin
 - [ ] Commit; MCP tool calls and A2A task lifecycle stay distinct.
 
 ### Task 24: Fleet capacity and WhatsApp/Discord adapters
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R01, R06, R08, R12, R14, R21. Dependencies: 20, 22, 23.
 
@@ -449,6 +501,8 @@ Interfaces: existing WorkerDescriptor, TaskEnvelope and ChannelAdapter; no direc
 
 ### Task 25: Production hardening, restore, retention, and first release
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R02, R09, R15, R19, R22, R23. Dependencies: 17–24.
 
 Files: `infra/compose.yaml` production profiles; `tests/release/{restore,retention,startup}.test.ts`; `tests/load/assistant.test.ts`; `docs/runbooks/{deploy,backup,retention,incident-response,key-rotation}.md`; `docs/release-evidence/stage-d.md`.
@@ -456,7 +510,7 @@ Files: `infra/compose.yaml` production profiles; `tests/release/{restore,retenti
 Interfaces: `pnpm test:load`, `pnpm test:e2e`, documented restore/rollback operator commands; no new public capability.
 
 - [ ] Assert health/readiness refuses missing policy keys/quotas/unqualified sandbox; restore recovers episodes+lineage+memory+receipts+pending deliveries with valid chain; authorized deletion removes source and derived projections without retaining secret payload in receipt.
-- [ ] Run release suite for RED; implement TLS/front-door controls, private networks, migration ordering, secrets/bootstrap, backups, retention, disk alerts, graceful drain, and image/digest inventory. Linux volume remains outside workstation sync folders.
+- [ ] Run release suite for RED; implement TLS/front-door controls, private networks, migration ordering, secrets/bootstrap, backups, retention, disk alerts, graceful drain, and image/digest inventory. Owner data and VM volumes remain outside workstation sync/network folders. Validate Windows service startup/shutdown, ACLs, paths, secrets, restore and update/rollback behavior.
 - [ ] Run lint/type/build/unit/integration/security/protocol/e2e/load/architecture/dependency/traceability suites for GREEN; record zero skipped critical checks and seeded secret-leak failures.
 - [ ] Load gate: 10 concurrent sessions, 100 deterministic seeded requests, zero cross-tenant/stale commits and zero duplicate fixture effects; framework overhead p95 under 1 second excluding provider/tool time on recorded hardware. Real model end-to-end latency and quality get an approved workload-specific baseline.
 - [ ] Recovery target proposed for this first service: daily backups, RPO ≤24 hours, RTO ≤2 hours, proved by a timed clean-host restore. Stronger requirements need a reviewed availability/storage decision.
@@ -465,6 +519,8 @@ Interfaces: `pnpm test:load`, `pnpm test:e2e`, documented restore/rollback opera
 ## 9. Stage E — experimental background learning
 
 ### Task 26: Offline consolidation with scoped CAS publication
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R05, R09–11, R14, R16, R23. Dependencies: 25, 09, 11, 17.
 
@@ -479,6 +535,8 @@ Interfaces: `proposeConsolidation(principal: Principal, episodeIds: string[]): P
 
 ### Task 27: Generated tool candidates in microVM shadow mode
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R03, R07, R11, R15, R17. Dependencies: 25, 12, 13, 18.
 
 Files: `packages/evolution/src/{tool-candidate,shadow-tool}.ts`; `tests/security/tool-synthesis.test.ts`; `db/postgres/migrations/007-learning.sql`.
@@ -491,6 +549,8 @@ Interfaces: `createToolCandidate(manifest: ToolManifest, artifactRef: string, pr
 - [ ] Commit experimental tool synthesis; capture cost/quality versus existing tools.
 
 ### Task 28: Optional observation graph and verified knowledge exchange
+
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
 
 Requirements: R10, R11, R16, R24. Dependencies: 26; explicit scope review because these report extensions are not separate required screenshot nodes.
 
@@ -507,6 +567,8 @@ Interfaces: `recordObservation(principal: Principal, observation: Observation): 
 
 ### Task 29: Candidate archive, independent eval, canary promotion, rollback
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R02, R03, R07, R14, R15, R17, R24. Dependencies: 25–27.
 
 Files: `packages/evolution/src/{archive,protected-paths,benchmark,promote,rollback}.ts`; `apps/evolution-engine/src/main.ts`; `tests/security/evolution.test.ts`; `evals/held-out/`; `docs/runbooks/evolution.md`.
@@ -521,6 +583,8 @@ Interfaces: `evaluateCandidate(candidate: Candidate): Promise<EvalReport>`; `dec
 
 ### Task 30: Full conformance, agent workflow enforcement, and handoff
 
+Execution target: Windows development and deployment. Linux is not required; a future guest is allowed only if mandatory for a scoped VM feature. See ADR 0004. All required service/security checks and dependencies remain.
+
 Requirements: R01–R24. Dependencies: 29; Task 28 recorded as implemented or explicitly excluded.
 
 Files: `tests/architecture/{baseline,protected-paths,traceability}.test.ts`; `tests/e2e/full-flow.test.ts`; `scripts/verify-all.mjs`; `docs/release-evidence/full-system.md`; update AGENTS.md/ledger only through approved governance review.
@@ -529,7 +593,7 @@ Interfaces: `pnpm verify` plus all release suites; architecture-baseline/require
 
 - [ ] Assert removal of any pictured node, forbidden direct channel/model path, worker credential inheritance, bypassed privacy/memory port, unsigned install, missing requirement test, or modified protection without approved ADR fails conformance.
 - [ ] Run conformance tests for RED; wire provider-neutral CI/release checks, reviewed branch protection once a remote is chosen, candidate task file scopes, and approval evidence for protected changes. Local hooks alone are not sufficient enforcement.
-- [ ] Run all required suites for GREEN on clean Linux runtime with frozen install/images. Verify positive end-to-end and denied end-to-end flows; perform independently witnessed restore/receipt verification.
+- [ ] Run all required suites for GREEN on a clean Windows host with frozen install and any selected VM images. Repeat guest isolation tests only when that VM backend is used; standalone Linux release is deferred. Verify positive end-to-end and denied end-to-end flows; perform independently witnessed restore/receipt verification.
 - [ ] Produce final component-to-code-to-test-to-evidence matrix, full run/learning/evolution trace, operator runbooks, exact supported protocol/channel/backend matrix, and measured cost/latency/quality comparison.
 - [ ] Commit/handoff only with approved integration method. Do not mark the entire roadmap complete while optional/unsupported features remain unlabeled.
 

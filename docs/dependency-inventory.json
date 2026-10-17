@@ -209,6 +209,24 @@
       "status": "approved"
     },
     {
+      "name": "@testing-library/jest-dom",
+      "version": "6.5.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-xGGHpBXYSHUUr6XsKBfs85TWlYKpTc37cSBBVrXcib2MkHLboWlkClhWF37JKlDb9KEq3dHs+f2xR7XJEWGBxA==",
+      "peerDependencies": {
+        "@testing-library/dom": "^10.0.0"
+      },
+      "engines": {
+        "npm": ">=6",
+        "node": ">=14",
+        "yarn": ">=1"
+      },
+      "role": "Jest DOM matchers for testing (U07)",
+      "qualification": "Primary npm registry metadata rechecked 2026-10-07 for M03 approved-baseline restoration; corrected the recorded integrity typo to match registry and lock artifact",
+      "status": "approved"
+    },
+    {
       "name": "jsdom",
       "version": "30.1.2",
       "registry": "npm",
@@ -382,6 +400,363 @@
       "role": "U03 simulated Gateway, same approved Hono stack",
       "qualification": "Exact registry artifact/peers inspected 2026-10-06",
       "status": "approved"
+    },
+    {
+      "name": "marked",
+      "version": "15.0.4",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-TCHvDqmb3ZJ4PWG7VEGVgtefA5/euFmsIhxtD0XsBxI39gUSKL81mIRFdt0AiNQozUahd4ke98ZdirExd/vSEw==",
+      "role": "markdown parser for chat UI messages (U07)",
+      "qualification": "Exact registry artifact inspected 2026-10-07",
+      "status": "approved"
+    },
+    {
+      "name": "isomorphic-dompurify",
+      "version": "2.24.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-SgKoDBCQveodymGMBPpzs9MOTCk4Luq0bTfwoPrUKa7q0FnCLZMtqR25Rnq228zJfMTsX1ZItiJbDtjb2lyv4A==",
+      "role": "HTML sanitization for chat messages (U07)",
+      "qualification": "Exact registry artifact inspected 2026-10-07",
+      "status": "approved"
+    },
+    {
+      "name": "pg",
+      "version": "8.23.1",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-OUir1A0rPNZlX//c7ksiu7crsGZTKSOXJPgtNiHGIlC9H0lO+NC6ZDYksSgBYY/thSWhnSRBv8w1lieNNGATNQ==",
+      "role": "PostgreSQL client for control state, leases, outboxes, receipts, budgets (Task 04); credentials stay in trusted services",
+      "qualification": "Exact registry artifact inspected 2026-10-07",
+      "status": "approved"
+    },
+    {
+      "name": "@types/pg",
+      "version": "8.11.10",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-LczQUW4dbOQzsH2RQ5qoeJ6qJPdrcM/DcMLoqWQkMLMsq83J5lAX3LXjdkWdpscFy67JSOWDnh7Ny/sPFykmkg==",
+      "role": "TypeScript definitions for pg (Task 04)",
+      "qualification": "Exact registry artifact inspected 2026-10-07",
+      "status": "approved"
+    },
+    {
+      "name": "@modelcontextprotocol/client",
+      "version": "2.3.1",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-mIGZXpHsjnZ6lD+gD/WCMpR5k8yVQQ8nNFH1N0Srf7AvnwTUMYD6pvTY8ng2+He5FfV7YMZLmrjL7cLa/cc3dQ==",
+      "role": "Task22 reviewed MCP2026-07-28 protocol adapter",
+      "qualification": "Human approved 2026-10-09 in docs/decisions/0002-mcp-revision.md; exact installed manifest/lock integrity inspected;53 local protocol tests pass. Live trusted-owner/system qualification remains blocked.",
+      "status": "approved",
+      "owningTask": "22"
+    },
+    {
+      "name": "@modelcontextprotocol/server",
+      "version": "2.3.1",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-e59MfWuSssj6DoQ96JCTqdW1AXT5/XtnTl0WWd6MU1Ka434fFUGGosCLJbGNySDhHGvxQWoRWK137FXYFkYNWw==",
+      "role": "Task22 reviewed MCP2026-07-28 protocol adapter",
+      "qualification": "Human approved 2026-10-09 in docs/decisions/0002-mcp-revision.md; exact installed manifest/lock integrity inspected;53 local protocol tests pass. Live trusted-owner/system qualification remains blocked.",
+      "status": "approved",
+      "owningTask": "22"
+    },
+    {
+      "name": "@modelcontextprotocol/core",
+      "version": "2.3.1",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-laVmIhPGpWi7rG9q+0UigblRN0Hws/Yjlb6qLFtVqryXVLkc4h+yN8z731POD2LnAGQlFe7/tXhUm7Bi0YB91g==",
+      "role": "Task22 reviewed MCP2026-07-28 protocol adapter",
+      "qualification": "Human approved 2026-10-09 in docs/decisions/0002-mcp-revision.md; exact installed manifest/lock integrity inspected;53 local protocol tests pass. Live trusted-owner/system qualification remains blocked.",
+      "status": "approved",
+      "owningTask": "22"
+    },
+    {
+      "name": "@modelcontextprotocol/node",
+      "version": "2.1.1",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-EY92OAXN2xYL7tNS/MVsWJW1v8VHAPwl9B4Ca3pCrjmvqyC+S1C/6UHsMxF2GoFPraS5Yyg56vFz9brVpFojMA==",
+      "role": "Task22 reviewed MCP2026-07-28 protocol adapter",
+      "qualification": "Human approved 2026-10-09 in docs/decisions/0002-mcp-revision.md; exact installed manifest/lock integrity inspected;53 local protocol tests pass. Live trusted-owner/system qualification remains blocked.",
+      "status": "approved",
+      "owningTask": "22"
+    },
+    {
+      "name": "tsx",
+      "version": "4.23.15",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-Yiex1Ovn8z2xPpOWckIiysV1SSyRMY9BkLF++q0yKiDxCqRhosKfMg3janKkiLBwZ5c/YryloKwGZcrEmtwxKw==",
+      "engines": {
+        "node": ">=18.0.0"
+      },
+      "upstreamPeers": {},
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in tooling-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/tooling-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "yaml",
+      "version": "2.9.1",
+      "registry": "npm",
+      "license": "ISC",
+      "integrity": "sha512-3NxN8+78OdzbT7C/WjGsyfPAtJaN3FNDsWxv7Y7mcDsT/oOmgW8BpyQQFFBnvZE3j9Y2Sdz1ULFLezL7Eb2yFw==",
+      "engines": {
+        "node": ">= 14.6"
+      },
+      "upstreamPeers": {},
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in tooling-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/tooling-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@types/better-sqlite3",
+      "version": "7.6.13",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-NMv9ASNARoKksWtsq/SHakpYAYnhBrQgGD8zkLYk/jaK8jUGn08CfEdTRgYhMypUQAfzSP8W6gNLe0q19/t4VA==",
+      "engines": {},
+      "upstreamPeers": {},
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in sqlite-types.ts",
+      "qualificationEvidence": "build/task01-current-repair/sqlite-types.ts",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "better-sqlite3",
+      "version": "13.0.3",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-RbOBxmLBG8uvFUc15X9+9SFemKcQ0WBuISBVkpuiaUB2qblC8UWlHEjdWVoZ8AdhSwmoEgsiXKfopX0CQxaACQ==",
+      "engines": {
+        "node": ">=22"
+      },
+      "upstreamPeers": {},
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in sqlite-driver-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/sqlite-driver-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "bullmq",
+      "version": "6.3.11",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-ylSY3FYil6E9IjqVtT+WHcZvS1rgTZ0L3Aev62u45NXQFe+H37a1AuC3WDATR7ScNDet1Ah8MnP3lf8XaUbPUw==",
+      "engines": {
+        "node": ">=14.17.0"
+      },
+      "upstreamPeers": {
+        "pg": ">=8.0.0",
+        "redis": ">=5.0.0",
+        "ioredis": ">=5.0.0",
+        "bullmq-otel": ">=2.0.0"
+      },
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in redis-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/redis-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "ioredis",
+      "version": "6.0.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-f+Dtubxfpf6KYFq7WVXJoOLn0bk4TJrMrN9SzeE+jrWrCWj7XX3fA6vkryafhADX+GMymRxgDJDOI33COkJc0w==",
+      "engines": {
+        "node": ">=20.0.0"
+      },
+      "upstreamPeers": {},
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in redis-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/redis-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@opentelemetry/sdk-trace-node",
+      "version": "2.11.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-CuvCMJmZxswhNLlM2LfuLOW3h3fZujA4hsG4B+Sz4dX2zvaXO8Ng74cnDHWD64gLszTlhiG3c0iNUjj4g+0/sA==",
+      "engines": {
+        "node": "^18.19.0 || >=20.6.0"
+      },
+      "upstreamPeers": {
+        "@opentelemetry/api": ">=1.0.0 <1.10.0"
+      },
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in otel-api-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/otel-api-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@opentelemetry/sdk-trace-base",
+      "version": "2.11.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-H19x/TX/LZdqiYOjM7fqtSxwlplC5pgelavqbQdHbhdq0q/AI/TGkM2dfGuuynTXmJPeF2HoZVoPDu+TGoW78A==",
+      "engines": {
+        "node": "^18.19.0 || >=20.6.0"
+      },
+      "upstreamPeers": {
+        "@opentelemetry/api": ">=1.3.0 <1.10.0"
+      },
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in otel-api-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/otel-api-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@opentelemetry/sdk-metrics",
+      "version": "2.11.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-7GXXcObyHyDUUSG+L+kJoquty01bzm7ivE7+SSgXXJcHuPzGviptxwARmI2c+bnnxjexGQbJnyNlN8HxBP/Y7A==",
+      "engines": {
+        "node": "^18.19.0 || >=20.6.0"
+      },
+      "upstreamPeers": {
+        "@opentelemetry/api": ">=1.9.0 <1.10.0"
+      },
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in otel-api-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/otel-api-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@opentelemetry/resources",
+      "version": "2.11.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-Ie7+8q8MDF4FAEQCKVMTx3ReUvxiIAgIiiW3c9JdmP8+HMcDy20puT+AHjexnExgnbvBxjQ9fjkFDWrikJ2jQA==",
+      "engines": {
+        "node": "^18.19.0 || >=20.6.0"
+      },
+      "upstreamPeers": {
+        "@opentelemetry/api": ">=1.3.0 <1.10.0"
+      },
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in otel-api-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/otel-api-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@opentelemetry/api",
+      "version": "1.9.1",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-gLyJlPHPZYdAk1JENA9LeHejZe1Ti77/pTeFm/nMXmQH/HFZlcS/O2XJB+L8fkbrNSqhdtlvjBVjxwUYanNH5Q==",
+      "engines": {
+        "node": ">=8.0.0"
+      },
+      "upstreamPeers": {},
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in otel-api-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/otel-api-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@opentelemetry/semantic-conventions",
+      "version": "1.43.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-eSYWTm620tTk45EKSedaUL8MFYI8hW164hIXsgIHyxu3VobUB3fFCu5t0hQby6OoWRPsG1KkKUG2M5UadiLiVg==",
+      "engines": {
+        "node": ">=14"
+      },
+      "upstreamPeers": {},
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in otel-api-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/otel-api-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@opentelemetry/exporter-trace-otlp-http",
+      "version": "0.222.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-RCnPWcHppwiquQ+cV3nWvNwdf0MG1w26e5jewW2T83nTZOlXgcg88sY9ulCVgagGHcq1mj0L0GP6YHgzk2v8oA==",
+      "engines": {
+        "node": "^18.19.0 || >=20.6.0"
+      },
+      "upstreamPeers": {
+        "@opentelemetry/api": "^1.3.0"
+      },
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in otel-api-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/otel-api-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "@opentelemetry/exporter-metrics-otlp-http",
+      "version": "0.222.0",
+      "registry": "npm",
+      "license": "Apache-2.0",
+      "integrity": "sha512-6Ko+0bgNP6V4G/RsmNBSk5lO1B/lo9z6tvLpFY3ykPPevXNzFmOW3C9hEmTt0zKCvHovyrol3TYlg4HVb5gwjg==",
+      "engines": {
+        "node": "^18.19.0 || >=20.6.0"
+      },
+      "upstreamPeers": {
+        "@opentelemetry/api": "^1.3.0"
+      },
+      "role": "Task01 reviewed exact dependency correction",
+      "qualification": "2026-10-10 exact registry provenance, strict peer install, frozen-lockfile unchanged; actual binary/API qualification in otel-api-qualification.json",
+      "qualificationEvidence": "build/task01-current-repair/otel-api-qualification.json",
+      "review": "docs/decisions/0002-mcp-revision.md#task01-dependency-correction-continuation--2026-10-10",
+      "status": "approved",
+      "limitation": "Local dependency/API qualification only. Does not qualify Task08 authenticated SQLite owner/fencing, Task10 product exporter/eval workflow or Task14 governed queue/worker."
+    },
+    {
+      "name": "ws",
+      "version": "8.22.0",
+      "integrity": "sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==",
+      "role": "Existing Gateway WebSocket transport; explicit declaration of already-locked runtime artifact",
+      "registry": "npm",
+      "license": "MIT",
+      "qualification": "Official npm integrity/MIT provenance inspected2026-10-10; clean root TypeScript/build and real loopback WebSocket exchange PASS after direct declaration",
+      "status": "approved"
+    },
+    {
+      "name": "@types/ws",
+      "version": "8.18.2",
+      "integrity": "sha512-67MQl+fpWKVTT1NYdnmo3U4sc/xPo/zQBncVnI74qmQa0z/b+1g6iYqNmGCPbxO+zz2aklb08a0oHfegiVd0/w==",
+      "role": "TypeScript definitions for existing Gateway ws transport",
+      "registry": "npm",
+      "license": "MIT",
+      "qualification": "Official npm integrity/MIT provenance inspected2026-10-10; clean root TypeScript/build and real loopback WebSocket exchange PASS after direct declaration",
+      "status": "approved"
     }
   ],
   "planned": [
@@ -401,6 +776,36 @@
       "license": "MIT",
       "role": "Hono Node adapter (Task 16)",
       "owningTask": "16",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "marked",
+      "version": "15.0.4",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-TCHvDqmb3ZJ4PWG7VEGVgtefA5/euFmsIhxtD0XsBxI39gUSKL81mIRFdt0AiNQozUahd4ke98ZdirExd/vSEw==",
+      "role": "markdown parser for chat UI messages (U07)",
+      "owningTask": "07",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "isomorphic-dompurify",
+      "version": "2.24.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-SgKoDBCQveodymGMBPpzs9MOTCk4Luq0bTfwoPrUKa7q0FnCLZMtqR25Rnq228zJfMTsX1ZItiJbDtjb2lyv4A==",
+      "role": "HTML sanitization for chat messages (U07)",
+      "owningTask": "07",
+      "status": "version-resolved; install and integrity capture deferred to owning task"
+    },
+    {
+      "name": "pg",
+      "version": "8.23.1",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-OUir1A0rPNZlX//c7ksiu7crsGZTKSOXJPgtNiHGIlC9H0lO+NC6ZDYksSgBYY/thSWhnSRBv8w1lieNNGATNQ==",
+      "role": "PostgreSQL client for control state, leases, outboxes, receipts, budgets (Task 04); credentials stay in trusted services",
+      "owningTask": "04",
       "status": "version-resolved; install and integrity capture deferred to owning task"
     },
     {
@@ -440,7 +845,8 @@
       "license": "MIT",
       "role": "MCP adapter (Task 22); target protocol revision 2026-07-28 subject to SDK behavior qualification",
       "owningTask": "22",
-      "status": "version-resolved; SDK must implement the pinned revision behavior or the integration stops at its compatibility gate"
+      "status": "rejected for Task22 target qualification; preserved historical planned pin",
+      "qualification": "Archive supports2025-11-25, not2026-07-28; reviewed replacement ADR0002-mcp-revision on2026-10-09"
     },
     {
       "name": "mastra",
@@ -593,30 +999,13 @@
       "status": "version-resolved; install and integrity capture deferred to owning task"
     }
   ],
-  "containerImages": [
-    {
-      "image": "postgres:17",
-      "qualifiedReference": "docker.io/library/postgres:17@sha256:3cec7eb015ba8adb28139fa5c83b8489cdf0e666e53dfdf20f598ae0cc8739e3",
-      "platform": "linux/amd64",
-      "role": "control state, leases, outboxes, receipts, curated shared memory (Task 04)",
-      "qualification": "manifest digest resolved from the registry 2026-10-06 without the daemon; pull-and-run verification happens on the qualified Linux host at the owning task",
-      "status": "digest-resolved; runtime qualification deferred"
-    },
-    {
-      "image": "redis:8",
-      "qualifiedReference": "docker.io/library/redis:8@sha256:6e9101032a2126aeeb4b1e862ac77d2fcf26b831ae37e5ff2e69169f82ddd411",
-      "platform": "linux/amd64",
-      "role": "BullMQ transport (Tasks 04, 14); never authoritative task history",
-      "qualification": "manifest digest resolved from the registry 2026-10-06 without the daemon; pull-and-run verification happens on the qualified Linux host at the owning task",
-      "status": "digest-resolved; runtime qualification deferred"
-    }
-  ],
+  "containerImages": [],
   "protocols": [
     {
       "protocol": "Model Context Protocol",
       "targetRevision": "2026-07-28",
-      "sdk": "@modelcontextprotocol/sdk 1.32.1 (planned)",
-      "note": "legacy 2025-11-25 behavior requires an explicit compatibility fixture and decision (Task 22); a version mismatch is a protocol error, not a guessed downgrade"
+      "sdk": "Official @modelcontextprotocol/client/server/core2.3.1; @modelcontextprotocol/node2.1.1",
+      "note": "Exact modern-only pin and local JSON/SSE qualification per approved Task22 ADR; legacy1.32.1 rejected. Live trusted-owner integration blocked."
     },
     {
       "protocol": "Agent-to-Agent",
@@ -626,9 +1015,46 @@
     }
   ],
   "openQualifications": [
-    "Docker CLI 29.4.3 is present on this Windows workstation but the Docker daemon is not running; image pull verification, Linux Landlock/seccomp probes, and all sandbox/security integration checks (Tasks 12, 13, 22, 23, 25, 27, 29) must run on the qualified Linux host before those tasks execute.",
-    "WSL is present with the docker-desktop distribution (version 2); it is not yet qualified as the Linux enforcement runtime.",
     "SQLite driver choice (better-sqlite3 13.0.3 versus built-in node:sqlite) and bundled-build bug-fix qualification are decided in Task 08, not assumed here.",
-    "bullmq 6.3.11 peer optionality (redis, bullmq-otel) must be confirmed at install time with strict-peer-dependencies enabled."
+    "bullmq 6.3.11 peer optionality (redis, bullmq-otel) must be confirmed at install time with strict-peer-dependencies enabled.",
+    "Task22 modern SDK local fixtures qualified; production effects blocked on Task13 verified manifests/immutable journal/policy-budget-isolation-signed-receipt owner qualification and required system checks. Official Node bridge upstream server peer^2.3.0 resolves exact2.3.1; upstream @hono/node-server^1.19.9 resolves integrity-locked1.19.17 without changing approved direct2.1.3.",
+    "2026-10-10 reviewed exact SQLite13/BullMQ6+ioredis6/OTel2.11+0.222/tooling binaries locally API-qualified with strict peers and unchanged frozen lockfile. Product owner08/10/14 acceptance and Linux release qualification remain separate. Disposable Redis8 fixture removed.",
+    "Native Windows isolation backend is unimplemented; tool execution is refused. Future VM-only Linux work is separately scoped and cannot block ordinary Windows implementation."
+  ],
+  "platformPolicy": {
+    "date": "2026-10-15",
+    "decision": "docs/decisions/0004-windows-only-current-release.md",
+    "scope": "Native Windows implementation. Linux images and receipts deferred to historical records; no current image/service dependency."
+  },
+  "deferredLinuxImages": [
+    {
+      "image": "postgres:17",
+      "qualifiedReference": "docker.io/library/postgres:17@sha256:3cec7eb015ba8adb28139fa5c83b8489cdf0e666e53dfdf20f598ae0cc8739e3",
+      "platform": "linux/amd64",
+      "role": "control state, leases, outboxes, receipts, curated shared memory (Task 04)",
+      "qualification": "manifest digest resolved from the registry 2026-10-06 without the daemon; pull-and-run verification happens on the qualified Linux host at the owning task",
+      "status": "digest-resolved; runtime qualification deferred",
+      "currentScope": "Historical/deferred only; no active deployment file or current Windows prerequisite"
+    },
+    {
+      "image": "redis:8",
+      "qualifiedReference": "docker.io/library/redis:8@sha256:6e9101032a2126aeeb4b1e862ac77d2fcf26b831ae37e5ff2e69169f82ddd411",
+      "platform": "linux/amd64",
+      "role": "BullMQ transport (Tasks 04, 14); never authoritative task history",
+      "qualification": "manifest digest resolved from the registry 2026-10-06 without the daemon; pull-and-run verification happens on the qualified Linux host at the owning task",
+      "status": "digest-resolved; runtime qualification deferred",
+      "currentScope": "Historical/deferred only; no active deployment file or current Windows prerequisite"
+    },
+    {
+      "image": "node:24.19.0-bookworm-slim",
+      "qualifiedReference": "docker.io/library/node:24.19.0-bookworm-slim@sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df",
+      "platform": "linux/amd64",
+      "role": "M03 identity library and worker credential qualification; approved Node version unchanged",
+      "qualification": "Human-approved M03 correction; pinned image built locally and actual independent identity/worker processes qualified on Docker Desktop Linux (non-root, read-only, mounts/environment inspected). Release-host and Task12 qualification remain separate.",
+      "status": "M03 local Linux runtime qualified; release-host qualification deferred",
+      "review": "docs/v2-build-guide.md#m03-image-qualification-scope-correction--approved",
+      "localImage": "asi/identity:m03-qualification",
+      "currentScope": "Historical/deferred only; no active deployment file or current Windows prerequisite"
+    }
   ]
 }

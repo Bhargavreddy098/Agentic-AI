@@ -1,6 +1,10 @@
 # 0001 — Runtime, dependency baseline, and workspace enforcement
 
+> **Current platform scope — 2026-10-15:** Build and deploy the Windows version only. Linux is allowed only as an optional VM guest for qualified isolation; standalone Linux hosts/releases are deferred. This supersedes earlier platform assumptions in this document. PostgreSQL/Redis and ordinary integration/security tests remain in the Windows work queue. Preserve required protections and tests; unsupported executable paths stay disabled. See ADR 0004.
+
 Status: APPROVED. Date: 2026-10-06. Decided by: user (execution authorized the same day).
+
+> Current navigation (2026-10-10): use [the consolidated guide](../v2-build-guide.md#start-here) and live dependency inventory. This ADR preserves the Oct6 baseline decision and original planning context. Its monolithic MCP SDK 1.32.1 selection was superseded by [ADR0002](0002-mcp-revision.md); official client/server/core 2.3.1 and Node bridge 2.1.1 are already implemented for Task22. Do not reinstall the superseded SDK or infer current service readiness from the historical environment notes below.
 
 ## Context
 

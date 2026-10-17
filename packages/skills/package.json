@@ -1,0 +1,29 @@
+{
+  "name": "@asi/skills",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@asi/contracts": "workspace:*",
+    "@asi/control": "workspace:*",
+    "@asi/audit": "workspace:*",
+    "@asi/identity": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "5.0.3",
+    "@types/node": "24.19.1"
+  }
+}

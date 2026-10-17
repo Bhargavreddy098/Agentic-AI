@@ -1,2 +1,2 @@
-import { UnavailableSection } from "../../../features/shell/UnavailableSection";
-export default function Page() { return <UnavailableSection title="Settings" description="Manage appearance, privacy, notifications and workspace preferences." />; }
+import SettingsPage from "../../../features/settings/SettingsPage";
+export default function Page() { return <SettingsPage />; }

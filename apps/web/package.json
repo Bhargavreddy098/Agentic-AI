@@ -14,10 +14,16 @@
     "react-dom": "19.3.0",
     "@asi/ui": "workspace:*",
     "@asi/contracts": "workspace:*",
-    "zod": "4.6.5"
+    "zod": "4.6.5",
+    "marked": "15.0.4",
+    "isomorphic-dompurify": "2.24.0",
+    "clsx": "2.1.1"
   },
   "devDependencies": {
     "tailwindcss": "4.3.3",
-    "@tailwindcss/postcss": "4.3.3"
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@testing-library/jest-dom": "6.5.0"
   }
 }
