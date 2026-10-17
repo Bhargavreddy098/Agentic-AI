@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { sections, navigateToInteraction } from "../../apps/web/src/lib/navigation.js";
+import { sections, navigateToInteraction } from "@asi/web/lib/navigation.js";
 
 const labels = ["Chat", "Models & Providers", "Skills", "Tools & Connections", "Memory", "Activity & Tasks", "Settings"];
 const routes = ["/chat", "/models", "/skills", "/connections", "/memory", "/activity", "/settings"];

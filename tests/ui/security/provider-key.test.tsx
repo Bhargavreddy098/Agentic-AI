@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { UiCommandResult } from "../../../packages/contracts/src/ui/index.js";
-import { ConnectionForm, type ProviderConnectCommand } from "../../../apps/web/src/features/models/ConnectionForm.tsx";
+import { ConnectionForm, type ProviderConnectCommand } from "@asi/web/features/models/ConnectionForm.tsx";
 
 const SECRET = "sk-live-secret-0001";
 const applied = (commandId: string): UiCommandResult => ({ commandId, status: "applied", revision: 2 });

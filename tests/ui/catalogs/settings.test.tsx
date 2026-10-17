@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { applyAppearance, readAppearance, deriveCapabilities, applyLocalPreference, hasUnsavedChanges, validateDraft, buildSettingsCommand, submitSettings } from "../../../apps/web/src/features/settings/settings.ts";
-import { SettingsPanel } from "../../../apps/web/src/features/settings/SettingsPanel.tsx";
+import { applyAppearance, readAppearance, deriveCapabilities, applyLocalPreference, hasUnsavedChanges, validateDraft, buildSettingsCommand, submitSettings } from "@asi/web/features/settings/settings.ts";
+import { SettingsPanel } from "@asi/web/features/settings/SettingsPanel.tsx";
 import { SettingsViewSchema, type SettingsView } from "../../../packages/contracts/src/ui/index.js";
 
 const makeSettings = (overrides = {}): SettingsView => SettingsViewSchema.parse({ revision: 4, allowedActions: ["settings.update"], availability: "ready", privacyMode: "redacted_cloud", spendLimitMicroUsd: null, retentionDays: 7, notifications: true, scheduleEnabled: false, ...overrides });

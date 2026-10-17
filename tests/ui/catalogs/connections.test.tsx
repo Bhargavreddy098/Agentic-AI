@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ConnectionsProvider, useConnections, filterConnections, connectConnection, disconnectConnection } from "../../../apps/web/src/features/connections/catalog.tsx";
-import { ConnectionCatalog } from "../../../apps/web/src/features/connections/ConnectionCatalog.tsx";
-import { ConnectionForm } from "../../../apps/web/src/features/connections/ConnectionForm.tsx";
+import { ConnectionsProvider, useConnections, filterConnections, connectConnection, disconnectConnection } from "@asi/web/features/connections/catalog.tsx";
+import { ConnectionCatalog } from "@asi/web/features/connections/ConnectionCatalog.tsx";
+import { ConnectionForm } from "@asi/web/features/connections/ConnectionForm.tsx";
 import { ConnectionViewSchema, type Catalog, type ConnectionView } from "../../../packages/contracts/src/ui/index.js";
 
 const makeConnection = (overrides = {}): ConnectionView => ConnectionViewSchema.parse({ connectionId: "c1", displayName: "Local Tool", kind: "tool", status: "connected", permissions: ["tool.invoke"], revision: 1, allowedActions: ["connection.disconnect"], ...overrides });

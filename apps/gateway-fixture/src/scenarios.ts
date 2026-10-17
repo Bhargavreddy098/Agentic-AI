@@ -85,13 +85,16 @@ export function createDemoGateway() {
   app.use("*", async (c, next) => {
     c.header("Cache-Control", "no-store"); c.header("X-ASI-Demo", "true");
     if (c.req.path !== `${base}/me` && getCookie(c, "asi-demo") !== "demo-session") return c.json(error("UNAUTHENTICATED", "Demo session required."), 401);
-    if (!["GET", "HEAD"].includes(c.req.method) && (c.req.header("x-csrf-token") !== "demo-csrf" || c.req.header("origin") !== "http://127.0.0.1:3000")) return c.json(error("POLICY_DENIED", "Demo mutation origin or CSRF check failed."), 403);
+    const origin = c.req.header("origin") ?? "";
+    const allowedOrigin = origin === "http://127.0.0.1:3000" || origin === "http://localhost:3000" || /^https:\/\/[a-z0-9-]+\.[a-z0-9-]+\.run\.app$/.test(origin);
+    if (!["GET", "HEAD"].includes(c.req.method) && (c.req.header("x-csrf-token") !== "demo-csrf" || !allowedOrigin)) return c.json(error("POLICY_DENIED", "Demo mutation origin or CSRF check failed."), 403);
     await next();
   });
   app.onError(() => new Response(JSON.stringify(error("DEPENDENCY_UNAVAILABLE", "Demo request could not be processed.")), { status: 400, headers: { "content-type": "application/json", "X-ASI-Demo": "true" } }));
   app.notFound(c => c.json(error("INVALID_INPUT", "Demo resource unavailable."), 404));
   app.get(`${base}/me`, c => {
-    setCookie(c, "asi-demo", "demo-session", { httpOnly: true, sameSite: "Strict", path: "/" });
+    const isHttps = c.req.header("x-forwarded-proto") === "https";
+    setCookie(c, "asi-demo", "demo-session", isHttps ? { httpOnly: true, sameSite: "None", secure: true, partitioned: true, path: "/" } : { httpOnly: true, sameSite: "Strict", path: "/" });
     return c.json({ workspaceId: "demo-workspace", displayName: "Demo workspace", subjectId: "demo-user", allowedActions: ["chat", "demo_decisions"], demoMode: true, csrfToken: "demo-csrf", limits: { maxMessageBytes: 65536, maxAttachmentBytes: 65536, maxAttachmentCount: 3 } });
   });
   app.get(`${base}/conversations`, c => c.json({ items: [...conversations.values()].map(entry => entry.summary), nextCursor: null }));

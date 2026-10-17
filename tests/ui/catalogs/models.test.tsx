@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { CatalogProvider, useCatalogs, isModelSelectable, modelUnavailableReason, filterModels, optionalDetail, preferModel } from "../../../apps/web/src/features/models/catalog.tsx";
-import { ModelCatalog } from "../../../apps/web/src/features/models/ModelCatalog.tsx";
-import { ProviderList } from "../../../apps/web/src/features/models/ProviderList.tsx";
+import { CatalogProvider, useCatalogs, isModelSelectable, modelUnavailableReason, filterModels, optionalDetail, preferModel } from "@asi/web/features/models/catalog.tsx";
+import { ModelCatalog } from "@asi/web/features/models/ModelCatalog.tsx";
+import { ProviderList } from "@asi/web/features/models/ProviderList.tsx";
 import { ModelViewSchema, ProviderViewSchema, type Catalog, type ModelView, type ProviderView } from "../../../packages/contracts/src/ui/index.js";
 
 const makeModel = (overrides = {}): ModelView => ModelViewSchema.parse({ modelId: "m1", providerId: "p1", displayName: "Local Fast", locality: "local", status: "available", preferred: false, revision: 1, allowedActions: ["model.preference.set"], ...overrides });

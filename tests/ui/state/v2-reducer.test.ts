@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 import { ConversationSnapshotSchema, UiEventSchema, isCurrentVerification, type UiEvent } from "../../../packages/contracts/src/ui/index.js";
-import { hydrateConversation, reduceConversation } from "../../../apps/web/src/lib/chat/reducer.js";
+import { hydrateConversation, reduceConversation } from "@asi/web/lib/chat/reducer.js";
 
 const snapshot = (conversationId = "c1") => ConversationSnapshotSchema.parse({ conversationId, workspaceId: "w1", revision: 9, lastEventSequence: 9, messages: [], interactions: [], tasks: [], tools: [], artifacts: [], runStatus: "running", effectiveModel: null, usage: { inputTokens: null, outputTokens: null, costMicroUsd: null }, composerCapabilities: ["send", "cancel"] });
 const goal = (revision: number, conversationId = "c1") => ({ conversationId, revision, allowedActions: [], goalId: "g1", runId: "r1", status: "running", objective: "Ship the demo goal", criteria: [{ criterionId: "k1", description: "Demo criterion", required: true }] });

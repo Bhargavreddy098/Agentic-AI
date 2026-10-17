@@ -2,7 +2,7 @@ import { expect, it } from "vitest";
 import { ApprovalDecisionInputSchema, ClarificationAnswerSchema, ProviderViewSchema, UiEventSchema, SendMessageInputSchema } from "../../../packages/contracts/src/ui/index.js";
 import { UiApprovalRequestSchema, UiCommandResultSchema } from "../../../packages/contracts/src/ui/index.js";
 import { readFileSync } from "node:fs";
-import { gatewayPath } from "../../../apps/web/src/lib/gateway/client.js";
+import { gatewayPath } from "@asi/web/lib/gateway/client.js";
 
 it("requires command identity and conversation revision", () => {
   expect(SendMessageInputSchema.safeParse({ text: "hello" }).success).toBe(false);

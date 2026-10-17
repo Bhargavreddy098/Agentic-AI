@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { UiMessageSchema } from "../../../packages/contracts/src/ui/index.js";
-import { MessageRenderer } from "../../../apps/web/src/features/chat/MessageRenderer";
-import { ConversationPanel } from "../../../apps/web/src/features/chat/ConversationPanel";
-import SafeMarkdown, { safeHttpUrl } from "../../../apps/web/src/features/chat/SafeMarkdown";
-import { renderMarkdown, sanitizeHtml } from "../../../apps/web/src/features/chat/markdown";
-import { formatStatusSummary } from "../../../apps/web/src/features/chat/status-summary";
+import { MessageRenderer } from "@asi/web/features/chat/MessageRenderer";
+import { ConversationPanel } from "@asi/web/features/chat/ConversationPanel";
+import SafeMarkdown, { safeHttpUrl } from "@asi/web/features/chat/SafeMarkdown";
+import { renderMarkdown, sanitizeHtml } from "@asi/web/features/chat/markdown";
+import { formatStatusSummary } from "@asi/web/features/chat/status-summary";
 
 const createMessage = (overrides = {}) => UiMessageSchema.parse({
   messageId: "msg-1",

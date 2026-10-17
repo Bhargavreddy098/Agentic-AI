@@ -18,6 +18,15 @@
       "DOM.Iterable"
     ],
     "paths": {
+      "@asi/web/*": [
+        "./apps/web/src/*"
+      ],
+      "@asi/gateway-fixture/*": [
+        "./apps/gateway-fixture/src/*"
+      ],
+      "@asi/gateway-app/*": [
+        "./apps/gateway/src/*"
+      ],
       "@asi/*": [
         "./packages/*/src/index.ts"
       ]

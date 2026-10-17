@@ -1,5 +1,5 @@
 import { expect, it, vi } from "vitest";
-import { SubmissionController } from "../../../apps/web/src/lib/chat/submission.js";
+import { SubmissionController } from "@asi/web/lib/chat/submission.js";
 const input = { commandId: "command-1", clientMessageId: "message-1", expectedConversationRevision: 0, text: "hello", attachmentIds: [], requestedSkillIds: [] };
 it("shares one in-flight submission and retries the identical command after transport failure", async () => {
   const send = vi.fn().mockRejectedValueOnce(new Error("lost response")).mockResolvedValue({ commandId: "command-1", status: "applied", revision: 4 });

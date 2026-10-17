@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { filterTasks, paginateTasks, usageLabel, canonicalDecision, decisionHref, reconcileTasks, cancelTask } from "../../../apps/web/src/features/activity/activity.ts";
-import { ActivityTasks } from "../../../apps/web/src/features/activity/ActivityTasks.tsx";
-import { ActivityUsage } from "../../../apps/web/src/features/activity/ActivityUsage.tsx";
+import { filterTasks, paginateTasks, usageLabel, canonicalDecision, decisionHref, reconcileTasks, cancelTask } from "@asi/web/features/activity/activity.ts";
+import { ActivityTasks } from "@asi/web/features/activity/ActivityTasks.tsx";
+import { ActivityUsage } from "@asi/web/features/activity/ActivityUsage.tsx";
 import { TaskViewSchema, ClarificationRequestSchema, UiApprovalRequestSchema, type Interaction, type TaskView } from "../../../packages/contracts/src/ui/index.js";
 
 const makeTask = (overrides = {}): TaskView => TaskViewSchema.parse({ taskId: "t1", conversationId: "conv-1", runId: "r1", version: 1, status: "running", summary: "Summarize the docs.", allowedActions: ["run.cancel"], evidenceRefs: ["ev1"], ...overrides });

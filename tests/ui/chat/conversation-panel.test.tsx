@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ConversationPanel } from "../../../apps/web/src/features/chat/ConversationPanel.tsx";
+import { ConversationPanel } from "@asi/web/features/chat/ConversationPanel.tsx";
 import {
   ArtifactViewSchema, ClarificationRequestSchema, TaskViewSchema, ToolViewSchema, UiApprovalRequestSchema,
   type ClarificationAnswer, type ClarificationRequest, type TaskView, type ToolView, type ArtifactView, type UiApprovalRequest, type UiCommandResult,

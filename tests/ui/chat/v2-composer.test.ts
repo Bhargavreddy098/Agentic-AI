@@ -2,10 +2,10 @@
 import { createElement, useState } from "react";
 import { afterEach, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import Composer from "../../../apps/web/src/features/chat/Composer.tsx";
+import Composer from "@asi/web/features/chat/Composer.tsx";
 import { ConversationSnapshotSchema, SendMessageInputSchema } from "../../../packages/contracts/src/ui/index.js";
-import type { GatewayClient } from "../../../apps/web/src/lib/gateway/client.js";
-import { ChatStore } from "../../../apps/web/src/lib/chat/store.js";
+import type { GatewayClient } from "@asi/web/lib/gateway/client.js";
+import { ChatStore } from "@asi/web/lib/chat/store.js";
 
 const session = { workspaceId: "w1", displayName: "Demo", subjectId: "u1", allowedActions: ["chat"], demoMode: true, csrfToken: "csrf", limits: { maxMessageBytes: 1000, maxAttachmentBytes: 1000, maxAttachmentCount: 1 } };
 const snapshot = ConversationSnapshotSchema.parse({ conversationId: "c1", workspaceId: "w1", revision: 0, lastEventSequence: 0, messages: [], interactions: [], tasks: [], tools: [], artifacts: [], runStatus: null, effectiveModel: "demo", usage: { inputTokens: null, outputTokens: null, costMicroUsd: null }, composerCapabilities: ["send", "cancel"] });

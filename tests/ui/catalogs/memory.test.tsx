@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { narrowScopes, availableScopes, confidenceLabel, resetOnWorkspaceChange, correctMemory, deleteMemory } from "../../../apps/web/src/features/memory/memory.ts";
-import { MemoryPanel } from "../../../apps/web/src/features/memory/MemoryPanel.tsx";
-import { MemoryDetail } from "../../../apps/web/src/features/memory/MemoryDetail.tsx";
-import { MemoryCorrectionForm } from "../../../apps/web/src/features/memory/MemoryCorrectionForm.tsx";
+import { narrowScopes, availableScopes, confidenceLabel, resetOnWorkspaceChange, correctMemory, deleteMemory } from "@asi/web/features/memory/memory.ts";
+import { MemoryPanel } from "@asi/web/features/memory/MemoryPanel.tsx";
+import { MemoryDetail } from "@asi/web/features/memory/MemoryDetail.tsx";
+import { MemoryCorrectionForm } from "@asi/web/features/memory/MemoryCorrectionForm.tsx";
 import { MemoryViewSchema, type MemoryView, type Page } from "../../../packages/contracts/src/ui/index.js";
 
 const makeMemory = (overrides = {}): MemoryView => MemoryViewSchema.parse({ memoryId: "m1", scope: "Global", value: "The team prefers TypeScript.", sourceIds: ["s1"], confidence: 0.9, revision: 1, allowedActions: ["memory.correct", "memory.delete"], ...overrides });

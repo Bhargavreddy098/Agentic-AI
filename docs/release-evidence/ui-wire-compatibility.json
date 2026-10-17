@@ -3,7 +3,7 @@
   "date": "2026-10-17",
   "owner": "U21",
   "sourcePath": "packages/contracts/src/ui/index.ts",
-  "sourceDigest": "91eff1737cf0ae6b4b541cb2cc175d387a9b31e88cbdae911fa0556426ebb02e",
+  "sourceDigest": "94221199d337e54975bec742eb7145902c1c2953549c2b21e5ec031300c4996b",
   "envelope": "UiEventSchema wraps every event with schemaVersion literal 1, eventId, conversationId, sequence, occurredAt and eventType",
   "compatibilityBasis": "The Gateway, the fixture Gateway and the browser client all parse this exact schema. Any field, enum or event change requires a reviewed contract update plus a refreshed digest and eventTypes list here; a silent change fails tests/ui/security/conformance.test.ts.",
   "eventTypes": [

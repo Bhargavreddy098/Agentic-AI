@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { TaskProgressCard } from "../../../apps/web/src/features/chat/TaskProgressCard.tsx";
-import { ToolActivityCard } from "../../../apps/web/src/features/chat/ToolActivityCard.tsx";
-import { ArtifactCard } from "../../../apps/web/src/features/chat/ArtifactCard.tsx";
-import { isPreviewable, canAction, downloadHref, SUMMARY_LIMIT } from "../../../apps/web/src/lib/artifacts.ts";
+import { TaskProgressCard } from "@asi/web/features/chat/TaskProgressCard.tsx";
+import { ToolActivityCard } from "@asi/web/features/chat/ToolActivityCard.tsx";
+import { ArtifactCard } from "@asi/web/features/chat/ArtifactCard.tsx";
+import { isPreviewable, canAction, downloadHref, SUMMARY_LIMIT } from "@asi/web/lib/artifacts.ts";
 import { TaskViewSchema, ToolViewSchema, ArtifactViewSchema, UiApprovalRequestSchema } from "../../../packages/contracts/src/ui/index.js";
-import { hydrateConversation, reduceConversation } from "../../../apps/web/src/lib/chat/reducer.ts";
+import { hydrateConversation, reduceConversation } from "@asi/web/lib/chat/reducer.ts";
 
 const makeTask = (overrides = {}) => TaskViewSchema.parse({ taskId: "t1", conversationId: "c1", runId: "r1", version: 1, status: "queued", summary: "Synthetic task", allowedActions: [], evidenceRefs: [], ...overrides });
 const makeTool = (overrides = {}) => ToolViewSchema.parse({ toolId: "tool1", conversationId: "c1", runId: "r1", version: 1, status: "planned", summary: "Synthetic tool", allowedActions: [], evidenceRefs: [], ...overrides });

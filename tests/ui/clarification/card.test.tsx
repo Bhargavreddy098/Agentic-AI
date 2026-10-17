@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ClarificationCard, validateAnswer, isExpired } from "../../../apps/web/src/features/chat/ClarificationCard.tsx";
+import { ClarificationCard, validateAnswer, isExpired } from "@asi/web/features/chat/ClarificationCard.tsx";
 import { ClarificationAnswerSchema, ClarificationRequestSchema, type ClarificationRequest, type UiCommandResult } from "../../../packages/contracts/src/ui/index.js";
 
 const makeQuestion = (overrides: Partial<ClarificationRequest> = {}): ClarificationRequest => ClarificationRequestSchema.parse({

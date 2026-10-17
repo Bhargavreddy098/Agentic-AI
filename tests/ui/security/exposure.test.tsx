@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ChatStore } from "../../../apps/web/src/lib/chat/store.js";
-import { HttpGatewayClient } from "../../../apps/web/src/lib/gateway/http-client.js";
-import { renderMarkdown, sanitizeHtml } from "../../../apps/web/src/features/chat/markdown.js";
-import SafeMarkdown, { safeHttpUrl } from "../../../apps/web/src/features/chat/SafeMarkdown.js";
-import { MemoryPanel } from "../../../apps/web/src/features/memory/MemoryPanel.js";
+import { ChatStore } from "@asi/web/lib/chat/store.js";
+import { HttpGatewayClient } from "@asi/web/lib/gateway/http-client.js";
+import { renderMarkdown, sanitizeHtml } from "@asi/web/features/chat/markdown.js";
+import SafeMarkdown, { safeHttpUrl } from "@asi/web/features/chat/SafeMarkdown.js";
+import { MemoryPanel } from "@asi/web/features/memory/MemoryPanel.js";
 import { ConversationSnapshotSchema, MemoryViewSchema, UiEventSchema, WorkspaceSessionSchema } from "../../../packages/contracts/src/ui/index.js";
 
 const SECRET = "sk-live-secret-0001";
