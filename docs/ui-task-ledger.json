@@ -1014,8 +1014,15 @@
         "F18"
       ],
       "stage": "quality",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Implemented comprehensive UI security architecture test suite in tests/ui/security/: conformance.test.ts (7 tests), exposure.test.tsx (6 tests), provider-key.test.tsx (4 tests), and race.test.tsx (5 tests); full suite vitest run tests/ui/security passes 22/22 tests in 3.60s on Windows.",
+        "Conformance verification (tests/ui/security/conformance.test.ts): asserts exactly 7 approved navigation routes exist (/chat, /models, /skills, /connections, /memory, /activity, /settings); strictly rejects unapproved routes (/approvals, /questions, /agents, /dashboard); verifies zero Next.js API route handlers (/api/*) exist in apps/web/src/app; verifies zero direct provider SDK imports (openai, @anthropic-ai/sdk, @google/genai, langchain) exist in apps/web or packages/ui; verifies single ChatStore state ownership across all chat features; validates wire schema compatibility digest (91eff1737cf0ae6b4b541cb2cc175d387a9b31e88cbdae911fa0556426ebb02e) and all 20 registered UI wire event types in docs/release-evidence/ui-wire-compatibility.json.",
+        "Exposure & Privacy protection (tests/ui/security/exposure.test.tsx): proves secrets, sensitive provider keys, private memory records, and auth tokens are never persisted in localStorage or sessionStorage; proves sensitive data is not leaked into DOM attributes, URL query params, console output, or telemetry logs; verifies SafeMarkdown renders inert text without HTML or script injection; proves workspace switching instantly purges private conversation drafts and memory states.",
+        "Provider credential protection (tests/ui/security/provider-key.test.tsx): proves provider API keys remain write-only; form fields never echo stored values; keys are purged from component state immediately upon submission failure; credentials never hit browser storage or URL parameters.",
+        "Race protection & state integrity (tests/ui/security/race.test.tsx): proves double-click user decisions on approvals and clarifications coalesce into a single Gateway command; proves expired proposals are locked read-only and reject decision attempts; proves state reducer discards stale-epoch deltas and out-of-order sequence frames.",
+        "Windows gate verification: pnpm ui:verify exits 0 (ui:typecheck clean, ui:build 10/10 routes compiled, ui:test 31 files / 210 passed, ui:test:security 4 files / 22 passed, verify-ui-boundaries 0 violations, verify-ui-sources 0 violations); 12-node verify-architecture.mjs exits 0 across 421 scanned files; verify-traceability.mjs exits 0; verify-protected-files.mjs exits 0 with 25 protected rules enforced."
+      ],
       "v2ProposalIds": [],
       "executionTarget": {
         "host": "Windows",
@@ -1045,8 +1052,16 @@
         "F18"
       ],
       "stage": "release",
-      "status": "pending",
-      "evidence": [],
+      "status": "completed",
+      "evidence": [
+        "Created docs/release-evidence/frontend.md documenting the comprehensive frontend release evidence, frozen verification results, test counts across environments, and operator runbook.",
+        "Produced complete integration matrix: Section → Wrapper → Contract → Gateway Port → Backend Task → Test → Evidence across all 7 canonical navigation routes (/chat, /models, /skills, /connections, /memory, /activity, /settings).",
+        "Documented exact boundary between real enabled features (Gateway authenticated session, SSE streaming, in-chat interactive cards, write-only credentials, scoped memory search, appearance bootstrap) vs demo fixture scenarios (apps/gateway-fixture mock scenarios).",
+        "Formally recorded U19 accepted limited scope: in-process policy evaluation + signed HMAC execution receipts proven end-to-end through real Gateway HTTP/SSE server; explicitly retained limitation that microVM sandbox isolation, @asi/audit, @asi/budgets, PostgreSQL durable outbox, external privacy router daemon, and Mastra orchestrator remain unqualified/blocked upstream at this frontend milestone.",
+        "Verified component inventory alignment (docs/ui-component-inventory.json) with Apache-2.0 AI Elements source hashes and zero unauthorized dependencies; verified wire schema compatibility digest (docs/release-evidence/ui-wire-compatibility.json).",
+        "Documented operator handoff procedures: local demo mode startup, live Gateway connection configuration, session management and tenant isolation, interrupted stream recovery via sequence replay / snapshot re-fetch, pending decisions and race protection, failure and unknown outcomes handling, and clean release rollback.",
+        "Frozen gate verification on Windows: pnpm install --frozen-lockfile exits 0; pnpm ui:verify exits 0 (typecheck clean, build 10 routes compiled, 210/210 unit tests passed, 22/22 security tests passed, 0 boundary violations, 0 source violations); pnpm ui:test:e2e exits 0 (26/26 passed in 56.8s); pnpm ui:test:a11y exits 0 (16/16 passed in 24.2s); pnpm ui:test:visual exits 0 (6/6 passed in 27.8s); verify-architecture.mjs exits 0 (421 files, 0 violations); verify-traceability.mjs exits 0; verify-protected-files.mjs exits 0."
+      ],
       "v2ProposalIds": [
         "V2-F01",
         "V2-F02",
