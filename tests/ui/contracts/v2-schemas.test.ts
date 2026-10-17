@@ -4,8 +4,8 @@ import {
   UiEventSchema, UiEventTypeSchema, ConversationSnapshotSchema, WorkspaceSessionSchema,
   SendMessageInputSchema, UiMutationCommandSchema, isCurrentVerification,
 } from "../../../packages/contracts/src/ui/index.js";
-import type { GatewayClient } from "../../../apps/web/src/lib/gateway/client.js";
-import { HttpGatewayClient } from "../../../apps/web/src/lib/gateway/http-client.js";
+import type { GatewayClient } from "@asi/web/lib/gateway/client.js";
+import { HttpGatewayClient } from "@asi/web/lib/gateway/http-client.js";
 
 const goalView = { conversationId: "c-1", revision: 4, allowedActions: ["a-view"], goalId: "g-1", runId: "r-1", status: "running", objective: "Ship the reviewed slice", criteria: [{ criterionId: "cr-1", description: "Tests pass", required: true }] };
 const planView = { conversationId: "c-1", revision: 5, allowedActions: [], planId: "p-1", goalId: "g-1", runId: "r-1", goalRevision: 4, status: "active", steps: [{ stepId: "s-1", summary: "Run checks", status: "running", dependsOn: [] }] };

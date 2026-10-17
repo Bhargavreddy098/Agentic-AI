@@ -1,8 +1,8 @@
 import { afterEach, expect, it, vi } from "vitest";
-import { ChatStore } from "../../../apps/web/src/lib/chat/store.js";
-import { GatewayError, HttpGatewayClient } from "../../../apps/web/src/lib/gateway/http-client.js";
+import { ChatStore } from "@asi/web/lib/chat/store.js";
+import { GatewayError, HttpGatewayClient } from "@asi/web/lib/gateway/http-client.js";
 import { ConversationSnapshotSchema } from "../../../packages/contracts/src/ui/index.js";
-import type { GatewayClient } from "../../../apps/web/src/lib/gateway/client.js";
+import type { GatewayClient } from "@asi/web/lib/gateway/client.js";
 
 const snapshot = (sequence = 0) => ConversationSnapshotSchema.parse({ conversationId: "c1", workspaceId: "w1", revision: sequence, lastEventSequence: sequence, messages: [], interactions: [], tasks: [], tools: [], artifacts: [], runStatus: null, effectiveModel: null, usage: { inputTokens: null, outputTokens: null, costMicroUsd: null }, composerCapabilities: [] });
 const session = { workspaceId: "w1", displayName: "Demo", subjectId: "u1", allowedActions: [], demoMode: true, csrfToken: "csrf", limits: { maxMessageBytes: 1000, maxAttachmentBytes: 1000, maxAttachmentCount: 1 } };

@@ -4,7 +4,22 @@ import { setCookie, getCookie } from "hono/cookie";
 import { createHash } from "node:crypto";
 import { SendMessageInputSchema, ClarificationAnswerSchema, ApprovalDecisionInputSchema, UiMutationCommandSchema, ConversationPatchSchema, UploadIntentSchema, UiEventSchema, ConversationSnapshotSchema, type UploadView, type ConversationSnapshot, type ConversationSummary, type UiEvent, type UiCommandResult, type Interaction } from "@asi/contracts";
 
-export function createDemoGateway() {
+export interface DemoGatewayOptions {
+  previewOrigins?: readonly string[];
+  trustedProxy?: boolean;
+  crossSiteCookies?: boolean;
+}
+
+export function createDemoGateway(options: DemoGatewayOptions = {}) {
+  const allowedOrigins = new Set(["http://127.0.0.1:3000", "http://localhost:3000"]);
+  for (const origin of options.previewOrigins ?? []) {
+    let parsed: URL;
+    try { parsed = new URL(origin); } catch { throw new Error("Invalid demo preview origin"); }
+    if (parsed.protocol !== "https:" || parsed.origin !== origin || parsed.username || parsed.password || origin.includes("*")) throw new Error("Invalid demo preview origin; use an exact HTTPS origin without path, credentials or wildcards");
+    allowedOrigins.add(origin);
+  }
+  if (options.crossSiteCookies && !options.trustedProxy) throw new Error("Cross-site demo cookies require explicit trusted proxy configuration");
+  if (options.crossSiteCookies && !options.previewOrigins?.length) throw new Error("Cross-site demo cookies require an explicit preview origin");
   if (process.env.NODE_ENV === "production") throw new Error("Demo fixture is unavailable in production");
   const app = new Hono();
   const base = "/api/ui/v1";
@@ -85,13 +100,16 @@ export function createDemoGateway() {
   app.use("*", async (c, next) => {
     c.header("Cache-Control", "no-store"); c.header("X-ASI-Demo", "true");
     if (c.req.path !== `${base}/me` && getCookie(c, "asi-demo") !== "demo-session") return c.json(error("UNAUTHENTICATED", "Demo session required."), 401);
-    if (!["GET", "HEAD"].includes(c.req.method) && (c.req.header("x-csrf-token") !== "demo-csrf" || c.req.header("origin") !== "http://127.0.0.1:3000")) return c.json(error("POLICY_DENIED", "Demo mutation origin or CSRF check failed."), 403);
+    const origin = c.req.header("origin") ?? "";
+    const allowedOrigin = allowedOrigins.has(origin);
+    if (!["GET", "HEAD"].includes(c.req.method) && (c.req.header("x-csrf-token") !== "demo-csrf" || !allowedOrigin)) return c.json(error("POLICY_DENIED", "Demo mutation origin or CSRF check failed."), 403);
     await next();
   });
   app.onError(() => new Response(JSON.stringify(error("DEPENDENCY_UNAVAILABLE", "Demo request could not be processed.")), { status: 400, headers: { "content-type": "application/json", "X-ASI-Demo": "true" } }));
   app.notFound(c => c.json(error("INVALID_INPUT", "Demo resource unavailable."), 404));
   app.get(`${base}/me`, c => {
-    setCookie(c, "asi-demo", "demo-session", { httpOnly: true, sameSite: "Strict", path: "/" });
+    const isHttps = options.crossSiteCookies === true && options.trustedProxy === true && c.req.header("x-forwarded-proto") === "https";
+    setCookie(c, "asi-demo", "demo-session", isHttps ? { httpOnly: true, sameSite: "None", secure: true, partitioned: true, path: "/" } : { httpOnly: true, sameSite: "Strict", path: "/" });
     return c.json({ workspaceId: "demo-workspace", displayName: "Demo workspace", subjectId: "demo-user", allowedActions: ["chat", "demo_decisions"], demoMode: true, csrfToken: "demo-csrf", limits: { maxMessageBytes: 65536, maxAttachmentBytes: 65536, maxAttachmentCount: 3 } });
   });
   app.get(`${base}/conversations`, c => c.json({ items: [...conversations.values()].map(entry => entry.summary), nextCursor: null }));

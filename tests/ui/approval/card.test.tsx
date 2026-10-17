@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ApprovalCard } from "../../../apps/web/src/features/chat/ApprovalCard.tsx";
+import { ApprovalCard } from "@asi/web/features/chat/ApprovalCard.tsx";
 import { ApprovalDecisionInputSchema, UiApprovalRequestSchema, type UiApprovalRequest, type UiCommandResult } from "../../../packages/contracts/src/ui/index.js";
-import { GatewayError } from "../../../apps/web/src/lib/gateway/http-client.ts";
+import { GatewayError } from "@asi/web/lib/gateway/http-client.ts";
 
 const makeApproval = (overrides: Partial<UiApprovalRequest> = {}): UiApprovalRequest => UiApprovalRequestSchema.parse({
   interactionId: "i1", conversationId: "c1", runId: "r1", version: 1, type: "approval", approvalId: "a1", effectId: "e1",

@@ -113,8 +113,8 @@
     },
     {
       "path": "docs/implementation-audit-2026-10-06.md",
-      "sha256": "068a5fcfe84affb0f64786892c5b12c124956acab0b687f5d025b2eede6e02c6",
-      "byteLength": 3429,
+      "sha256": "e11d90d553520e7b5e343bd474894fee56762619c2159bc0d86e1b40a9be2902",
+      "byteLength": 3428,
       "archiveAnchor": "source-13",
       "fenceLength": 4,
       "startMarker": "<!-- V2 SOURCE START docs/implementation-audit-2026-10-06.md -->",
@@ -149,8 +149,8 @@
     },
     {
       "path": "docs/runbooks/identity.md",
-      "sha256": "4008dba0e2f444a13e141ccf33e00444e15e05d062d9fe856f9aa7619e3cb36b",
-      "byteLength": 8852,
+      "sha256": "c31a860c4055426e8579600e1e70e72b5a32c480a9686c68d0d51fea568c176b",
+      "byteLength": 8851,
       "archiveAnchor": "source-17",
       "fenceLength": 4,
       "startMarker": "<!-- V2 SOURCE START docs/runbooks/identity.md -->",
@@ -248,8 +248,8 @@
     },
     {
       "path": "docs/dependency-inventory.json",
-      "sha256": "e65d5379a27df2ad7ac013bdb45d6b9813f01f0ceac11a78bf2413a6312f180b",
-      "byteLength": 49043,
+      "sha256": "6d98d28b372dfdafa957df8dbe14a0327c41e10f9f9b589cd04c31f81bd26648",
+      "byteLength": 49412,
       "archiveAnchor": "source-28",
       "fenceLength": 4,
       "startMarker": "<!-- V2 SOURCE START docs/dependency-inventory.json -->",

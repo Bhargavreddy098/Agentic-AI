@@ -11,8 +11,8 @@ import {
   type CatalogAdapters,
   type UiCredentialPort,
   type UiUploadLimits,
-} from "../../../apps/gateway/src/ui/index.js";
-import { HttpGatewayClient } from "../../../apps/web/src/lib/gateway/http-client.js";
+} from "@asi/gateway-app/ui/index.js";
+import { HttpGatewayClient } from "@asi/web/lib/gateway/http-client.js";
 import {
   ConnectionViewSchema,
   MemoryViewSchema,

@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 import { once } from "node:events";
 import { describe, expect, it } from "vitest";
-import { createGatewayServer } from "../../apps/gateway/src/main.js";
+import { createGatewayServer } from "@asi/gateway-app/main.js";
 
 const signingKey = Uint8Array.from({ length: 32 }, (_, index) => index);
 

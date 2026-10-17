@@ -110,7 +110,7 @@ export function scanWireSchema(root: string, eventTypes: readonly string[]): Vio
   const evidencePath = join(root, "docs/release-evidence/ui-wire-compatibility.json");
   if (!existsSync(contractsPath)) return [{ code: "WIRE_SCHEMA_EVIDENCE_MISSING", file: "packages/contracts/src/ui/index.ts", detail: "wire contract source is missing" }];
   if (!existsSync(evidencePath)) return [{ code: "WIRE_SCHEMA_EVIDENCE_MISSING", file: "docs/release-evidence/ui-wire-compatibility.json", detail: "a modified wire schema requires recorded compatibility evidence" }];
-  const digest = createHash("sha256").update(readFileSync(contractsPath)).digest("hex");
+  const digest = createHash("sha256").update(read(contractsPath).replaceAll("\r\n", "\n")).digest("hex");
   const evidence = JSON.parse(read(evidencePath)) as { schemaVersion?: number; sourceDigest?: string; eventTypes?: string[] };
   const violations: Violation[] = [];
   if (evidence.schemaVersion !== 1) violations.push({ code: "WIRE_SCHEMA_VERSION_DRIFT", file: "docs/release-evidence/ui-wire-compatibility.json", detail: "recorded wire schema version changed" });
@@ -155,6 +155,23 @@ describe("repository conformance", () => {
 });
 
 describe("conformance checks reject drift", () => {
+  it("accepts equivalent Windows and Git checkout line endings but rejects changed schema text", () => {
+    const root = mkdtempSync(join(tmpdir(), "asi-wire-newlines-"));
+    try {
+      mkdirSync(join(root, "packages/contracts/src/ui"), { recursive: true });
+      mkdirSync(join(root, "docs/release-evidence"), { recursive: true });
+      const source = "export const schemaVersion = 1;\nexport const eventType = 'notice';\n";
+      const file = join(root, "packages/contracts/src/ui/index.ts");
+      writeFileSync(join(root, "docs/release-evidence/ui-wire-compatibility.json"), JSON.stringify({ schemaVersion: 1, sourceDigest: createHash("sha256").update(source).digest("hex"), eventTypes: [] }));
+      writeFileSync(file, source);
+      expect(scanWireSchema(root, [])).toEqual([]);
+      writeFileSync(file, source.replaceAll("\n", "\r\n"));
+      expect(scanWireSchema(root, [])).toEqual([]);
+      writeFileSync(file, source.replace("schemaVersion = 1", "schemaVersion = 2"));
+      expect(scanWireSchema(root, []).map(item => item.code)).toContain("WIRE_SCHEMA_CHANGED_WITHOUT_EVIDENCE");
+    } finally { rmSync(root, { recursive: true, force: true }); }
+  });
+
   it("flags an eighth route, question-as-approval, direct provider import, competing store, Next route and changed wire schema", () => {
     const root = mkdtempSync(join(tmpdir(), "asi-ui-conformance-"));
     try {

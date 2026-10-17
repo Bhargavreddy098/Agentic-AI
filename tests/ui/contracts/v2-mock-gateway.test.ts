@@ -1,10 +1,10 @@
 // @vitest-environment node
 import { afterAll, beforeAll, expect, it } from "vitest";
 import { serve } from "@hono/node-server";
-import { createDemoGateway } from "../../../apps/gateway-fixture/src/scenarios.js";
+import { createDemoGateway } from "@asi/gateway-fixture/scenarios.js";
 import { WorkspaceSessionSchema, ConversationSnapshotSchema, isCurrentVerification, type UiEvent } from "../../../packages/contracts/src/ui/index.js";
-import { HttpGatewayClient } from "../../../apps/web/src/lib/gateway/http-client.js";
-import type { GatewayClient } from "../../../apps/web/src/lib/gateway/client.js";
+import { HttpGatewayClient } from "@asi/web/lib/gateway/http-client.js";
+import type { GatewayClient } from "@asi/web/lib/gateway/client.js";
 import { runGatewayContractTests } from "./harness.js";
 
 let base = "";

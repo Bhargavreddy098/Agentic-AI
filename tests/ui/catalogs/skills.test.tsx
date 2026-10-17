@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { SkillsProvider, useSkills, isSkillSelectable, skillSelectabilityReason, filterSkills, permissionExpansion, reconcileSelection, submitSkillCommand, installSkill, enableSkill, disableSkill, revokeSkill } from "../../../apps/web/src/features/skills/catalog.tsx";
-import { SkillCatalog } from "../../../apps/web/src/features/skills/SkillCatalog.tsx";
+import { SkillsProvider, useSkills, isSkillSelectable, skillSelectabilityReason, filterSkills, permissionExpansion, reconcileSelection, submitSkillCommand, installSkill, enableSkill, disableSkill, revokeSkill } from "@asi/web/features/skills/catalog.tsx";
+import { SkillCatalog } from "@asi/web/features/skills/SkillCatalog.tsx";
 import { SkillViewSchema, type Catalog, type SkillView } from "../../../packages/contracts/src/ui/index.js";
 
 const makeSkill = (overrides = {}): SkillView => SkillViewSchema.parse({ skillId: "s1", displayName: "Summarize", description: "Summarizes text.", skillVersion: "1.0.0", status: "enabled", trustStatus: "verified", requiredPermissions: [], revision: 1, allowedActions: ["skill.enable", "skill.disable", "skill.revoke"], ...overrides });

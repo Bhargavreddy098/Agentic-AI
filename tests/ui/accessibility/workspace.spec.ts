@@ -12,7 +12,9 @@ async function seriousViolations(page: Page) {
 
 async function ready(page: Page, route: string) {
   await page.goto(route);
-  await expect(page.getByRole("navigation", { name: "Primary navigation" })).toBeVisible();
+  const navigation = page.getByRole("navigation", { name: "Primary navigation" });
+  if (!(await navigation.isVisible())) await page.getByRole("button", { name: "Toggle navigation" }).click();
+  await expect(navigation).toBeVisible();
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 }
 

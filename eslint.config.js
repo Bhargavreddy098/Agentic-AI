@@ -9,6 +9,7 @@ export default tseslint.config(
       "**/dist/**",
       "**/build/**",
       "**/.next/**",
+      "**/.next-live/**",
       "**/coverage/**",
       "tests/fixtures/**",
       "docs/**",

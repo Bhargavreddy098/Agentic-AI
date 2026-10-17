@@ -9,8 +9,8 @@ page.on("response", async (r) => {
   if (r.url().includes("/api/ui/v1/")) {
     console.log("RESP", r.status(), r.request().method(), r.url());
     if (r.request().method() === "POST") {
-      try { console.log("  REQBODY", (r.request().postData() ?? "").slice(0, 300)); } catch {}
-      try { console.log("  RESPBODY", (await r.text()).slice(0, 300)); } catch {}
+      try { console.log("  REQBODY", (r.request().postData() ?? "").slice(0, 300)); } catch { /* Response diagnostics can be unavailable after navigation. */ }
+      try { console.log("  RESPBODY", (await r.text()).slice(0, 300)); } catch { /* Response diagnostics can be unavailable after navigation. */ }
     }
   }
 });

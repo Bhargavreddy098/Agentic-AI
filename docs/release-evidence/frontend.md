@@ -185,3 +185,25 @@ As verified by `scripts/verify-architecture.mjs`, all 12 canonical system compon
 12. `telemetry` (OpenTelemetry/audit)
 
 No component has been bypassed, deleted, or conflated. The web frontend interfaces strictly with the Gateway via `/api/ui/v1`.
+
+
+## 7. Local/GitHub integration verification — 2026-10-17
+
+Integrated local parent `3d8bc76` and GitHub parent `11622fc` in the existing Windows checkout. Preserved the local redesign, local U21/U22 evidence, backend owners and all pending-task statuses. Restored the exact dependency lock, strict engine policy and complete recursive workspace build; retained GitHub import aliases, metadata and foundation entry link.
+
+The synthetic demo launcher builds contracts/UI/fixture without relinking node_modules, waits for both listeners, rejects occupied ports and terminates its own child process trees. The fixture stays on loopback. Hosted previews require exact HTTPS origins; cross-site cookies require explicit proxy/cookie configuration. Live mode cannot silently use this fixture. Message creation/send retries keep command identity, rejected drafts remain visible, newer edits reach the canonical ChatStore, and accepted-message navigation failures retry opening without another send.
+
+Fresh integration evidence:
+
+- Frozen offline installation with scripts disabled passed; full workspace TypeScript/build and lint passed.
+- Pre-review full unit baseline: 57 files / 691 tests passed using a newly created disposable local PostgreSQL database with migrations 001 and 005, then removed. Final committed baseline passed `pnpm verify` using the same disposable setup: 57 files / 693 tests, 430 architecture source files, 33 dependency manifests, traceability and all 25 protected-file patterns. Temporary qualification database removed afterward.
+- Final UI unit/component/security-conformance suite: 34 files / 230 tests passed after the newline regression and recovery fix.
+- Startup lifecycle regressions: 7/7 passed, including occupied ports, startup failure, timeout and signal cleanup on Windows.
+- Final browser matrix: 48/48 passed in one run (26 end-to-end, 16 accessibility, 6 visual cases). Initial cold development compilation exceeded four 5-second URL assertions; those passed warm, and the subsequent full run passed all 48. Visual snapshots were regenerated after waiting for authenticated demo readiness.
+- Live Gateway browser suite: 9/9 passed. This is the bounded in-process protected UI flow, not qualification of the complete persistent backend or executable sandbox.
+- Independent code review found one accepted-send recovery defect; its regression passed after repair and re-review found no remaining important issue.
+- UI boundary/source checks and consolidated guide verification passed. Compatibility digests normalize CRLF to LF so Git/Windows newline conversion is not mistaken for a wire-schema change; a regression still rejects altered schema text. Preserved guide snapshots and their manifest use LF consistently.
+
+Existing long-deadline UI fixtures emit Node TimeoutOverflowWarning. A UI conformance subprocess check also exceeded Vitest's default 5-second limit while browser/build work ran concurrently; the isolated eight conformance tests passed after that load ended. No assertions were removed or timeouts enlarged.
+
+These results do not complete pending backend/V2 tasks, qualify the Windows executable sandbox, or replace task-specific database/security acceptance. Historical release receipts above remain historical; this section records the integrated revision's scope. Runtime used Node 24.19.0, pnpm 12.6.0, Next.js 16.3.8 and Playwright 1.63.0.

@@ -1,7 +1,7 @@
 import { expect, it, vi } from "vitest";
-import { ChatStore } from "../../../apps/web/src/lib/chat/store.js";
-import { awaitUpload } from "../../../apps/web/src/lib/chat/uploads.js";
-import type { GatewayClient } from "../../../apps/web/src/lib/gateway/client.js";
+import { ChatStore } from "@asi/web/lib/chat/store.js";
+import { awaitUpload } from "@asi/web/lib/chat/uploads.js";
+import type { GatewayClient } from "@asi/web/lib/gateway/client.js";
 import { ConversationSnapshotSchema } from "../../../packages/contracts/src/ui/index.js";
 const snapshot = (id: string) => ConversationSnapshotSchema.parse({ conversationId: id, workspaceId: "w1", revision: 0, lastEventSequence: 0, messages: [], interactions: [], tasks: [], tools: [], artifacts: [], runStatus: null, effectiveModel: null, usage: { inputTokens: null, outputTokens: null, costMicroUsd: null }, composerCapabilities: [] });
 const input = { commandId: "original", clientMessageId: "original-message", expectedConversationRevision: 0, text: "hello", attachmentIds: [], requestedSkillIds: [] };

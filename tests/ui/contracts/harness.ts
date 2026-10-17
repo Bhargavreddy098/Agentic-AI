@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import type { GatewayClient } from "../../../apps/web/src/lib/gateway/client.js";
+import type { GatewayClient } from "@asi/web/lib/gateway/client.js";
 import { WorkspaceSessionSchema, ConversationSummarySchema, ConversationSnapshotSchema, CatalogSchema, ProviderViewSchema } from "../../../packages/contracts/src/ui/index.js";
 
 // U03 and U17 must call this unchanged against their HTTP clients.

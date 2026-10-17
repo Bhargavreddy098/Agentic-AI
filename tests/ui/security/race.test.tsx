@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ApprovalCard } from "../../../apps/web/src/features/chat/ApprovalCard.js";
-import { SubmissionController } from "../../../apps/web/src/lib/chat/submission.js";
-import { ChatStore } from "../../../apps/web/src/lib/chat/store.js";
-import { GatewayError } from "../../../apps/web/src/lib/gateway/http-client.js";
-import { hydrateConversation, reduceConversation } from "../../../apps/web/src/lib/chat/reducer.js";
+import { ApprovalCard } from "@asi/web/features/chat/ApprovalCard.js";
+import { SubmissionController } from "@asi/web/lib/chat/submission.js";
+import { ChatStore } from "@asi/web/lib/chat/store.js";
+import { GatewayError } from "@asi/web/lib/gateway/http-client.js";
+import { hydrateConversation, reduceConversation } from "@asi/web/lib/chat/reducer.js";
 import { ConversationSnapshotSchema, UiApprovalRequestSchema, UiEventSchema, WorkspaceSessionSchema } from "../../../packages/contracts/src/ui/index.js";
 
 const session = WorkspaceSessionSchema.parse({ workspaceId: "w1", displayName: "Demo", subjectId: "u1", allowedActions: [], demoMode: true, csrfToken: "csrf", limits: { maxMessageBytes: 1000, maxAttachmentBytes: 1000, maxAttachmentCount: 1 } });
@@ -47,7 +47,7 @@ describe("recovery and race protection", () => {
 
   it("refuses a recovery snapshot that does not cover the missing events", async () => {
     const getSnapshot = vi.fn().mockResolvedValueOnce(snapshot(9)).mockResolvedValue(snapshot(5));
-    const subscribe = async function* () { throw new GatewayError(409, "expired cursor"); };
+    const subscribe = (): AsyncIterable<never> => ({ [Symbol.asyncIterator]: () => ({ next: async () => { throw new GatewayError(409, "expired cursor"); } }) });
     const store = new ChatStore({ getMe: async () => session, getSnapshot, subscribe } as never);
     await store.open("c1");
     await waitFor(() => expect(store.getSnapshot().connection).toBe("disconnected"));

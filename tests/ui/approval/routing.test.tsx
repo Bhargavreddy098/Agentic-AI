@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
-import { handleManagementResult, approvalForInteraction } from "../../../apps/web/src/lib/management.ts";
-import { navigateToInteraction } from "../../../apps/web/src/lib/navigation.ts";
-import { ApprovalCard } from "../../../apps/web/src/features/chat/ApprovalCard.tsx";
+import { handleManagementResult, approvalForInteraction } from "@asi/web/lib/management.ts";
+import { navigateToInteraction } from "@asi/web/lib/navigation.ts";
+import { ApprovalCard } from "@asi/web/features/chat/ApprovalCard.tsx";
 import { UiApprovalRequestSchema, ClarificationRequestSchema, type Interaction } from "../../../packages/contracts/src/ui/index.js";
 
 const approval = UiApprovalRequestSchema.parse({

@@ -1,35 +1,68 @@
 :root {
-  --background: #f7f9fc;
-  --foreground: #172331;
-  --card: #ffffff;
-  --muted: #eef2f7;
-  --muted-foreground: #4b5563;
-  --primary: #166d59;
-  --primary-foreground: #ffffff;
-  --secondary: #e9f2ee;
-  --secondary-foreground: #19392f;
-  --accent: #e9f2ee;
-  --accent-foreground: #166d59;
-  --border: #dce4ed;
-  --input: #dce4ed;
-  --ring: #2f7f68;
+  /* Perplexity AI Style Reference — Warm Parchment & Quiet Ink (WCAG AA Compliant) */
+  --color-parchment: #faf8f5;
+  --color-soft-paper: #fdfbfa;
+  --color-warm-mist: #d1d1cd;
+  --color-ink: #27251e;
+  --color-graphite: #595752;
+  --color-ash: #65635d;
+  --color-deep-teal: #016a71;
+
+  /* Semantic Mappings */
+  --background: #faf8f5;
+  --foreground: #27251e;
+  --card: #fdfbfa;
+  --card-foreground: #27251e;
+  --muted: #f2eee8;
+  --muted-foreground: #595752;
+  --primary: #27251e;
+  --primary-foreground: #faf8f5;
+  --secondary: #f0ede6;
+  --secondary-foreground: #27251e;
+  --accent: #016a71;
+  --accent-foreground: #ffffff;
+  --border: #d1d1cd;
+  --input: #d1d1cd;
+  --ring: #016a71;
   --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+
+  /* Radii */
+  --radius-cards: 16px;
+  --radius-inputs: 12px;
+  --radius-buttons: 6px;
+  --radius-primary: 12px;
+  --radius-chips: 9999px;
+  --radius-nav: 12px;
+  --radius-composer-hero: 26px;
 }
 
 :root[data-theme="dark"] {
-  --background: #0f141a;
-  --foreground: #e6ecf3;
-  --card: #161d26;
-  --muted: #1d2733;
-  --muted-foreground: #a9b6c5;
-  --primary: #3fb495;
-  --primary-foreground: #04140f;
-  --secondary: #1b2a24;
-  --secondary-foreground: #cfe8df;
-  --accent: #1b2a24;
-  --accent-foreground: #7fe0c3;
-  --border: #2a3644;
-  --input: #2a3644;
-  --ring: #5cc6a8;
+  /* Warm Charcoal Adaptations */
+  --color-parchment: #191816;
+  --color-soft-paper: #23221e;
+  --color-warm-mist: #383630;
+  --color-ink: #ece9e2;
+  --color-graphite: #b2afa8;
+  --color-ash: #9c9993;
+  --color-deep-teal: #26c6d0;
+
+  /* Semantic Mappings */
+  --background: #191816;
+  --foreground: #ece9e2;
+  --card: #23221e;
+  --card-foreground: #ece9e2;
+  --muted: #292723;
+  --muted-foreground: #b2afa8;
+  --primary: #ece9e2;
+  --primary-foreground: #191816;
+  --secondary: #292723;
+  --secondary-foreground: #ece9e2;
+  --accent: #26c6d0;
+  --accent-foreground: #191816;
+  --border: #383630;
+  --input: #383630;
+  --ring: #26c6d0;
   --destructive: #f97066;
+  --destructive-foreground: #191816;
 }

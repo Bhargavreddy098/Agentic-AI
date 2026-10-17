@@ -59,6 +59,7 @@ for (const viewport of VIEWPORTS) {
 
       await page.goto("/chat");
       await expect(page.getByRole("navigation", { name: "Primary navigation" })).toBeVisible();
+      await expect(page.getByRole("button", { name: "New conversation" })).toBeEnabled();
       await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
       await capture(page, `${viewport.name}-${theme}-chat-empty`);
 

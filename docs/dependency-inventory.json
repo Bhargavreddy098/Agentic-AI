@@ -757,6 +757,15 @@
       "license": "MIT",
       "qualification": "Official npm integrity/MIT provenance inspected2026-10-10; clean root TypeScript/build and real loopback WebSocket exchange PASS after direct declaration",
       "status": "approved"
+    },
+    {
+      "name": "@axe-core/playwright",
+      "version": "4.14.0",
+      "registry": "npm",
+      "license": "MPL-2.0",
+      "role": "U20 automated WCAG accessibility verification for Playwright",
+      "qualification": "Qualified in U20 with exact pin 4.14.0 in root devDependencies and pnpm-workspace minimumReleaseAgeExclude",
+      "status": "approved"
     }
   ],
   "planned": [

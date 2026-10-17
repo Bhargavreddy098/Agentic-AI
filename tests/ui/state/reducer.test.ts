@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 import { ConversationSnapshotSchema, UiEventSchema } from "../../../packages/contracts/src/ui/index.js";
-import { hydrateConversation, reduceConversation } from "../../../apps/web/src/lib/chat/reducer.js";
+import { hydrateConversation, reduceConversation } from "@asi/web/lib/chat/reducer.js";
 
 export const snapshot = (conversationId = "c1") => ConversationSnapshotSchema.parse({ conversationId, workspaceId: "w1", revision: 9, lastEventSequence: 9, messages: [{ messageId: "m1", role: "assistant", createdAt: "2026-10-06T12:00:00Z", parts: [{ type: "text", partId: "p1", text: "hello" }] }], interactions: [], tasks: [], tools: [], artifacts: [], runStatus: "running", effectiveModel: null, usage: { inputTokens: null, outputTokens: null, costMicroUsd: null }, composerCapabilities: ["send", "cancel"] });
 const delta = (sequence: number, conversationId = "c1") => UiEventSchema.parse({ schemaVersion: 1, eventId: `e${sequence}`, conversationId, sequence, occurredAt: "2026-10-06T12:00:00Z", eventType: "message.delta", payload: { messageId: "m1", partId: "p1", deltaIndex: 0, text: " world" } });
