@@ -43,7 +43,7 @@ Effect intent preserves its original effect ID, full request, digests, run, tena
 Use only a disposable database named with suffix `_qualification`. Tests create and remove their own random schemas and restricted roles. Qualification uses PostgreSQL17 on Windows; restricted database roles and real service checks are required, but Linux/KVM is not a database prerequisite. Initialize `pgcrypto` once in `public` before concurrently starting suites; extension creation is database-wide and individual schema fixtures must not compete to install it. This is fixture bootstrap, not a production migration.
 
 ```powershell
-pnpm exec vitest run --project integration packages/control/test/control.test.ts tests/integration/control-v2-qualification.test.ts tests/integration/migration-registry.test.ts
+pnpm exec vitest run --project integration backend/modules/control/test/control.test.ts tests/integration/control-v2-qualification.test.ts tests/integration/migration-registry.test.ts
 pnpm typecheck
 pnpm --filter @asi/control build
 ```

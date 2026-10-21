@@ -54,7 +54,9 @@ const SKIP_DIRECTORIES = new Set([
   ".next",
   "coverage",
 ]);
-const SCAN_EXCLUSIONS = ["tests/fixtures"];
+// Unmodified upstream reference source is outside the ASI component graph.
+// Any future files integrated into apps/ or packages/ remain fully checked.
+const SCAN_EXCLUSIONS = ["tests/fixtures", "third_party/openclaw"];
 
 const PROVIDER_SDK_PACKAGES = new Set([
   "ai",
@@ -239,10 +241,8 @@ function classifyComponent(index, relativePath) {
 function collectAppRootsAndNames(target) {
   const roots = [];
   const packageNames = new Map();
-  const appsDirectory = join(target, "apps");
-  if (!existsSync(appsDirectory)) {
-    return { roots, packageNames };
-  }
+  for (const appsDirectory of [join(target, "apps"), join(target, "backend", "workers")]) {
+  if (!existsSync(appsDirectory)) continue;
   for (const entry of readdirSync(appsDirectory, { withFileTypes: true })) {
     if (!entry.isDirectory()) {
       continue;
@@ -254,27 +254,26 @@ function collectAppRootsAndNames(target) {
       try {
         const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
         if (typeof manifest.name === "string") {
-          packageNames.set(manifest.name, entry.name);
+          packageNames.set(manifest.name, appRoot);
         }
       } catch {
         // Malformed manifests are reported by verify-dependencies, not here.
       }
     }
   }
+  }
+  roots.sort((a, b) => b.length - a.length);
   return { roots, packageNames };
 }
 
 function containingAppRoot(roots, absolutePath) {
   for (const root of roots) {
-    if (absolutePath === root || absolutePath.startsWith(`${root}${sep()}`)) {
+    const within = relative(root, absolutePath);
+    if (within === "" || (!within.startsWith("..") && !/^(?:[A-Za-z]:|[/\\])/.test(within))) {
       return root;
     }
   }
   return null;
-}
-
-function sep() {
-  return "/";
 }
 
 function checkBaselineConsistency(baseline, violations) {
@@ -373,7 +372,7 @@ function verifyArchitecture(target, baseline) {
     const component = classifyComponent(componentIndex, relativePath);
 
     if (
-      (relativePath.startsWith("apps/") || relativePath.startsWith("packages/")) &&
+      (relativePath.startsWith("apps/") || relativePath.startsWith("packages/") || relativePath.startsWith("backend/")) &&
       component === null
     ) {
       violations.push({
@@ -399,7 +398,7 @@ function verifyArchitecture(target, baseline) {
       const importPath = specifier.startsWith(".")
         ? toPosix(relative(target, resolve(dirname(filePath), specifier)))
         : specifier;
-      if ((relativePath.startsWith("apps/") || relativePath.startsWith("packages/")) &&
+      if ((relativePath.startsWith("apps/") || relativePath.startsWith("packages/") || relativePath.startsWith("backend/")) &&
           isProductionSourcePath(relativePath) && !isProductionSourcePath(importPath)) {
         violations.push({
           code: "PRODUCTION_IMPORTS_TEST",
@@ -480,7 +479,7 @@ function verifyArchitecture(target, baseline) {
           appRoots,
           resolve(target, relativePath),
         );
-        if (importerApp && importerApp !== join(target, "apps", importedApp)) {
+        if (importerApp && importerApp !== importedApp) {
           violations.push({
             code: "CROSS_APP_IMPORT",
             rule: "ARCH-004",
@@ -510,7 +509,7 @@ function verifyArchitecture(target, baseline) {
             component,
             detail: `relative import crosses app boundaries (${toPosix(relative(target, filePath))} -> ${toPosix(relative(target, resolved))}); apps must communicate through packages only`,
           });
-        } else if (!importerAppRoot && targetAppRoot) {
+        } else if (!importerAppRoot && targetAppRoot && isProductionSourcePath(relativePath)) {
           violations.push({
             code: "PACKAGE_IMPORTS_APP",
             rule: "ARCH-005",

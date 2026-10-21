@@ -25,9 +25,10 @@
         "./apps/gateway-fixture/src/*"
       ],
       "@asi/gateway-app/*": [
-        "./apps/gateway/src/*"
+        "./backend/workers/gateway/src/*"
       ],
       "@asi/*": [
+        "./backend/modules/*/src/index.ts",
         "./packages/*/src/index.ts"
       ]
     }
@@ -39,7 +40,9 @@
     "vitest.config.ts",
     "eslint.config.js",
     "apps/**/*.ts",
-    "apps/**/*.tsx"
+    "apps/**/*.tsx",
+    "backend/modules/**/*.ts",
+    "backend/workers/**/*.ts"
   ],
   "exclude": [
     "tests/fixtures/**",

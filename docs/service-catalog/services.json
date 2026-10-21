@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-21T00:00:00.000Z",
+  "status": "proposed ownership map; no service processes exist yet",
+  "ports": {
+    "api-gateway": 4400,
+    "core": 4410,
+    "memory": 4420,
+    "episode": 4430,
+    "inference": 4440,
+    "orchestrator": 4450,
+    "tool-runtime": 4460,
+    "specialist": 4470
+  },
+  "services": {
+    "api-gateway": {
+      "package": "@asi/service-api-gateway",
+      "port": 4400,
+      "store": "none directly",
+      "responsibilities": [
+        "public /api/ui/v1 transport, session/CSRF/origin handling",
+        "safe projections and SSE",
+        "channel/webhook adapters"
+      ],
+      "owningModules": ["gateway", "channels"],
+      "owningWorkers": ["gateway"],
+      "forbidden": [
+        "another service's models",
+        "another service's controllers",
+        "another service's runtime entry",
+        "provider SDKs",
+        "private repositories",
+        "SQL-writing implementations",
+        "policy signing keys",
+        "provider credentials",
+        "Core/memory database credentials"
+      ]
+    },
+    "core": {
+      "package": "@asi/service-core",
+      "port": 4410,
+      "store": "private PostgreSQL asi_core",
+      "responsibilities": [
+        "identity, grants and signing",
+        "policy decisions, approvals and execution bindings",
+        "atomic quota, reservation and settlement",
+        "signed receipt persistence and safe decision projection",
+        "runs, leases, checkpoints, effects, outboxes and durable metadata",
+        "skills catalog, trust and install persistence",
+        "goals, tasks, artifacts and evidence metadata"
+      ],
+      "owningModules": ["control", "identity", "policy", "budgets", "audit", "skills"],
+      "owningWorkers": ["policy-kernel"],
+      "forbidden": [
+        "another service's models",
+        "another service's controllers",
+        "another service's runtime entry",
+        "provider SDKs",
+        "private repositories",
+        "memory module source",
+        "episodic module source",
+        "models module source",
+        "privacy module source"
+      ]
+    },
+    "memory": {
+      "package": "@asi/service-memory",
+      "port": 4420,
+      "store": "private PostgreSQL asi_memory with pgvector",
+      "responsibilities": [
+        "scoped vector and relational memory",
+        "revisions, branches and observation graph"
+      ],
+      "owningModules": ["memory"],
+      "owningWorkers": ["memory-broker"],
+      "forbidden": [
+        "another service's models",
+        "another service's controllers",
+        "another service's runtime entry",
+        "provider SDKs",
+        "private repositories",
+        "control module source",
+        "identity module source",
+        "policy module source"
+      ]
+    },
+    "episode": {
+      "package": "@asi/service-episode",
+      "port": 4430,
+      "store": "exclusive local SQLite",
+      "responsibilities": [
+        "transcript and episode append",
+        "search, ordered replay and compression lineage"
+      ],
+      "owningModules": ["episodic"],
+      "owningWorkers": ["episodic-owner"],
+      "forbidden": [
+        "another service's models",
+        "another service's controllers",
+        "another service's runtime entry",
+        "provider SDKs",
+        "private repositories",
+        "another service opening the same WAL file"
+      ]
+    },
+    "inference": {
+      "package": "@asi/service-inference",
+      "port": 4440,
+      "store": "no domain database initially",
+      "responsibilities": [
+        "privacy eligibility and permitted provider routing",
+        "governed generation and embedding",
+        "usage reporting"
+      ],
+      "owningModules": ["privacy", "models"],
+      "owningWorkers": ["privacy-router"],
+      "forbidden": [
+        "another service's models",
+        "another service's controllers",
+        "another service's runtime entry",
+        "private repositories",
+        "provider credentials outside trusted Inference configuration"
+      ]
+    },
+    "orchestrator": {
+      "package": "@asi/service-orchestrator",
+      "port": 4450,
+      "store": "canonical workflow state via Core",
+      "responsibilities": [
+        "plans, context, task dispatch, recovery and bounded reasoning",
+        "pure skill selection and trust labels as projections"
+      ],
+      "owningModules": ["orchestrator", "context"],
+      "owningWorkers": ["orchestrator"],
+      "forbidden": [
+        "another service's models",
+        "another service's controllers",
+        "another service's runtime entry",
+        "provider SDKs",
+        "private repositories",
+        "direct SQL import of another service"
+      ]
+    },
+    "tool-runtime": {
+      "package": "@asi/service-tool-runtime",
+      "port": 4460,
+      "store": "canonical effects via Core",
+      "responsibilities": [
+        "verified tools, isolated execution and exact results",
+        "MCP and A2A adapters"
+      ],
+      "owningModules": ["tools", "protocols", "sandbox"],
+      "owningWorkers": ["tool-engine"],
+      "forbidden": [
+        "another service's models",
+        "another service's controllers",
+        "another service's runtime entry",
+        "provider SDKs",
+        "private repositories",
+        "trusted host credentials and scoped execution bindings outside untrusted handlers",
+        "provider, identity signing or Core database credentials in task payloads"
+      ]
+    },
+    "specialist": {
+      "package": "@asi/service-specialist",
+      "port": 4470,
+      "store": "canonical tasks and results via Core",
+      "responsibilities": [
+        "bounded browser, data, coding and research workers",
+        "measured eligibility and worker ranking"
+      ],
+      "owningModules": ["specialists"],
+      "owningWorkers": ["specialist"],
+      "forbidden": [
+        "another service's models",
+        "another service's controllers",
+        "another service's runtime entry",
+        "provider SDKs",
+        "private repositories",
+        "invoking provider SDKs or opening another service's database directly"
+      ]
+    }
+  },
+  "shared": {
+    "telemetry": {
+      "role": "narrow instrumentation and redaction helpers only",
+      "forbidden": ["shared domain repositories", "shared credentials"]
+    }
+  },
+  "crossServiceRules": [
+    "services may import their own domain modules, pure contracts and transport clients",
+    "services may not import another service's models, controllers, runtime entry, provider SDKs or private repositories",
+    "data access is through the owning service, with separate database credentials",
+    "logical ASI component classifications are preserved inside services",
+    "no service may write another service's authoritative table"
+  ],
+  "notYetBuilt": [
+    "backend/services/{api-gateway,core,memory,episode,inference,orchestrator,tool-runtime,specialist}",
+    "packages/service-clients",
+    "packages/contracts/src/services/*"
+  ],
+  "existingMonolith": {
+    "path": "backend/",
+    "note": "Single Express application on port 4400. It is the current implementation input, not the target service set. It remains in place until service packages consume their modules correctly."
+  }
+}

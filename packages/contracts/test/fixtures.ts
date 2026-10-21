@@ -505,7 +505,7 @@ export function candidate(overrides: Record<string, unknown> = {}): Candidate {
     schemaVersion: 1,
     candidateId: "candidate-1",
     artifactHash: SHA_A,
-    allowedChangedPaths: ["packages/skills/src/**"],
+    allowedChangedPaths: ["backend/modules/skills/src/**"],
     schemaDigests: [SHA_B],
     policyDigests: [SHA_C],
     requestedPermissions: ["read:eval-cases"],

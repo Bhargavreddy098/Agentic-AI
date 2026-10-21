@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { A2A_REVISION, assertA2aRevision } from "../../packages/protocols/src/a2a/versions.js";
-import { validateAgentCard, sanitizeAgentCard } from "../../packages/protocols/src/a2a/card.js";
-import { mapA2aToLocal, mapLocalToA2a, createRemoteTaskState, updateRemoteTaskState, isTerminalA2aStatus } from "../../packages/protocols/src/a2a/state-map.js";
-import { checkedPrincipal, checkedEndpoint, isPublicA2aAddress, checkedCredential } from "../../packages/protocols/src/a2a/auth.js";
+import { A2A_REVISION, assertA2aRevision } from "../../backend/modules/protocols/src/a2a/versions.js";
+import { validateAgentCard, sanitizeAgentCard } from "../../backend/modules/protocols/src/a2a/card.js";
+import { mapA2aToLocal, mapLocalToA2a, createRemoteTaskState, updateRemoteTaskState, isTerminalA2aStatus } from "../../backend/modules/protocols/src/a2a/state-map.js";
+import { checkedPrincipal, checkedEndpoint, isPublicA2aAddress, checkedCredential } from "../../backend/modules/protocols/src/a2a/auth.js";
 import type { Principal } from "@asi/contracts";
 
 describe("A2A Protocol", () => {

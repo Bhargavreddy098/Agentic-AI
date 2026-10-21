@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { createServer, type Server } from "node:http";
 import { once } from "node:events";
-import { A2A_REVISION } from "../../packages/protocols/src/a2a/versions.js";
-import { sanitizeAgentCard, validateAgentCard } from "../../packages/protocols/src/a2a/card.js";
+import { A2A_REVISION } from "../../backend/modules/protocols/src/a2a/versions.js";
+import { sanitizeAgentCard, validateAgentCard } from "../../backend/modules/protocols/src/a2a/card.js";
 import {
   createA2aClient, digest, type A2AClientServices,
-} from "../../packages/protocols/src/a2a/client.js";
-import { createA2aServer, type A2AServerServices } from "../../packages/protocols/src/a2a/server.js";
+} from "../../backend/modules/protocols/src/a2a/client.js";
+import { createA2aServer, type A2AServerServices } from "../../backend/modules/protocols/src/a2a/server.js";
 import type { Principal, RunContext, TaskEnvelope, TaskResult } from "@asi/contracts";
 
 const cleanup: (() => Promise<void>)[] = [];

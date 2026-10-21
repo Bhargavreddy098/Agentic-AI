@@ -1,10 +1,10 @@
-import { createSqliteFixtureDatabase, type SqliteFixtureDatabase as Database } from "../../packages/episodic/test/fixtures/sqlite.js";
+import { createSqliteFixtureDatabase, type SqliteFixtureDatabase as Database } from "../../backend/modules/episodic/test/fixtures/sqlite.js";
 import { mkdtempSync, rmSync, existsSync, readFileSync } from "node:fs";
 import { createHash, randomUUID } from "node:crypto";
 import { tmpdir } from "os";
 import { join } from "path";
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
-import { appendEpisode, searchEpisodes, recordCompression, getCompressions, getSessionEpisodes, getEpisodeById, type EpisodicAppendConfig, type SearchEpisodesConfig, type LineageConfig } from "../../packages/episodic/src/index.js";
+import { appendEpisode, searchEpisodes, recordCompression, getCompressions, getSessionEpisodes, getEpisodeById, type EpisodicAppendConfig, type SearchEpisodesConfig, type LineageConfig } from "../../backend/modules/episodic/src/index.js";
 import type { EpisodeCommand, Principal } from "@asi/contracts";
 
 const TEST_TENANT = "test-tenant-episodic";
@@ -76,7 +76,7 @@ beforeAll(() => {
   db.pragma("synchronous = NORMAL");
 
   // Run the migration
-  const migrationPath = join(__dirname, "../../db/sqlite/migrations/001-episodes.sql");
+  const migrationPath = join(__dirname, "../../backend/database/migrations/sqlite/001-episodes.sql");
   if (existsSync(migrationPath)) {
     const migration = readFileSync(migrationPath, "utf8");
     db.exec(migration);

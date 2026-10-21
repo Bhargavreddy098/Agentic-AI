@@ -1,4 +1,4 @@
-import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../packages/control/test/fixtures/postgres.js";
+import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../backend/modules/control/test/fixtures/postgres.js";
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import { createQueueAdapter } from "@asi/specialists";
 import type { TaskEnvelope } from "@asi/contracts";

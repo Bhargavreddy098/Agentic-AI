@@ -128,7 +128,7 @@ function verify(repoRoot) {
   check(new Set(migrationNames.map(name => name.split('-')[0])).size === migrationNames.length, 'MIGRATION_ID_COLLISION', 'Globally unique reserved migration IDs');
   for (const migration of ledger.migrationRegistry?.newMigrations ?? []) {
     const task = nodes.get(migration.owner);
-    check(Boolean(task) && task.files.includes(`db/postgres/migrations/${migration.file}`), 'MIGRATION_FILE_OWNER', migration.file);
+    check(Boolean(task) && task.files.some(file => file.replace(/^db\/postgres\/migrations\//, 'backend/database/migrations/postgres/') === `backend/database/migrations/postgres/${migration.file}`), 'MIGRATION_FILE_OWNER', migration.file);
     for (const dependency of migration.requires) check(migrationNames.includes(dependency), 'UNKNOWN_MIGRATION_DEPENDENCY', `${migration.file} -> ${dependency}`);
   }
   const approved = guideApproved(state);

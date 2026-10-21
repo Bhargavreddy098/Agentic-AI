@@ -11,7 +11,7 @@ export default defineConfig({
   use: { baseURL: WEB_ORIGIN, headless: true, trace: "retain-on-failure" },
   webServer: [
     {
-      command: "node apps/gateway/dist/ui-server.js",
+      command: "node backend/workers/gateway/dist/ui-server.js",
       url: `${GATEWAY_ORIGIN}/health`,
       reuseExistingServer: false,
       timeout: 120_000,

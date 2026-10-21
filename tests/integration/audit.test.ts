@@ -6,10 +6,10 @@ import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
 import { resolve, join, sep, basename } from "node:path";
 import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from "vitest";
-import { safeSequence } from "../../packages/audit/src/append.js";
-import * as Audit from "../../packages/audit/src/index.js";
-import { appendReceipt, verifyReceiptChain, exportReceiptChain, type AuditAppendConfig, type VerifyReceiptConfig } from "../../packages/audit/src/index.js";
-import { createControlServices, type ControlServices } from "../../packages/control/src/index.js";
+import { safeSequence } from "../../backend/modules/audit/src/append.js";
+import * as Audit from "../../backend/modules/audit/src/index.js";
+import { appendReceipt, verifyReceiptChain, exportReceiptChain, type AuditAppendConfig, type VerifyReceiptConfig } from "../../backend/modules/audit/src/index.js";
+import { createControlServices, type ControlServices } from "../../backend/modules/control/src/index.js";
 import { applyReviewedMigrations, reviewedMigrationPlan } from "../../scripts/apply-migrations.mjs";
 type Pool = ControlServices["pool"];
 const root = resolve(import.meta.dirname, "../..");
@@ -75,7 +75,7 @@ describe("Audit Receipts", () => {
     await admin.query("CREATE SCHEMA " + schema);
     bootstrap = createControlServices({ connectionString: url, options: "-c search_path=" + schema + ",public", max: 2 }, { tenantId: "admin" }).pool;
     const client = await bootstrap.connect();
-    try { await applyReviewedMigrations(client, { schema, target: existsSync(resolve(root, "db/postgres/migrations/014-audit-qualification.sql")) ? "05" : "M04" }); }
+    try { await applyReviewedMigrations(client, { schema, target: existsSync(resolve(root, "backend/database/migrations/postgres/014-audit-qualification.sql")) ? "05" : "M04" }); }
     finally { client.release(); }
     await bootstrap.query("GRANT USAGE ON SCHEMA " + schema + " TO " + role);
     await bootstrap.query("GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE ON ALL TABLES IN SCHEMA " + schema + " TO " + role);
@@ -329,8 +329,8 @@ describe("Audit Receipts", () => {
     const expected=await exportReceiptChain({pool,tenantId:"a"});
     const script=[
       'import {createRequire} from "node:module";',
-      'import {exportReceiptChain,verifyExportedReceiptChain} from '+JSON.stringify(pathToFileURL(resolve(root,"packages/audit/dist/index.js")).href)+';',
-      'const {Pool}=createRequire('+JSON.stringify(pathToFileURL(resolve(root,"packages/audit/package.json")).href)+')("pg");',
+      'import {exportReceiptChain,verifyExportedReceiptChain} from '+JSON.stringify(pathToFileURL(resolve(root,"backend/modules/audit/dist/index.js")).href)+';',
+      'const {Pool}=createRequire('+JSON.stringify(pathToFileURL(resolve(root,"backend/modules/audit/package.json")).href)+')("pg");',
       'const pool=new Pool({connectionString:process.env.AUDIT_RESTART_DATABASE,options:"-c search_path="+process.env.AUDIT_RESTART_SCHEMA+",public -c role="+process.env.AUDIT_RESTART_ROLE,connectionTimeoutMillis:5000,max:1});',
       'try {const chain=await exportReceiptChain({pool,tenantId:"a"});const valid=await verifyExportedReceiptChain(chain.receipts,{tenantId:"a",verificationKeys:new Map([["key-1",Buffer.alloc(32,7)]]),checkpoint:JSON.parse(process.env.AUDIT_RESTART_CHECKPOINT)});process.stdout.write(JSON.stringify({pid:process.pid,receipts:chain.receipts,valid}));}finally{await pool.end();}'
     ].join("\n");
@@ -522,12 +522,12 @@ describe("Task05 explicit migration approval denial", () => {
   it("historical original completion cannot authorize an unreviewed forward migration", () => {
     const directory = mkdtempSync(join(tmpdir(), "asi-audit-review-"));
     try {
-      mkdirSync(join(directory,"docs")); mkdirSync(join(directory,"db/postgres/migrations"), { recursive: true });
+      mkdirSync(join(directory,"docs")); mkdirSync(join(directory,"backend/database/migrations/postgres"), { recursive: true });
       const ledger = JSON.parse(readFileSync(resolve(root,"docs/v2-task-ledger.json"), "utf8"));
       ledger.boundaryReviewRequests["05"].reviewStatus = "pending";
       writeFileSync(join(directory,"docs/v2-task-ledger.json"), JSON.stringify(ledger));
       copyFileSync(resolve(root,"docs/task-ledger.json"),join(directory,"docs/task-ledger.json"));
-      for (const file of ["001-control.sql","002-audit.sql","009-identity-grants.sql","010-control-qualification.sql","014-audit-qualification.sql"]) copyFileSync(resolve(root,"db/postgres/migrations",file),join(directory,"db/postgres/migrations",file));
+      for (const file of ["001-control.sql","002-audit.sql","009-identity-grants.sql","010-control-qualification.sql","014-audit-qualification.sql"]) copyFileSync(resolve(root,"backend/database/migrations/postgres",file),join(directory,"backend/database/migrations/postgres",file));
       expect(() => reviewedMigrationPlan({ root: directory, target:"05" })).toThrow("boundary review");
     } finally {
       const actual = realpathSync(directory), base = realpathSync(tmpdir());

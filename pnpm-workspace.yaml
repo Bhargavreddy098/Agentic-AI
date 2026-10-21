@@ -1,4 +1,7 @@
 packages:
+  - "backend"
+  - "backend/modules/*"
+  - "backend/workers/*"
   - "apps/*"
   - "packages/*"
 allowBuilds:

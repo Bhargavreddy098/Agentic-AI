@@ -766,6 +766,109 @@
       "role": "U20 automated WCAG accessibility verification for Playwright",
       "qualification": "Qualified in U20 with exact pin 4.14.0 in root devDependencies and pnpm-workspace minimumReleaseAgeExclude",
       "status": "approved"
+    },
+    {
+      "name": "express",
+      "version": "5.3.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-qCqy1xSoaugxOD4IVHb1ZWdkvCF2W3aE2okKouWj8VwJ+ztskSiXoBnCSJqfKT+cVPJhuJqe9YLbY425+Zh00g==",
+      "engines": {
+        "node": ">= 18"
+      },
+      "role": "Approved Express backend migration",
+      "qualification": "Official registry metadata inspected 2026-10-21; install/build/API tests recorded separately",
+      "status": "approved"
+    },
+    {
+      "name": "pgvector",
+      "version": "0.3.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-+t7qcQD2us8fO8YIq/3lA0gUrD+bVO70MG1MhcDcxJz/OlRGGIIHzFq/4x57Vn/LpzX5wFdfOTLQp9QMPd4ljQ==",
+      "engines": {
+        "node": ">=22"
+      },
+      "role": "Approved Express backend migration",
+      "qualification": "Official registry metadata inspected 2026-10-21; install/build/API tests recorded separately",
+      "status": "approved"
+    },
+    {
+      "name": "helmet",
+      "version": "8.3.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-Qgpiaws3Sm30Av8Eah6sjMCZZwjlBu+E68rhpCWBshY1lb09HtLwj5GviX0OyQIn+ulUS0iX0AxN5n3tLZzz1w==",
+      "engines": {
+        "node": ">=18.0.0"
+      },
+      "role": "Approved Express backend migration",
+      "qualification": "Official registry metadata inspected 2026-10-21; install/build/API tests recorded separately",
+      "status": "approved"
+    },
+    {
+      "name": "express-rate-limit",
+      "version": "8.7.1",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-2FXbqkygil3mZiXzEtM0IjE/UBmBNot0J1GEVrJT4JbrvwOSoEtqtO+wHbiMQELWe1eNvHoYRg2dkjOid+6JkA==",
+      "engines": {
+        "node": ">= 16"
+      },
+      "role": "Approved Express backend migration",
+      "qualification": "Official registry metadata inspected 2026-10-21; install/build/API tests recorded separately",
+      "status": "approved"
+    },
+    {
+      "name": "pino",
+      "version": "10.4.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-bk1ZMTwG/Vymx+zPoa28MhNzucFvXJWp3csrSuxuHPSMeUettaCoQ5Jvg07mtC4JGNpcfTwz41oVCnNgBK9+vA==",
+      "role": "Approved Express backend migration",
+      "qualification": "Official registry metadata inspected 2026-10-21; install/build/API tests recorded separately",
+      "status": "approved"
+    },
+    {
+      "name": "pino-http",
+      "version": "11.0.0",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-wqg5XIAGRRIWtTk8qPGxkbrfiwEWz1lgedVLvhLALudKXvg1/L2lTFgTGPJ4Z2e3qcRmxoFxDuSdMdMGNM6I1g==",
+      "role": "Approved Express backend migration",
+      "qualification": "Official registry metadata inspected 2026-10-21; install/build/API tests recorded separately",
+      "status": "approved"
+    },
+    {
+      "name": "cookie-parser",
+      "version": "1.4.7",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-nGUvgXnotP3BsjiLX2ypbQnWoGUPIIfHQNZkkC668ntrzGWEZVW70HDEB1qnNGMicPje6EttlIgzo51YSwNQGw==",
+      "engines": {
+        "node": ">= 0.8.0"
+      },
+      "role": "Approved Express backend migration",
+      "qualification": "Official registry metadata inspected 2026-10-21; install/build/API tests recorded separately",
+      "status": "approved"
+    },
+    {
+      "name": "@types/cookie-parser",
+      "version": "1.4.10",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-B4xqkqfZ8Wek+rCOeRxsjMS9OgvzebEzzLYw7NHYuvzb7IdxOkI0ZHGgeEBX4PUM7QGVvNSK60T3OvWj3YfBRg==",
+      "qualification": "Express checkJs definitions; real module API compiler check",
+      "status": "approved"
+    },
+    {
+      "name": "@types/express",
+      "version": "5.0.6",
+      "registry": "npm",
+      "license": "MIT",
+      "integrity": "sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==",
+      "qualification": "Express checkJs definitions; real module API compiler check",
+      "status": "approved"
     }
   ],
   "planned": [

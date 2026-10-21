@@ -15,6 +15,9 @@ export default tseslint.config(
       "docs/**",
       "assets/**",
       ".archify/**",
+      ".superpowers/**",
+      // Pinned upstream source snapshot; not an ASI workspace or runtime dependency.
+      "third_party/openclaw/**",
       "pnpm-lock.yaml",
     ],
   },

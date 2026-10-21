@@ -1,4 +1,4 @@
-import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../packages/control/test/fixtures/postgres.js";
+import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../backend/modules/control/test/fixtures/postgres.js";
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import {
   queryMemory,
@@ -6,7 +6,7 @@ import {
   revertMemoryRevision,
   type QueryMemoryConfig,
   type PublishMemoryConfig,
-} from "../../packages/memory/src/index.js";
+} from "../../backend/modules/memory/src/index.js";
 import type { Principal, MemoryWrite, MemoryQuery, RunContext } from "@asi/contracts";
 
 const TEST_TENANT_A = "tenant-a";

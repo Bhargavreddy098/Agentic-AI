@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
-import { evaluatePolicy } from '../../packages/policy/src/evaluate.js';
-import { createPostgresFixturePool } from '../../packages/control/test/fixtures/postgres.js';
+import { evaluatePolicy } from '../../backend/modules/policy/src/evaluate.js';
+import { createPostgresFixturePool } from '../../backend/modules/control/test/fixtures/postgres.js';
 import { configureIdentity, createPrincipalToken, verifyPrincipal, setGrantStore, PostgresGrantStore } from '@asi/identity';
 import { randomBytes } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
@@ -25,7 +25,7 @@ import {
   InMemoryCapabilityStore,
   createPolicyService,
   type PolicyService,
-} from "../../packages/policy/src/index.js";
+} from "../../backend/modules/policy/src/index.js";
 import type { Principal, EffectRequest, PolicyVersion } from "../../packages/contracts/src/index.js";
 import "fs";
 import * as path from "path";

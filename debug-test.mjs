@@ -15,10 +15,10 @@ Module._resolveFilename = function(request, parent, isMain, options) {
     return resolve(root, 'packages/contracts/src/index.ts');
   }
   if (request === '@asi/identity') {
-    return resolve(root, 'packages/identity/src/index.ts');
+    return resolve(root, 'backend/modules/identity/src/index.ts');
   }
   if (request === '@asi/control') {
-    return resolve(root, 'packages/control/src/index.ts');
+    return resolve(root, 'backend/modules/control/src/index.ts');
   }
   return originalResolveFilename.call(this, request, parent, isMain, options);
 };

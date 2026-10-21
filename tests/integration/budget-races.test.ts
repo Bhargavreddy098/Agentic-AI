@@ -1,5 +1,5 @@
 // Approved Task06: real PostgreSQL qualification, replacing query-order mocks with accounting/authority evidence.
-import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../packages/control/test/fixtures/postgres.js";
+import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../backend/modules/control/test/fixtures/postgres.js";
 type PoolClient = Parameters<Parameters<Pool["connect"]>[0]>[1];
 import { describe,it,expect,beforeAll,afterAll,beforeEach,vi } from "vitest";
 import { randomBytes } from "node:crypto";
@@ -7,7 +7,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { createBudgetService,createBudgetReconciler,reserveBudget,getReservation,settleBudget,releaseBudget,getSelfState,getBudgetSnapshot,getSettledForRun,type BudgetConfig,type BudgetQuotas } from "../../packages/budgets/src/index.js";
+import { createBudgetService,createBudgetReconciler,reserveBudget,getReservation,settleBudget,releaseBudget,getSelfState,getBudgetSnapshot,getSettledForRun,type BudgetConfig,type BudgetQuotas } from "../../backend/modules/budgets/src/index.js";
 import type { RunContext } from "@asi/contracts";
 const url=process.env['B06_TEST_DATABASE_URL'];
 if(!url||!new URL(url).pathname.endsWith('_qualification')||!['127.0.0.1','localhost','[::1]'].includes(new URL(url).hostname))throw new Error('Explicit local disposable B06_TEST_DATABASE_URL required');
@@ -140,7 +140,7 @@ describe('Shared budget authority and atomic conservation',()=>{
  });
  it('new Node process observes durable unknown reservation without replacement or recharge',async()=>{
   const {s,r}=await reserve();await s.markDispatched(r.reservationId);await s.markUnknown(r.reservationId);
-  const script=`import {Pool} from 'pg';import {createBudgetService} from './packages/budgets/dist/index.js';const pool=new Pool({connectionString:process.env.B06_TEST_DATABASE_URL,options:process.env.B06_OPTIONS});try{const scope=JSON.parse(process.env.B06_SCOPE);const s=await createBudgetService({pool,trustedScope:scope});const r=await s.getReservation(process.env.B06_ID);if(r?.status!=='unknown')throw Error('durable unknown missing');const again=await s.reserveBudget(scope.context.budgetRef,100,100);if(again.reservationId!==r.reservationId)throw Error('replacement');process.stdout.write('durable-unknown-ok');}finally{await pool.end();}`;
+  const script=`import {Pool} from 'pg';import {createBudgetService} from './backend/modules/budgets/dist/index.js';const pool=new Pool({connectionString:process.env.B06_TEST_DATABASE_URL,options:process.env.B06_OPTIONS});try{const scope=JSON.parse(process.env.B06_SCOPE);const s=await createBudgetService({pool,trustedScope:scope});const r=await s.getReservation(process.env.B06_ID);if(r?.status!=='unknown')throw Error('durable unknown missing');const again=await s.reserveBudget(scope.context.budgetRef,100,100);if(again.reservationId!==r.reservationId)throw Error('replacement');process.stdout.write('durable-unknown-ok');}finally{await pool.end();}`;
   const result=await promisify(execFile)(process.execPath,['--input-type=module','-e',script],{cwd:process.cwd(),env:{...process.env,B06_TEST_DATABASE_URL:url,B06_OPTIONS:options+' -c role='+role,B06_SCOPE:JSON.stringify(config().trustedScope),B06_ID:r.reservationId},timeout:10000});expect(result.stdout).toBe('durable-unknown-ok');expect(await charge()).toEqual({tokens:100,cost:100});
  });
 });

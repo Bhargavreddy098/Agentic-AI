@@ -75,9 +75,9 @@ beforeAll(() => {
 
   // Copy migration files referenced in the registry
   const migrationFiles = [
-    "db/postgres/migrations/001-control.sql",
-    "db/postgres/migrations/009-identity-grants.sql",
-    "db/postgres/migrations/010-control-qualification.sql",
+    "backend/database/migrations/postgres/001-control.sql",
+    "backend/database/migrations/postgres/009-identity-grants.sql",
+    "backend/database/migrations/postgres/010-control-qualification.sql",
   ];
   for (const file of migrationFiles) {
     const src = join(repoRoot, file);

@@ -74,6 +74,7 @@ function gitArguments(repoRoot, arguments_) {
   return execFileSync("git", ["-C", repoRoot, ...arguments_], {
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
+    maxBuffer: 16 * 1024 * 1024,
   });
 }
 

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OpaqueIdSchema, SchemaVersionSchema } from "../primitives.js";
+import { SchemaVersionSchema } from "../primitives.js";
 
 /**
  * Operation-level capability projection (Task 1).

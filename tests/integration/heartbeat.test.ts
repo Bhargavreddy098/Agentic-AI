@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../packages/control/test/fixtures/postgres.js";
+import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../backend/modules/control/test/fixtures/postgres.js";
 import { createControlPool } from "@asi/control";
 import { scheduleHeartbeat, cancelHeartbeat, runDueHeartbeats, getHeartbeatSchedule, listHeartbeatSchedules } from "@asi/gateway";
 import type { Principal, RunContext } from "@asi/contracts";

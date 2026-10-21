@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "moves": [
+    {
+      "from": "packages/audit",
+      "to": "backend/modules/audit",
+      "packageName": "@asi/audit",
+      "componentId": "govKernel"
+    },
+    {
+      "from": "packages/budgets",
+      "to": "backend/modules/budgets",
+      "packageName": "@asi/budgets",
+      "componentId": "govKernel"
+    },
+    {
+      "from": "packages/channels",
+      "to": "backend/modules/channels",
+      "packageName": "@asi/channels",
+      "componentId": "channels"
+    },
+    {
+      "from": "packages/context",
+      "to": "backend/modules/context",
+      "packageName": "@asi/context",
+      "componentId": "supervisor"
+    },
+    {
+      "from": "packages/control",
+      "to": "backend/modules/control",
+      "packageName": "@asi/control",
+      "componentId": "control"
+    },
+    {
+      "from": "packages/episodic",
+      "to": "backend/modules/episodic",
+      "packageName": "@asi/episodic",
+      "componentId": "sessionFTS"
+    },
+    {
+      "from": "packages/gateway",
+      "to": "backend/modules/gateway",
+      "packageName": "@asi/gateway",
+      "componentId": "gateway"
+    },
+    {
+      "from": "packages/identity",
+      "to": "backend/modules/identity",
+      "packageName": "@asi/identity",
+      "componentId": "govKernel"
+    },
+    {
+      "from": "packages/memory",
+      "to": "backend/modules/memory",
+      "packageName": "@asi/memory",
+      "componentId": "memStore"
+    },
+    {
+      "from": "packages/models",
+      "to": "backend/modules/models",
+      "packageName": "@asi/models",
+      "componentId": "frontierModels"
+    },
+    {
+      "from": "packages/orchestrator",
+      "to": "backend/modules/orchestrator",
+      "packageName": "@asi/orchestrator",
+      "componentId": "supervisor"
+    },
+    {
+      "from": "packages/policy",
+      "to": "backend/modules/policy",
+      "packageName": "@asi/policy",
+      "componentId": "govKernel"
+    },
+    {
+      "from": "packages/privacy",
+      "to": "backend/modules/privacy",
+      "packageName": "@asi/privacy",
+      "componentId": "privRouter"
+    },
+    {
+      "from": "packages/protocols",
+      "to": "backend/modules/protocols",
+      "packageName": "@asi/protocols",
+      "componentId": "toolRuntime"
+    },
+    {
+      "from": "packages/sandbox",
+      "to": "backend/modules/sandbox",
+      "packageName": "@asi/sandbox",
+      "componentId": "sandbox"
+    },
+    {
+      "from": "packages/skills",
+      "to": "backend/modules/skills",
+      "packageName": "@asi/skills",
+      "componentId": "supervisor"
+    },
+    {
+      "from": "packages/specialists",
+      "to": "backend/modules/specialists",
+      "packageName": "@asi/specialists",
+      "componentId": "specialists"
+    },
+    {
+      "from": "packages/telemetry",
+      "to": "backend/modules/telemetry",
+      "packageName": "@asi/telemetry",
+      "componentId": "supporting"
+    },
+    {
+      "from": "packages/tools",
+      "to": "backend/modules/tools",
+      "packageName": "@asi/tools",
+      "componentId": "toolRuntime"
+    },
+    {
+      "from": "apps/episodic-owner",
+      "to": "backend/workers/episodic-owner",
+      "packageName": "@asi/episodic-owner-app",
+      "componentId": "sessionFTS"
+    },
+    {
+      "from": "apps/gateway",
+      "to": "backend/workers/gateway",
+      "packageName": "@asi/gateway-app",
+      "componentId": "gateway"
+    },
+    {
+      "from": "apps/memory-broker",
+      "to": "backend/workers/memory-broker",
+      "packageName": "@asi/memory-broker-app",
+      "componentId": "memStore"
+    },
+    {
+      "from": "apps/orchestrator",
+      "to": "backend/workers/orchestrator",
+      "packageName": "@asi/orchestrator-app",
+      "componentId": "supervisor"
+    },
+    {
+      "from": "apps/policy-kernel",
+      "to": "backend/workers/policy-kernel",
+      "packageName": "@asi/policy-kernel",
+      "componentId": "govKernel"
+    },
+    {
+      "from": "apps/privacy-router",
+      "to": "backend/workers/privacy-router",
+      "packageName": "@asi/privacy-router-app",
+      "componentId": "privRouter"
+    },
+    {
+      "from": "apps/specialist",
+      "to": "backend/workers/specialist",
+      "packageName": "@asi/specialist",
+      "componentId": "specialists"
+    },
+    {
+      "from": "apps/tool-engine",
+      "to": "backend/workers/tool-engine",
+      "packageName": "@asi/tool-engine",
+      "componentId": "toolRuntime"
+    },
+    {
+      "from": "db/postgres/migrations",
+      "to": "backend/database/migrations/postgres",
+      "packageName": null,
+      "componentId": "control"
+    },
+    {
+      "from": "db/sqlite/migrations",
+      "to": "backend/database/migrations/sqlite",
+      "packageName": null,
+      "componentId": "control"
+    }
+  ]
+}

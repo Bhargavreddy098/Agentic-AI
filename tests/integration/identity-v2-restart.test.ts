@@ -4,18 +4,18 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { randomBytes } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { PostgresGrantStore } from "../../packages/identity/src/postgres-grant-store.js";
-import type { GrantQueryClient } from "../../packages/identity/src/postgres-grant-store.js";
-import { configureIdentity, resetIdentity, generateSigningKey, getConfig } from "../../packages/identity/src/config.js";
-import { setGrantStore, resetGrantStore, getGrantStore, revokeGrant } from "../../packages/identity/src/revoke.js";
-import { createPrincipalToken, delegatePrincipal } from "../../packages/identity/src/delegate.js";
-import { verifyPrincipal, parseGrantId } from "../../packages/identity/src/verify.js";
+import { PostgresGrantStore } from "../../backend/modules/identity/src/postgres-grant-store.js";
+import type { GrantQueryClient } from "../../backend/modules/identity/src/postgres-grant-store.js";
+import { configureIdentity, resetIdentity, generateSigningKey, getConfig } from "../../backend/modules/identity/src/config.js";
+import { setGrantStore, resetGrantStore, getGrantStore, revokeGrant } from "../../backend/modules/identity/src/revoke.js";
+import { createPrincipalToken, delegatePrincipal } from "../../backend/modules/identity/src/delegate.js";
+import { verifyPrincipal, parseGrantId } from "../../backend/modules/identity/src/verify.js";
 import type { Principal } from "../../packages/contracts/src/identity.js";
 
 interface DatabaseClient extends GrantQueryClient { connect(): Promise<void>; end(): Promise<void> }
 const root = resolve(import.meta.dirname, "../..");
 // Use the already-qualified pg driver through its owning workspace, not another dependency.
-const { Client } = createRequire(resolve(root, "packages/control/package.json"))("pg") as {
+const { Client } = createRequire(resolve(root, "backend/modules/control/package.json"))("pg") as {
   Client: new (options: { connectionString: string; connectionTimeoutMillis: number; statement_timeout: number }) => DatabaseClient;
 };
 let url: string;
@@ -44,8 +44,8 @@ describe("M03 actual PostgreSQL durability and revocation", () => {
 
     client = await connect();
     await client.query(`CREATE SCHEMA ${schema}`);
-    await client.query(readFileSync(resolve(root, "db/postgres/migrations/001-control.sql"), "utf8"));
-    await client.query(readFileSync(resolve(root, "db/postgres/migrations/009-identity-grants.sql"), "utf8"));
+    await client.query(readFileSync(resolve(root, "backend/database/migrations/postgres/001-control.sql"), "utf8"));
+    await client.query(readFileSync(resolve(root, "backend/database/migrations/postgres/009-identity-grants.sql"), "utf8"));
     await client.query(`INSERT INTO tenants(tenant_id,display_name) VALUES ('tenant-a','A'),('tenant-b','B')`);
     await client.query(`CREATE ROLE ${runtimeRole} NOLOGIN NOSUPERUSER NOBYPASSRLS`);
     await client.query(`GRANT USAGE ON SCHEMA ${schema} TO ${runtimeRole}`);
@@ -131,10 +131,10 @@ describe("M03 actual PostgreSQL durability and revocation", () => {
     const child = await delegatePrincipal(parent, ["read"], "child", new Date(Date.now() + 600000).toISOString().replace(/\.\d{3}Z$/, "Z"));
     const script = `
       import {createRequire} from 'node:module';
-      import * as identity from './packages/identity/dist/index.js';
+      import * as identity from './backend/modules/identity/dist/index.js';
       const chunks=[];for await(const chunk of process.stdin)chunks.push(chunk);
       const input=JSON.parse(Buffer.concat(chunks).toString());
-      const {Client}=createRequire(new URL('./packages/control/package.json', import.meta.url))('pg');
+      const {Client}=createRequire(new URL('./backend/modules/control/package.json', import.meta.url))('pg');
       const db=new Client({connectionString:input.url,connectionTimeoutMillis:5000,statement_timeout:5000});
       await db.connect();await db.query('SET search_path TO '+input.schema+',public');await db.query('SET ROLE '+input.role);
       identity.configureIdentity(input.keys);identity.setGrantStore(new identity.PostgresGrantStore(db));

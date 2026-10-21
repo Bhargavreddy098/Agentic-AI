@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { spawnSync } from "node:child_process";
 import { resolve } from "node:path";
-import { configureIdentity, resetIdentity, generateSigningKey, getConfig } from "../../packages/identity/src/config.js";
-import { decodeToken } from "../../packages/identity/src/token.js";
+import { configureIdentity, resetIdentity, generateSigningKey, getConfig } from "../../backend/modules/identity/src/config.js";
+import { decodeToken } from "../../backend/modules/identity/src/token.js";
 
 describe("credentials security", () => {
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe("credentials security", () => {
   it("does not expose signing keys in tokens", async () => {
     const key = generateSigningKey("test-key");
     configureIdentity({ keys: [key], defaultKid: "test-key" });
-    const { signToken } = await import("../../packages/identity/src/token.js");
+    const { signToken } = await import("../../backend/modules/identity/src/token.js");
     const token = signToken({
       iss: "asi-identity",
       sub: "test-subject",
@@ -82,7 +82,7 @@ describe("credentials security", () => {
 
 describe("native identity process credential refusal", () => {
   it("does not inherit signing or provider credentials and refuses issuance without bootstrap", () => {
-    const script = `import * as identity from './packages/identity/dist/index.js';
+    const script = `import * as identity from './backend/modules/identity/dist/index.js';
       let denied=false;try{await identity.createPrincipalToken({tenantId:'a',subjectId:'s',roles:['admin'],capabilities:['admin'],audience:'owner',expiresAt:new Date(Date.now()+60000).toISOString(),authenticatedSource:'asi-identity'});}catch{denied=true;}
       console.log(JSON.stringify({denied,keysConfigured:identity.getConfig()!==null,credentialNames:Object.keys(process.env).filter(k=>/^(IDENTITY_SIGNING_KEYS_JSON|DATABASE_URL|PGPASSWORD|OPENAI_API_KEY|ANTHROPIC_API_KEY)$/.test(k))}));`;
     const env = Object.fromEntries(["SystemRoot", "WINDIR", "TEMP", "TMP"].flatMap(name => process.env[name] === undefined ? [] : [[name, process.env[name]!] ]));

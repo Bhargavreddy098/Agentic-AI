@@ -1,3 +1,6 @@
 # Keep preserved documentation snapshots stable across Windows/Git checkouts.
 docs/v2-build-guide.md text eol=lf
 docs/v2-source-manifest.json text eol=lf
+
+# Preserve the upstream snapshot's byte-level integrity manifest on Windows.
+third_party/openclaw/** -text

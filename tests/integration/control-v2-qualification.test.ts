@@ -3,13 +3,13 @@ import { createRequire } from "node:module";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { randomBytes } from "node:crypto";
-import { createControlServices, closeControlServices } from "../../packages/control/src/index.js";
-import type { ControlServices } from "../../packages/control/src/index.js";
+import { createControlServices, closeControlServices } from "../../backend/modules/control/src/index.js";
+import type { ControlServices } from "../../backend/modules/control/src/index.js";
 import type { RunContext, Checkpoint, EffectRequest, SessionEvent, TaskEnvelope } from "../../packages/contracts/src/index.js";
 
 type Pool = ControlServices["pool"];
 const root = resolve(import.meta.dirname, "../..");
-const { Pool: DatabasePool } = createRequire(resolve(root, "packages/control/package.json"))("pg") as { Pool: new (config: Record<string, unknown>) => Pool };
+const { Pool: DatabasePool } = createRequire(resolve(root, "backend/modules/control/package.json"))("pg") as { Pool: new (config: Record<string, unknown>) => Pool };
 const url = process.env.M04_TEST_DATABASE_URL ?? "postgresql://postgres@127.0.0.1:60637/asi_m04_qualification";
 if (!new URL(url).pathname.endsWith("_qualification")) throw new Error("Disposable *_qualification database required");
 const schema = `m04_control_${randomBytes(6).toString("hex")}`, role = `m04_role_${randomBytes(6).toString("hex")}`;
@@ -27,10 +27,10 @@ function event(): SessionEvent { return { schemaVersion: 1, eventId: "event", te
 describe("M04 actual PostgreSQL control qualification", () => {
   beforeAll(async () => {
     await admin.query(`CREATE SCHEMA ${schema}`);
-    await admin.query(readFileSync(resolve(root, "db/postgres/migrations/001-control.sql"), "utf8"));
-    await admin.query(readFileSync(resolve(root, "db/postgres/migrations/009-identity-grants.sql"), "utf8"));
+    await admin.query(readFileSync(resolve(root, "backend/database/migrations/postgres/001-control.sql"), "utf8"));
+    await admin.query(readFileSync(resolve(root, "backend/database/migrations/postgres/009-identity-grants.sql"), "utf8"));
     // Baseline RED runs against 001/009; no absent-file or infrastructure skip.
-    const forward = resolve(root, "db/postgres/migrations/010-control-qualification.sql");
+    const forward = resolve(root, "backend/database/migrations/postgres/010-control-qualification.sql");
     if (existsSync(forward)) await admin.query(readFileSync(forward, "utf8"));
     await admin.query(`CREATE ROLE ${role} NOLOGIN NOSUPERUSER NOBYPASSRLS`);
     await admin.query(`GRANT USAGE ON SCHEMA ${schema} TO ${role}`);
@@ -64,7 +64,7 @@ describe("M04 actual PostgreSQL control qualification", () => {
   });
   it("a baseline live lease cannot be overwritten even when a competing claim throws", async () => {
     await admin.query("UPDATE runs SET writer_epoch=1,status='running' WHERE run_id=$1", [run]);
-    const forward = existsSync(resolve(root, "db/postgres/migrations/010-control-qualification.sql"));
+    const forward = existsSync(resolve(root, "backend/database/migrations/postgres/010-control-qualification.sql"));
     await admin.query(forward ? "INSERT INTO writer_leases(session_id,run_id,writer_epoch,expires_at,tenant_id,owner_id) VALUES ($1,$2,1,clock_timestamp()+interval '30seconds','a','owner-a')" : "INSERT INTO writer_leases(session_id,run_id,writer_epoch,expires_at) VALUES ($1,$2,1,clock_timestamp()+interval '30seconds')", [session, run]);
     await otherOwner.leases.claimSession(session, secondRun).catch(() => undefined);
     expect((await admin.query("SELECT run_id FROM writer_leases WHERE session_id=$1", [session])).rows[0].run_id).toBe(run);
