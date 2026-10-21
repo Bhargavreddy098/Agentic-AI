@@ -1,13 +1,17 @@
 # Agentic-AI
 
-Enterprise-grade autonomous agent system built with TypeScript, featuring deterministic execution, workspace UI, secure sandboxing, and policy-driven tool execution.
+ASI is a local-first Windows agent workspace for working with model providers, tasks, memory and inspectable results. The current codebase contains an Express backend, TypeScript domain modules and a Next.js demo UI. Independent microservices are the next proposed architecture, not an implemented deployment.
 
-## Features
+## Product scope and status
 
-- **Agent Core Architecture**: Modular agents with policy gates, planning, and task orchestration.
-- **Interactive Workspace UI**: Modern web UI for inspecting agent status, memory, tasks, and live execution.
-- **Deterministic Execution & Memory**: Persistent, auditable execution traces and memory management.
-- **Robust Verification**: Comprehensive test suites including unit, integration, security, and UI testing.
+- The target workflow is conversation → bounded plan → authorized task → artifact → verification, with honest progress and restart/recovery behavior.
+- The frontend has seven sections: Chat, Models & Providers, Skills, Tools & Connections, Memory, Activity & Tasks, Settings.
+- No user RBAC is part of the product target. Agent capabilities, action approvals, privacy rules and scoped data access remain required.
+- The default UI launcher uses synthetic data. Production authentication, durable UI composition, real provider execution, pgvector qualification and executable isolation still have unresolved prerequisites. A working demo does not establish a complete agent system.
+
+## Documentation
+
+Start with the [documentation index](docs/README.md). The current engineering direction is the [microservices build plan](docs/superpowers/plans/2026-10-21-asi-microservices-build.md), supported by its [architecture proposal](docs/superpowers/plans/2026-10-21-asi-microservices-migration.md).
 
 ## Getting Started
 
@@ -47,4 +51,4 @@ For a hosted preview, explicitly set `ASI_DEV_HOST` for the UI listener and list
 
 ## Build status
 
-Start with `docs/v2-build-guide.md` and its task ledgers. Merging local and GitHub work preserves completed-task evidence; pending backend and V2 work still requires its own implementation and qualification. The interactive demo is not evidence that those tasks are complete.
+Use the current microservices plan for proposed service placement and the original/V2 task ledgers for feature requirements and recorded qualification. The large V2 guide retains historical source snapshots; it is reference material, not a second current implementation roadmap. See the [backend migration evidence](docs/release-evidence/express-backend-migration.md) for executed checks and limitations.

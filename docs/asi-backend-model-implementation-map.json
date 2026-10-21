@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "proposed-plan",
+  "status": "reference-only; service placement superseded",
   "taskCount": 50,
   "familyCount": 43,
   "rows": [
@@ -1443,5 +1443,7 @@
       ],
       "assertions": "depth<=2/fanOut<=8; reduced grants; data model never dispatches swarm"
     }
-  ]
+  ],
+  "currentOwnershipMap": "docs/asi-microservices-model-ownership.json",
+  "currentBuildPlan": "docs/superpowers/plans/2026-10-21-asi-microservices-build.md"
 }
