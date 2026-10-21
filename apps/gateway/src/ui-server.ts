@@ -2,7 +2,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-import { createUiGateway, createProtectedUiPorts, createSessionStore, type UiUploadLimits } from "./ui/index.js";
+import { createGatewayCapabilityProvider, createSyntheticCapabilityBindings, createUiGateway, createProtectedUiPorts, createSessionStore, type UiUploadLimits } from "./ui/index.js";
 
 const DEFAULT_ORIGINS = ["http://127.0.0.1:3100", "http://localhost:3100", "http://127.0.0.1:3000", "http://localhost:3000"];
 
@@ -31,6 +31,7 @@ export function createUiGatewayServer(options: UiGatewayServerOptions = {}) {
     sessions: createSessionStore(),
     allowedOrigins: options.allowedOrigins ?? allowlistFromEnv(),
     ...(options.limits ? { limits: options.limits } : {}),
+    capabilities: createGatewayCapabilityProvider(createSyntheticCapabilityBindings()),
   });
   const app = new Hono();
   app.get("/health", c => c.json({ status: "ok", service: "asi-ui-gateway", protectedEffects: "policy-authorized+receipt-signed", isolation: "unqualified" }));

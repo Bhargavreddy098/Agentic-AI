@@ -15,6 +15,7 @@ import {
   type Page,
   type SettingsView,
   type TaskView,
+  type UiCapabilities,
   type UiCommandResult,
   type UiMutationCommand,
 } from "@asi/contracts";
@@ -23,9 +24,11 @@ import { projectSession, projectSnapshot } from "./project.js";
 import { createSessionStore, csrfMatches, SESSION_COOKIE, type UiSessionRecord, type UiSessionStore } from "./session.js";
 import { encodeEvent, replayEvents } from "./stream.js";
 import { UploadQuarantine } from "./uploads.js";
+import { createUnconfiguredProjection } from "./capabilities.js";
 import {
   DEFAULT_UPLOAD_LIMITS,
   type UiAuthPort,
+  type UiCapabilitiesProvider,
   type UiCatalogPorts,
   type UiControlPort,
   type UiEpisodePort,
@@ -45,6 +48,7 @@ export interface UiGatewayConfig {
   allowedOrigins?: string[];
   now?: () => number;
   secureCookies?: boolean;
+  capabilities?: UiCapabilitiesProvider;
 }
 
 type Variables = { session: UiSessionRecord };
@@ -166,6 +170,13 @@ export function createUiGateway(config: UiGatewayConfig): Hono<{ Variables: Vari
   app.get(`${base}/me`, c => {
     const { principal, csrfToken } = c.get("session");
     return c.json(projectSession(principal, csrfToken, limits));
+  });
+
+  app.get(`${base}/capabilities`, async c => {
+    const projection: UiCapabilities = config.capabilities
+      ? await config.capabilities.read()
+      : createUnconfiguredProjection();
+    return c.json(projection, 200, { "cache-control": "no-store" });
   });
 
   app.get(`${base}/conversations`, async c => {

@@ -1,4 +1,4 @@
-import { createUiCapabilityProvider, type UiCapabilityBinding, type UiCapabilities } from "@asi/contracts";
+import { createUiCapabilityProvider, type UiCapabilityBinding, type UiCapabilities, type UiOperation } from "@asi/contracts";
 
 export type { UiCapabilityBinding, UiCapabilities };
 
@@ -46,6 +46,32 @@ const UNCONFIGURED_OPERATIONS: readonly UiCapabilityBinding["operation"][] = [
   "usage.read",
 ];
 
+export const ALL_OPERATIONS: readonly UiOperation[] = [
+  "conversation.read",
+  "conversation.create",
+  "conversation.update",
+  "message.send",
+  "run.cancel",
+  "clarification.answer",
+  "approval.decide",
+  "upload.create",
+  "artifact.read",
+  "provider.read",
+  "provider.write",
+  "model.read",
+  "model.write",
+  "skill.read",
+  "skill.write",
+  "connection.read",
+  "connection.write",
+  "memory.read",
+  "memory.write",
+  "activity.read",
+  "usage.read",
+  "settings.read",
+  "settings.write",
+];
+
 function syntheticBinding(operation: UiCapabilityBinding["operation"]): UiCapabilityBinding {
   return {
     operation,
@@ -72,4 +98,12 @@ export function createSyntheticCapabilityBindings(): readonly UiCapabilityBindin
 
 export function createGatewayCapabilityProvider(bindings: readonly UiCapabilityBinding[]): { read(): Promise<UiCapabilities> } {
   return createUiCapabilityProvider(bindings);
+}
+
+export function createUnconfiguredProjection(): UiCapabilities {
+  return {
+    schemaVersion: 1,
+    revision: 0,
+    operations: [...ALL_OPERATIONS].map(operation => ({ operation, state: "unconfigured" as const })),
+  };
 }
