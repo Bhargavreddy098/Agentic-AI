@@ -2,10 +2,6 @@ import { expect, it } from "vitest";
 import {
   createUiCapabilityProvider,
   type UiCapabilityBinding,
-  type UiCapabilities,
-  UiCapabilitiesSchema,
-  UiCapabilityStateSchema,
-  UiOperationSchema,
 } from "@asi/contracts";
 
 function binding(operation: string, readiness: () => Promise<boolean> = async () => true, source: "live" | "synthetic" = "synthetic", qualificationRef?: string): UiCapabilityBinding {
@@ -18,7 +14,6 @@ function binding(operation: string, readiness: () => Promise<boolean> = async ()
   return qualificationRef === undefined ? base : { ...base, qualificationRef };
 }
 
-const LIVE_OPERATIONS = ["conversation.read", "conversation.create", "message.send", "run.cancel", "clarification.answer", "approval.decide", "upload.create", "provider.read", "provider.write", "model.read", "model.write", "skill.read", "skill.write", "connection.read", "connection.write", "memory.read", "memory.write", "activity.read", "settings.read", "settings.write"];
 
 it("synthetic readiness never becomes live", async () => {
   const provider = createUiCapabilityProvider([binding("conversation.read", async () => true, "synthetic", "qualified")]);

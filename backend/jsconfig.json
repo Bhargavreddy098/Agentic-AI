@@ -1,0 +1,9 @@
+{
+  "compilerOptions":{
+    "target":"ES2022","module":"NodeNext","moduleResolution":"NodeNext",
+    "allowJs":true,"checkJs":true,"noEmit":true,"strict":true,"noImplicitAny":false,
+    "useUnknownInCatchVariables":false,"skipLibCheck":true,"types":["node"]
+  },
+  "include":["*.js","config/**/*.js","controllers/**/*.js","middlewares/**/*.js","models/**/*.js","routes/**/*.js","schemas/**/*.js","services/**/*.js","utils/**/*.js"],
+  "exclude":["modules","workers","node_modules","tests","database/migrate.js"]
+}

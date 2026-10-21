@@ -45,7 +45,9 @@ const SKIP_DIRECTORIES = new Set([
   ".next",
   "coverage",
 ]);
-const SCAN_EXCLUSIONS = ["tests/fixtures"];
+// The OpenClaw snapshot retains upstream manifests for provenance; it is not
+// enrolled in pnpm-workspace.yaml or installed as part of the ASI application.
+const SCAN_EXCLUSIONS = ["tests/fixtures", "third_party/openclaw"];
 
 function toPosix(path) {
   return path.replaceAll("\\", "/");
@@ -74,6 +76,9 @@ function discoverManifests(target) {
       const entryPath = join(directory, entry.name);
       if (entry.isDirectory()) {
         if (SKIP_DIRECTORIES.has(entry.name)) {
+          continue;
+        }
+        if (isExcluded(toPosix(relative(target, entryPath)))) {
           continue;
         }
         walk(entryPath);

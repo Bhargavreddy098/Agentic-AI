@@ -1,0 +1,609 @@
+{
+  "schemaVersion": 1,
+  "status": "proposed",
+  "date": "2026-10-21",
+  "plan": "docs/superpowers/plans/2026-10-21-asi-microservices-migration.md",
+  "taskCount": 50,
+  "modelFamilyCount": 43,
+  "services": [
+    "api-gateway",
+    "core",
+    "orchestrator",
+    "memory",
+    "episode",
+    "inference",
+    "tool-runtime",
+    "specialist"
+  ],
+  "models": [
+    {
+      "family": "skill",
+      "taskIds": [
+        "18",
+        "V2-T05"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/skill.model.js",
+      "notes": "Core owns catalog/trust/install metadata; Orchestrator selects; executable skills run in Tool Runtime."
+    },
+    {
+      "family": "channel-delivery",
+      "taskIds": [
+        "20"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "api-gateway / orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/channel-delivery.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "protocol-connection",
+      "taskIds": [
+        "22"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "tool-runtime",
+      "proposedModelPath": "backend/services/core/src/models/protocol-connection.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "remote-task",
+      "taskIds": [
+        "23"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "tool-runtime",
+      "proposedModelPath": "backend/services/core/src/models/remote-task.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "fleet-assignment",
+      "taskIds": [
+        "24"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/fleet-assignment.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "restore-report",
+      "taskIds": [
+        "25"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/restore-report.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "consolidation-candidate",
+      "taskIds": [
+        "26"
+      ],
+      "modelOwner": "memory",
+      "persistenceOwner": "memory",
+      "producer": "memory",
+      "proposedModelPath": "backend/services/memory/src/models/consolidation-candidate.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "tool-candidate",
+      "taskIds": [
+        "27"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "tool-runtime",
+      "proposedModelPath": "backend/services/core/src/models/tool-candidate.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "observation",
+      "taskIds": [
+        "28",
+        "V2-T22"
+      ],
+      "modelOwner": "memory",
+      "persistenceOwner": "memory",
+      "producer": "memory",
+      "proposedModelPath": "backend/services/memory/src/models/observation.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "scaffold-candidate",
+      "taskIds": [
+        "29"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/scaffold-candidate.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "task-plan",
+      "taskIds": [
+        "V2-T02"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/task-plan.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "critique-report",
+      "taskIds": [
+        "V2-T03"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/critique-report.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "skill-selection",
+      "taskIds": [
+        "V2-T06"
+      ],
+      "modelOwner": "orchestrator",
+      "persistenceOwner": null,
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/orchestrator/src/models/skill-selection.model.js",
+      "notes": "Owner projection over scoped remote contracts; no independent authoritative database."
+    },
+    {
+      "family": "agent-definition",
+      "taskIds": [
+        "V2-T07"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/agent-definition.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "agent-lifecycle",
+      "taskIds": [
+        "V2-T08"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/agent-lifecycle.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "trigger",
+      "taskIds": [
+        "V2-T09"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "api-gateway / orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/trigger.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "schedule",
+      "taskIds": [
+        "V2-T10"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "api-gateway / orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/schedule.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "approval-quorum",
+      "taskIds": [
+        "V2-T11"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/approval-quorum.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "resource-grant",
+      "taskIds": [
+        "V2-T12"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/resource-grant.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "action-preview",
+      "taskIds": [
+        "V2-T13"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "tool-runtime",
+      "proposedModelPath": "backend/services/core/src/models/action-preview.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "compensation-plan",
+      "taskIds": [
+        "V2-T14"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/compensation-plan.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "recovery-plan",
+      "taskIds": [
+        "V2-T15"
+      ],
+      "modelOwner": "orchestrator",
+      "persistenceOwner": null,
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/orchestrator/src/models/recovery-plan.model.js",
+      "notes": "Owner projection over scoped remote contracts; no independent authoritative database."
+    },
+    {
+      "family": "worker-score",
+      "taskIds": [
+        "V2-T16"
+      ],
+      "modelOwner": "specialist",
+      "persistenceOwner": null,
+      "producer": "specialist",
+      "proposedModelPath": "backend/services/specialist/src/models/worker-score.model.js",
+      "notes": "Read measured telemetry and Core eligibility evidence; ranking cannot override current grants/policy."
+    },
+    {
+      "family": "candidate-comparison",
+      "taskIds": [
+        "V2-T17"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/candidate-comparison.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "debate-report",
+      "taskIds": [
+        "V2-T18"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/debate-report.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "budget-allocation",
+      "taskIds": [
+        "V2-T19"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/budget-allocation.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "context-bundle",
+      "taskIds": [
+        "V2-T20"
+      ],
+      "modelOwner": "orchestrator",
+      "persistenceOwner": null,
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/orchestrator/src/models/context-bundle.model.js",
+      "notes": "Owner projection over scoped remote contracts; no independent authoritative database."
+    },
+    {
+      "family": "memory-lifecycle",
+      "taskIds": [
+        "V2-T21"
+      ],
+      "modelOwner": "memory",
+      "persistenceOwner": "memory",
+      "producer": "memory",
+      "proposedModelPath": "backend/services/memory/src/models/memory-lifecycle.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "memory-branch",
+      "taskIds": [
+        "V2-T23"
+      ],
+      "modelOwner": "memory",
+      "persistenceOwner": "memory",
+      "producer": "memory",
+      "proposedModelPath": "backend/services/memory/src/models/memory-branch.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "credential-binding",
+      "taskIds": [
+        "V2-T24"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/credential-binding.model.js",
+      "notes": "Opaque metadata in Core; raw provider secrets stay Inference-only and effect secrets resolve only in trusted execution infrastructure."
+    },
+    {
+      "family": "project",
+      "taskIds": [
+        "V2-T25"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/project.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "workspace-lease",
+      "taskIds": [
+        "V2-T26"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/workspace-lease.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "artifact",
+      "taskIds": [
+        "V2-T27"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "tool-runtime",
+      "proposedModelPath": "backend/services/core/src/models/artifact.model.js",
+      "notes": "Core owns metadata and durable registered bytes; runtime produces candidate artifacts via authenticated bounded transfer."
+    },
+    {
+      "family": "specialist-task",
+      "taskIds": [
+        "V2-T28",
+        "V2-T29",
+        "V2-T30",
+        "V2-T31"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "specialist",
+      "proposedModelPath": "backend/services/core/src/models/specialist-task.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "security-alert",
+      "taskIds": [
+        "V2-T32"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "specialist",
+      "proposedModelPath": "backend/services/core/src/models/security-alert.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "trust-label",
+      "taskIds": [
+        "V2-T33"
+      ],
+      "modelOwner": "orchestrator",
+      "persistenceOwner": null,
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/orchestrator/src/models/trust-label.model.js",
+      "notes": "Pure trust labels also enforced at every receiving service boundary; labels never grant authority."
+    },
+    {
+      "family": "decision-summary",
+      "taskIds": [
+        "V2-T34"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/decision-summary.model.js",
+      "notes": "Read-only projection of Core-owned records; no new writer."
+    },
+    {
+      "family": "replay-view",
+      "taskIds": [
+        "V2-T35"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "core",
+      "proposedModelPath": "backend/services/core/src/models/replay-view.model.js",
+      "notes": "Read-only projection of Core-owned records; no new writer."
+    },
+    {
+      "family": "simulation-report",
+      "taskIds": [
+        "V2-T36"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/simulation-report.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "agent-version",
+      "taskIds": [
+        "V2-T37"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/agent-version.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "agent-release",
+      "taskIds": [
+        "V2-T38"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/agent-release.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    },
+    {
+      "family": "model-routing",
+      "taskIds": [
+        "V2-T39"
+      ],
+      "modelOwner": "inference",
+      "persistenceOwner": null,
+      "producer": "inference",
+      "proposedModelPath": "backend/services/inference/src/models/model-routing.model.js",
+      "notes": "Owner projection over scoped remote contracts; no independent authoritative database."
+    },
+    {
+      "family": "swarm-plan",
+      "taskIds": [
+        "V2-T40"
+      ],
+      "modelOwner": "core",
+      "persistenceOwner": "core",
+      "producer": "orchestrator",
+      "proposedModelPath": "backend/services/core/src/models/swarm-plan.model.js",
+      "notes": "Canonical mutations through the owning service API; producers have no direct database access."
+    }
+  ],
+  "gates": [
+    {
+      "taskId": "30",
+      "title": "Full conformance and handoff",
+      "owner": "cross-service integration/release gate",
+      "model": null
+    },
+    {
+      "taskId": "V2-G01",
+      "title": "Protected goal-to-artifact V2 workflow",
+      "owner": "cross-service integration/release gate",
+      "model": null
+    }
+  ],
+  "existingModuleMap": [
+    {
+      "module": "control",
+      "owner": "core",
+      "boundary": "Runs, leases, checkpoints, effects, outboxes and metadata persistence"
+    },
+    {
+      "module": "identity",
+      "owner": "core",
+      "boundary": "Verified identity, grants/revocation and signing"
+    },
+    {
+      "module": "policy",
+      "owner": "core",
+      "boundary": "Policy decisions, approvals and execution bindings"
+    },
+    {
+      "module": "budgets",
+      "owner": "core",
+      "boundary": "Atomic quota/reservation/settlement"
+    },
+    {
+      "module": "audit",
+      "owner": "core",
+      "boundary": "Signed receipt persistence and safe decision projection"
+    },
+    {
+      "module": "skills",
+      "owner": "core / orchestrator",
+      "boundary": "Split authoritative catalog/trust/install persistence into Core and pure selection into Orchestrator; do not share a Core repository package"
+    },
+    {
+      "module": "orchestrator",
+      "owner": "orchestrator",
+      "boundary": "Workflow/retry/recovery coordination through typed clients"
+    },
+    {
+      "module": "context",
+      "owner": "orchestrator",
+      "boundary": "Context construction and trust handling"
+    },
+    {
+      "module": "memory",
+      "owner": "memory",
+      "boundary": "Scoped vector/relational memory and revisions"
+    },
+    {
+      "module": "episodic",
+      "owner": "episode",
+      "boundary": "Exclusive local SQLite episode owner"
+    },
+    {
+      "module": "privacy",
+      "owner": "inference",
+      "boundary": "Privacy eligibility and permitted provider routing"
+    },
+    {
+      "module": "models",
+      "owner": "inference",
+      "boundary": "Generation/embedding provider integration"
+    },
+    {
+      "module": "tools",
+      "owner": "tool-runtime",
+      "boundary": "Trusted registry and governed dispatch"
+    },
+    {
+      "module": "protocols",
+      "owner": "tool-runtime",
+      "boundary": "MCP/A2A protocol clients and exact scope checks"
+    },
+    {
+      "module": "sandbox",
+      "owner": "tool-runtime",
+      "boundary": "Trusted isolation interface; untrusted handlers remain in separately qualified sandbox"
+    },
+    {
+      "module": "specialists",
+      "owner": "specialist",
+      "boundary": "Bounded specialist worker tasks and measurements"
+    },
+    {
+      "module": "gateway",
+      "owner": "api-gateway / core",
+      "boundary": "Split HTTP/UI shaping/stream transport into Gateway; canonical ingress, scheduling, session and delivery state into Core"
+    },
+    {
+      "module": "channels",
+      "owner": "api-gateway",
+      "boundary": "Channel/webhook transport; durable acceptance/delivery state via Core"
+    },
+    {
+      "module": "telemetry",
+      "owner": "shared narrow instrumentation",
+      "boundary": "Only instrumentation/redaction helpers; no shared domain repositories or credentials"
+    }
+  ]
+}

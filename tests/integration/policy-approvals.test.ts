@@ -1,4 +1,4 @@
-import { createPostgresFixturePool } from "../../packages/control/test/fixtures/postgres.js";
+import { createPostgresFixturePool } from "../../backend/modules/control/test/fixtures/postgres.js";
 import { beforeAll, beforeEach, afterAll, describe, it, expect } from "vitest";
 import { randomBytes } from "node:crypto";
 import { spawn } from 'node:child_process';
@@ -109,7 +109,7 @@ describe('canonical policy approval PostgreSQL owner', () => {
     try{
       await c.query('CREATE SCHEMA '+legacy);await c.query('CREATE TABLE '+legacy+'.approvals(marker text)');await c.query('INSERT INTO '+legacy+".approvals VALUES('preserved')");
       await c.query('BEGIN');await c.query('SET LOCAL search_path TO '+legacy+',public');
-      await expect(c.query(readFileSync('db/postgres/migrations/016-policy-qualification.sql','utf8'))).rejects.toThrow('Populated legacy approvals');await c.query('ROLLBACK');
+      await expect(c.query(readFileSync('backend/database/migrations/postgres/016-policy-qualification.sql','utf8'))).rejects.toThrow('Populated legacy approvals');await c.query('ROLLBACK');
       expect((await c.query('SELECT * FROM '+legacy+'.approvals')).rows).toEqual([{marker:'preserved'}]);
     }finally{await c.query('ROLLBACK');await c.query('DROP SCHEMA IF EXISTS '+legacy+' CASCADE');c.release();}
   });
@@ -119,7 +119,7 @@ describe('authenticated policy service composition', () => {
   let activeVersion='1';
   beforeEach(()=>{activeVersion='1';});
   async function service(requireApproval = true) {
-    const { createPolicyService } = await import('../../packages/policy/src/runtime.js');
+    const { createPolicyService } = await import('../../backend/modules/policy/src/runtime.js');
     return createPolicyService({ pool, tenantId: 'tenant', ownerId: 'owner', context: request.runContext, principal: user, signingKey: 'policy-test-key-32-bytes-minimum-0123456789', transportKey: 'transport-test-key-32-bytes-minimum-0123456789', tokenTtlMs: 30000, loadPolicy: async () => ({ version: activeVersion, defaultEffect: 'deny', rules: [{ capability: 'invoke:tool', effect: 'allow', conditions: [] }], modeCapabilities: { observe: [], assist: [], execute: ['invoke:tool'] }, approvalRequired: requireApproval ? ['tool:*'] : [], protectedPaths: ['policy:'], maxEffectCostMicroUsd: 1000, approvalExpirySeconds: 60 }) });
   }
   it('rejects JSON principals and accepts only authenticated bound grants', async () => {
@@ -187,8 +187,8 @@ describe('authenticated policy service composition', () => {
   });
   it('serves authenticated signed requests in a separate process and fails closed after termination', async () => {
     const transportKey='transport-test-key-32-bytes-minimum-0123456789';
-    const {loadPolicyConfig}=await import('../../packages/policy/src/evaluate.js');const processPolicy=resolve('build/task07-current-repair/process-policy-'+id+'.json'),policy=await loadPolicyConfig('infra/policies/default.yaml');writeFileSync(processPolicy,JSON.stringify(policy));
-    const child=spawn(process.execPath,['apps/policy-kernel/dist/main.js'],{env:{...process.env,POLICY_KERNEL_PORT:'0',POLICY_KERNEL_OWNER_ID:'owner',POLICY_CONFIG_PATH:processPolicy,POLICY_DATABASE_URL:url,IDENTITY_DATABASE_URL:url,PGOPTIONS:options+' -c role='+role,IDENTITY_PGOPTIONS:options,POLICY_SIGNING_KEY:Buffer.from('policy-test-key-32-bytes-minimum-0123456789').toString('base64'),POLICY_TRANSPORT_KEY:Buffer.from(transportKey).toString('base64'),IDENTITY_SIGNING_CONFIG:JSON.stringify({defaultKid:'test',keys:[{kid:'test',alg:'HS256',secret:'identity-test-key-32-bytes-minimum-0123456789',createdAt:Date.now()-1000}]})},stdio:['ignore','pipe','pipe']});
+    const {loadPolicyConfig}=await import('../../backend/modules/policy/src/evaluate.js');const processPolicy=resolve('build/task07-current-repair/process-policy-'+id+'.json'),policy=await loadPolicyConfig('infra/policies/default.yaml');writeFileSync(processPolicy,JSON.stringify(policy));
+    const child=spawn(process.execPath,['backend/workers/policy-kernel/dist/main.js'],{env:{...process.env,POLICY_KERNEL_PORT:'0',POLICY_KERNEL_OWNER_ID:'owner',POLICY_CONFIG_PATH:processPolicy,POLICY_DATABASE_URL:url,IDENTITY_DATABASE_URL:url,PGOPTIONS:options+' -c role='+role,IDENTITY_PGOPTIONS:options,POLICY_SIGNING_KEY:Buffer.from('policy-test-key-32-bytes-minimum-0123456789').toString('base64'),POLICY_TRANSPORT_KEY:Buffer.from(transportKey).toString('base64'),IDENTITY_SIGNING_CONFIG:JSON.stringify({defaultKid:'test',keys:[{kid:'test',alg:'HS256',secret:'identity-test-key-32-bytes-minimum-0123456789',createdAt:Date.now()-1000}]})},stdio:['ignore','pipe','pipe']});
     try{
       const port=await new Promise<number>((resolvePort,reject)=>{const timer=setTimeout(()=>reject(new Error('Kernel readiness timeout')),5000);child.once('exit',()=>{clearTimeout(timer);reject(new Error('Kernel exited before readiness'));});child.stdout.on('data',chunk=>{const m=/POLICY_KERNEL_READY (\d+)/.exec(String(chunk));if(m){clearTimeout(timer);resolvePort(Number(m[1]));}});});
       const endpoint='http://127.0.0.1:'+port,body=JSON.stringify({operation:'authorize',timestamp:new Date().toISOString(),effectRequest:request});

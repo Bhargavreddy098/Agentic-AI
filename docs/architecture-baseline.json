@@ -27,68 +27,115 @@
       "apps/cli",
       "apps/gateway-fixture",
       "packages/channels",
-      "packages/ui"
+      "packages/ui",
+      "backend/modules/channels",
+      "apps/openclaw"
     ],
     "gateway": [
       "apps/gateway",
-      "packages/gateway"
+      "packages/gateway",
+      "backend/workers/gateway",
+      "backend/modules/gateway",
+      "backend/server.js",
+      "backend/app.js",
+      "backend/config/env.js",
+      "backend/config/logger.js",
+      "backend/routes",
+      "backend/controllers",
+      "backend/services",
+      "backend/middlewares",
+      "backend/schemas",
+      "backend/utils"
     ],
     "supervisor": [
       "apps/orchestrator",
       "packages/orchestrator",
       "packages/context",
-      "packages/skills"
+      "packages/skills",
+      "backend/workers/orchestrator",
+      "backend/modules/orchestrator",
+      "backend/modules/context",
+      "backend/modules/skills"
     ],
     "specialists": [
       "apps/specialist",
-      "packages/specialists"
+      "packages/specialists",
+      "backend/workers/specialist",
+      "backend/modules/specialists"
     ],
     "toolRuntime": [
       "apps/tool-engine",
       "packages/tools",
-      "packages/protocols"
+      "packages/protocols",
+      "backend/workers/tool-engine",
+      "backend/modules/tools",
+      "backend/modules/protocols"
     ],
     "govKernel": [
       "apps/policy-kernel",
       "packages/policy",
       "packages/identity",
       "packages/audit",
-      "packages/budgets"
+      "packages/budgets",
+      "backend/workers/policy-kernel",
+      "backend/modules/policy",
+      "backend/modules/identity",
+      "backend/modules/audit",
+      "backend/modules/budgets"
     ],
     "privRouter": [
       "apps/privacy-router",
-      "packages/privacy"
+      "packages/privacy",
+      "backend/workers/privacy-router",
+      "backend/modules/privacy"
     ],
     "frontierModels": [
-      "packages/models"
+      "packages/models",
+      "backend/modules/models"
     ],
     "sandbox": [
       "packages/sandbox",
-      "infra/sandbox"
+      "infra/sandbox",
+      "backend/modules/sandbox"
     ],
     "sessionFTS": [
       "apps/episodic-owner",
-      "packages/episodic"
+      "packages/episodic",
+      "backend/workers/episodic-owner",
+      "backend/modules/episodic"
     ],
     "consolidation": [
       "apps/consolidator",
-      "packages/consolidation"
+      "packages/consolidation",
+      "backend/workers/consolidator",
+      "backend/modules/consolidation"
     ],
     "memStore": [
       "apps/memory-broker",
-      "packages/memory"
+      "packages/memory",
+      "backend/workers/memory-broker",
+      "backend/modules/memory"
     ],
     "contracts": [
       "packages/contracts"
     ],
     "control": [
-      "packages/control"
+      "packages/control",
+      "backend/modules/control",
+      "backend/config/database.js",
+      "backend/database",
+      "backend/models"
     ],
     "supporting": [
       "packages/telemetry",
       "packages/evolution",
       "apps/evolution-engine",
-      "packages/observations"
+      "packages/observations",
+      "backend/modules/telemetry",
+      "backend/modules/evolution",
+      "backend/workers/evolution-engine",
+      "backend/modules/observations",
+      "backend/tests"
     ]
   },
   "componentPathNotes": "R01 refinement with traceability: the 12 pictured component IDs and primary flow are unchanged. Supporting packages are declared owners, not new components: contracts is pure zod schemas; control owns PostgreSQL control state and the outbox relay; identity/audit/budgets are governance infrastructure under the policy kernel boundary; skills and context belong to supervisor context assembly (skill scripts still execute only through the tool engine in isolation); telemetry/evolution/observations are supporting mechanisms with no special import allowances. Any new apps/* or packages/* source path is a UNMAPPED_COMPONENT_PATH violation until changed through an approved ADR.",
@@ -563,6 +610,9 @@
     "packages/policy/**",
     "packages/identity/**",
     "packages/audit/**",
+    "backend/modules/policy/**",
+    "backend/modules/identity/**",
+    "backend/modules/audit/**",
     "packages/contracts/**",
     "scripts/verify-*.mjs",
     "tests/architecture/**",

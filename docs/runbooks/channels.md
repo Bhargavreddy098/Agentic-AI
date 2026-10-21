@@ -222,7 +222,7 @@ COPY package*.json ./
 RUN npm ci --production
 COPY dist ./dist
 EXPOSE 8080
-CMD ["node", "dist/apps/gateway/src/main.js"]
+CMD ["node", "dist/backend/workers/gateway/src/main.js"]
 ```
 
 ### Kubernetes
@@ -341,7 +341,7 @@ grep "slack.*message" logs/app.log | head -20
 ### Unit Tests
 
 ```bash
-npm run test:unit -- packages/channels/src/slack.ts
+npm run test:unit -- backend/modules/channels/src/slack.ts
 ```
 
 ### Integration Tests

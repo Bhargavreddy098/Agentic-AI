@@ -6,7 +6,7 @@
 
 ## Durable bootstrap
 
-1. Apply reviewed prerequisite `db/postgres/migrations/001-control.sql`, then forward migration `009-identity-grants.sql` through the trusted schema owner. Never edit an applied 001. Production migration journaling/runner qualification belongs to M04; M03 applies this closure only to a disposable qualification schema.
+1. Apply reviewed prerequisite `backend/database/migrations/postgres/001-control.sql`, then forward migration `009-identity-grants.sql` through the trusted schema owner. Never edit an applied 001. Production migration journaling/runner qualification belongs to M04; M03 applies this closure only to a disposable qualification schema.
 2. Create the tenant through the existing trusted owner. Configure a dedicated identity runtime role with schema USAGE and SELECT/INSERT/UPDATE on `identity_grants`. Give it no schema ownership, DDL, TRUNCATE, worker-accessible connection or superuser privileges. The trigger denies physical DELETE and prevents claim mutation, clearing revocation and reversing deletion. Workers receive no table privileges.
 3. Obtain signing keys and a connected PostgreSQL client through trusted bootstrap. The injected client exposes parameterized `query(text, values)`; the service owner bounds connection/query timeouts and cancellation. The existing qualified control pg driver satisfies this interface; identity adds no driver dependency.
 4. Call `configureIdentity({ keys: trustedKeys, defaultKid: trustedDefaultKid })` and `setGrantStore(new PostgresGrantStore(trustedDatabaseClient))` before serving authorization. Import these functions/classes from `@asi/identity`.
@@ -46,7 +46,7 @@ Generate keys with `generateSigningKey(kid, ttlMs)` in trusted bootstrap. IDs mu
 Run the named checks from the root:
 
 ```powershell
-pnpm exec vitest run --project unit packages/identity/test/grants.test.ts
+pnpm exec vitest run --project unit backend/modules/identity/test/grants.test.ts
 pnpm exec vitest run --project security tests/security/credentials.test.ts
 pnpm typecheck
 pnpm exec vitest run --project integration tests/integration/identity-v2-restart.test.ts

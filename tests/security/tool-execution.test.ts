@@ -1,6 +1,6 @@
 import { generateKeyPairSync, sign, createHash } from "node:crypto";
-import { verifyManifestSignature, checkManifestDigest, getManifestSigningBytes } from "../../packages/tools/src/manifests.js";
-import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../packages/control/test/fixtures/postgres.js";
+import { verifyManifestSignature, checkManifestDigest, getManifestSigningBytes } from "../../backend/modules/tools/src/manifests.js";
+import { createPostgresFixturePool, type PostgresFixturePool as Pool } from "../../backend/modules/control/test/fixtures/postgres.js";
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import { ToolRegistry, createToolRegistry, ToolDispatcher, createToolDispatcher, EffectJournal, createEffectJournal, validateManifest, normalizeError, createNormalizedError, isRetryableError, isFatalError } from "@asi/tools";
 import type { ToolManifest, ToolResult, RunContext, Principal, OpaqueId } from "@asi/contracts";

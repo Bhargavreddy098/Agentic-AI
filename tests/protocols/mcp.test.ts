@@ -4,9 +4,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { createServer, type Server } from "node:http";
 import { createRequire } from "node:module";
 import { once } from "node:events";
-import { MCP_REVISION, assertMcpRevision } from "../../packages/protocols/src/mcp/versions.js";
-import { createMcpClient, digest, type McpGovernance, type McpRemoteOutput } from "../../packages/protocols/src/mcp/client.js";
-import { createMcpFetch, isPublicMcpAddress } from "../../packages/protocols/src/mcp/auth.js";
+import { MCP_REVISION, assertMcpRevision } from "../../backend/modules/protocols/src/mcp/versions.js";
+import { createMcpClient, digest, type McpGovernance, type McpRemoteOutput } from "../../backend/modules/protocols/src/mcp/client.js";
+import { createMcpFetch, isPublicMcpAddress } from "../../backend/modules/protocols/src/mcp/auth.js";
 import type { Principal, RunContext, ToolManifest, ToolResult } from "../../packages/contracts/src/index.js";
 
 vi.mock("node:https", async importOriginal => {
@@ -14,7 +14,7 @@ vi.mock("node:https", async importOriginal => {
   return { ...original, request: vi.fn(original.request) };
 });
 
-const sdkRequire = createRequire(new URL("../../packages/protocols/package.json", import.meta.url));
+const sdkRequire = createRequire(new URL("../../backend/modules/protocols/package.json", import.meta.url));
 const { McpServer, createMcpHandler, fromJsonSchema } = await import(sdkRequire.resolve("@modelcontextprotocol/server"));
 const { toNodeHandler } = await import(sdkRequire.resolve("@modelcontextprotocol/node"));
 const inputSchema = { type: "object", properties: { value: { type: "string" } }, required: ["value"], additionalProperties: false };
@@ -208,7 +208,7 @@ describe("real local SDK interoperability (fixture governance)", () => {
   });
 });
 
-import { createMcpServer, type McpServerServices } from "../../packages/protocols/src/mcp/server.js";
+import { createMcpServer, type McpServerServices } from "../../backend/modules/protocols/src/mcp/server.js";
 
 async function servingAdapter() {
   let executeCount = 0, approved = true, wrongResource = false, revoked = false, ownerError = false;
@@ -372,7 +372,7 @@ describe("MCP adversarial HTTP response lifecycle", () => {
     const source = `
       import { createServer } from 'node:http';
       import { once } from 'node:events';
-      import { createMcpFetch } from './packages/protocols/src/mcp/auth.ts';
+      import { createMcpFetch } from './backend/modules/protocols/src/mcp/auth.ts';
       const server=createServer((req,res)=>{res.writeHead(${status});res.end();});
       server.listen(0,'127.0.0.1');await once(server,'listening');
       const endpoint='http://127.0.0.1:'+server.address().port+'/mcp';

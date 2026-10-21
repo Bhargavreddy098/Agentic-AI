@@ -11,6 +11,8 @@ Enterprise-grade autonomous agent system built with TypeScript, featuring determ
 
 ## Getting Started
 
+The Express backend and its existing domain packages are consolidated under [`backend/`](backend/README.md). See that guide for PostgreSQL/pgvector configuration, build/start commands and current capability limitations. The UI demo command below remains an explicitly synthetic preview.
+
 ### Prerequisites
 
 - Node.js 24.19.0

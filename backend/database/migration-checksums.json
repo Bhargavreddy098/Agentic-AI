@@ -1,0 +1,17 @@
+{
+  "db/postgres/migrations/001-control.sql": "d974a31979cc522f64419022d5962aa1f30507c3e905972ed15d72f5a638d35e",
+  "db/postgres/migrations/002-audit.sql": "fcbe71274737f421547a7df0136f1b999aa44e44c8aed616a1d46643979e59b8",
+  "db/postgres/migrations/003-budgets.sql": "8e7c94c70c79bc9769f193d8afddc65d564755cbf93be04ce4907eda1a16dbb6",
+  "db/postgres/migrations/004-memory-rls.sql": "76519d39ccb5c06102bb45fadb00d6fc538ec31706cd37d1e2e76fe2794a2c8c",
+  "db/postgres/migrations/005-skills.sql": "a34ddf44881ba6c091fdc036ac1e4cdad6feed5a9886c76c5b898c3717335261",
+  "db/postgres/migrations/006-schedules.sql": "87e7f62934d023c2c842dcae018f0c8830274da91cb7587de58ebee40fb77f33",
+  "db/postgres/migrations/007-learning.sql": "81ef4dc320587572736616010229b4badf2b30bbbad003102242fae6e153e1df",
+  "db/postgres/migrations/008-observations.sql": "c28a285dc8918dd5f208d5c647851c09ae0749c9e58602bb87089c7c2b6e2ea3",
+  "db/postgres/migrations/009-identity-grants.sql": "d85327e652420d5f6e01a7d808fcd4b835b7851ec734dbd63a4fb19fc2a917b3",
+  "db/postgres/migrations/010-control-qualification.sql": "b113521f64b61fd1561cae055c4e622f8cbf5325e8fa8fe15619b98372f1af9a",
+  "db/postgres/migrations/011-v2-goals.sql": "0e8957461dfb56cead0b1b9bf311108924c98945ac2c35fa89d5b0b44fcffc0f",
+  "db/postgres/migrations/014-audit-qualification.sql": "de169b71d27f4a75e8efe251a152559fe541ba342239f9fb4f626ffc4c81a408",
+  "db/postgres/migrations/015-budget-qualification.sql": "7c07ff41a7b3600ca6f979e4405ce63155b6ce48df2e90f6c02ef17112f70896",
+  "db/postgres/migrations/016-policy-qualification.sql": "a50efc305f6456ff8e9567d8f3d19db7875428f373a38e2cd1fff8f190a96334",
+  "db/sqlite/migrations/001-episodes.sql": "cc8ab8c6cdaa90c31f7dead8578c662968a59e04a83eac025b8e1224396d0def"
+}

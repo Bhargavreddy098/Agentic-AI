@@ -9,7 +9,7 @@
     "pnpm": "12.6.0"
   },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm backend:typecheck",
     "lint": "eslint .",
     "build": "pnpm -r build",
     "test:unit": "vitest run --project unit",
@@ -22,7 +22,7 @@
     "verify:dependencies": "node scripts/verify-dependencies.mjs .",
     "verify:traceability": "node scripts/verify-traceability.mjs .",
     "verify:protected-files": "node scripts/verify-protected-files.mjs .",
-    "verify": "pnpm lint && pnpm typecheck && pnpm build && pnpm test:unit && pnpm verify:architecture && pnpm verify:dependencies && pnpm verify:traceability && pnpm verify:protected-files",
+    "verify": "pnpm lint && pnpm typecheck && pnpm build && pnpm test:unit && pnpm backend:test && pnpm verify:architecture && pnpm verify:dependencies && pnpm verify:traceability && pnpm verify:protected-files",
     "ui:dev": "node scripts/run-applet.mjs dev",
     "ui:typecheck": "pnpm --filter @asi/ui typecheck && pnpm --filter @asi/web typecheck",
     "ui:build": "pnpm --filter @asi/contracts build && pnpm --filter @asi/ui build && pnpm --filter @asi/web build",
@@ -37,7 +37,12 @@
     "ui:verify:sources": "node scripts/verify-ui-sources.mjs .",
     "ui:verify": "pnpm ui:typecheck && pnpm ui:build && pnpm ui:test && pnpm ui:test:security && pnpm ui:verify:boundaries && pnpm ui:verify:sources",
     "dev": "node scripts/run-applet.mjs dev",
-    "start": "node scripts/run-applet.mjs start"
+    "start": "node scripts/run-applet.mjs start",
+    "backend:dev": "pnpm --filter @asi/backend dev",
+    "backend:start": "node backend/server.js",
+    "backend:build": "pnpm --filter @asi/backend... build",
+    "backend:typecheck": "pnpm --filter @asi/backend typecheck",
+    "backend:test": "node --test backend/tests/*.test.js"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

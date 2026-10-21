@@ -19,3 +19,8 @@ data/
 Thumbs.db
 evals/**/outputs/
 docs/release-evidence/**/raw/
+
+# Machine-local permissions and temporary implementation helpers.
+.claude/settings.local.json
+.superpowers/*
+!.superpowers/*.md

@@ -5,12 +5,12 @@ import { resolve, join, sep, basename } from "node:path";
 import { tmpdir } from "node:os";
 import { pathToFileURL } from "node:url";
 import { randomBytes } from "node:crypto";
-import type { ControlServices } from "../../packages/control/src/index.js";
+import type { ControlServices } from "../../backend/modules/control/src/index.js";
 
 type Pool = ControlServices["pool"];
 type Client = Pick<Pool, "query">;
 const root = resolve(import.meta.dirname, "../..");
-const { Pool: DatabasePool } = createRequire(join(root, "packages/control/package.json"))("pg") as { Pool: new (config: Record<string, unknown>) => Pool };
+const { Pool: DatabasePool } = createRequire(join(root, "backend/modules/control/package.json"))("pg") as { Pool: new (config: Record<string, unknown>) => Pool };
 const url = process.env.M04_TEST_DATABASE_URL ?? "postgresql://postgres@127.0.0.1:60637/asi_m04_qualification";
 if (!new URL(url).pathname.endsWith("_qualification")) throw new Error("Disposable database required");
 const pool = new DatabasePool({ connectionString: url, max: 3, connectionTimeoutMillis: 5000, statement_timeout: 10000 });
@@ -18,8 +18,8 @@ let schema = "", fixtureRoot = "";
 let apply: (client: Client, options: { schema: string; target: string; root?: string }) => Promise<string[]>;
 function fixture(): string {
   const directory = mkdtempSync(join(tmpdir(), "asi-m04-migrations-"));
-  mkdirSync(join(directory, "docs"), { recursive: true }); mkdirSync(join(directory, "db/postgres/migrations"), { recursive: true });
-  for (const file of ["docs/v2-task-ledger.json", "docs/task-ledger.json", "db/postgres/migrations/001-control.sql", "db/postgres/migrations/009-identity-grants.sql", "db/postgres/migrations/010-control-qualification.sql"]) copyFileSync(join(root, file), join(directory, file));
+  mkdirSync(join(directory, "docs"), { recursive: true }); mkdirSync(join(directory, "backend/database/migrations/postgres"), { recursive: true });
+  for (const file of ["docs/v2-task-ledger.json", "docs/task-ledger.json", "backend/database/migrations/postgres/001-control.sql", "backend/database/migrations/postgres/009-identity-grants.sql", "backend/database/migrations/postgres/010-control-qualification.sql"]) copyFileSync(join(root, file), join(directory, file));
   return directory;
 }
 async function run(directory = root): Promise<string[]> {
@@ -55,7 +55,7 @@ describe("M04 reviewed migration DAG and immutable journal", () => {
   });
   it("changed applied source bytes are rejected without changing the journal", async () => {
     await run(fixtureRoot);
-    const file = join(fixtureRoot, "db/postgres/migrations/001-control.sql");
+    const file = join(fixtureRoot, "backend/database/migrations/postgres/001-control.sql");
     writeFileSync(file, readFileSync(file, "utf8") + "\n-- fixture checksum drift\n");
     await expect(run(fixtureRoot)).rejects.toThrow("checksum");
     expect((await pool.query(`SELECT * FROM ${schema}.schema_migrations`)).rows).toHaveLength(3);
@@ -75,7 +75,7 @@ describe("M04 reviewed migration DAG and immutable journal", () => {
     await expect(run(fixtureRoot)).rejects.toThrow();
   });
   it("failure in forward migration rolls back every schema and journal write in the chain", async () => {
-    const file = join(fixtureRoot, "db/postgres/migrations/010-control-qualification.sql");
+    const file = join(fixtureRoot, "backend/database/migrations/postgres/010-control-qualification.sql");
     writeFileSync(file, readFileSync(file, "utf8") + "\nSELECT m04_deliberate_missing_function();\n");
     await expect(run(fixtureRoot)).rejects.toThrow();
     expect((await pool.query("SELECT to_regclass($1) AS table", [schema + ".sessions"])).rows[0].table).toBeNull();
