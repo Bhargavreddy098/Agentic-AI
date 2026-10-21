@@ -129,6 +129,7 @@ export type VerificationView = z.infer<typeof VerificationViewSchema>;
 export type ProjectBlockerView = z.infer<typeof ProjectBlockerViewSchema>;
 export type ProjectView = z.infer<typeof ProjectViewSchema>;
 
+export * from "./capabilities.js";
 export function isCurrentVerification(verification: VerificationView, goal: { goalId: string; revision: number }): boolean {
   return verification.goalId === goal.goalId && verification.goalRevision === goal.revision && verification.status === "verified";
 }

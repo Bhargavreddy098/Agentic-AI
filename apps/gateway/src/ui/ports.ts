@@ -21,6 +21,7 @@ import type {
   SkillView,
   TaskView,
   ToolView,
+  UiCapabilities,
   UiCommandResult,
   UiEvent,
   UiMessage,
@@ -127,3 +128,7 @@ export const DEFAULT_UPLOAD_LIMITS: UiUploadLimits = {
   maxAttachmentBytes: 16_777_216,
   maxAttachmentCount: 16,
 };
+
+export interface UiCapabilitiesProvider {
+  read(): Promise<UiCapabilities>;
+}

@@ -9,3 +9,4 @@ export * from "./projections/catalogs.js";
 export * from "./commands/management.js";
 export * from "./memory-ports.js";
 export * from "./protected-ports.js";
+export * from "./capabilities.js";
