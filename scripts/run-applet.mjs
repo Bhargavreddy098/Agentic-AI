@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // This launcher serves the synthetic UI demo only. The workspace build stays pnpm -r build.
 import { execFileSync, spawn } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import net from 'node:net';
 import { dirname, join, resolve } from 'node:path';
@@ -9,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export function getDemoConfig(env = process.env) {
   if (env.NEXT_PUBLIC_ASI_UI_MODE && env.NEXT_PUBLIC_ASI_UI_MODE !== 'demo') throw new Error('This launcher supports demo UI only; use the live Gateway launcher for live mode.');
-  const timeoutMs = Number(env.ASI_DEV_STARTUP_TIMEOUT_MS ?? 30000);
+  const timeoutMs = Number(env.ASI_DEV_STARTUP_TIMEOUT_MS ?? 60000);
   if (!Number.isInteger(timeoutMs) || timeoutMs < 100 || timeoutMs > 300000) throw new Error('Invalid startup timeout: expected 100 through 300000 milliseconds.');
   const host = env.ASI_DEV_HOST ?? '127.0.0.1';
   if (!host || /[\s/]/.test(host)) throw new Error('ASI_DEV_HOST must be a hostname or IP address.');
@@ -29,7 +30,14 @@ function runtime(packagePath, specifier) {
   try { return createRequire(join(rootDir, packagePath, 'package.json')).resolve(specifier); }
   catch { throw new Error(`Cannot resolve ${specifier}. Install the workspace with pnpm install --frozen-lockfile first.`); }
 }
-function compileDemo() {
+function compileDemo(onlyIfMissing = false) {
+  const builtTargets = [
+    'packages/contracts/dist/index.js',
+    'packages/contracts/dist/ui/index.js',
+    'packages/ui/dist/index.js',
+    'apps/gateway-fixture/dist/main.js',
+  ];
+  if (onlyIfMissing && builtTargets.every(rel => existsSync(join(rootDir, rel)))) return;
   const tsc = runtime('', 'typescript/bin/tsc');
   for (const project of ['packages/contracts', 'packages/ui', 'apps/gateway-fixture']) {
     execFileSync(process.execPath, [tsc, '-p', join(rootDir, project, 'tsconfig.json')], { cwd: rootDir, stdio: 'inherit', timeout: 120000 });
@@ -87,7 +95,7 @@ export async function runDemo(options = {}) {
   // Only the UI bind is configurable; the synthetic gateway stays private on loopback.
   await assertPortAvailable("127.0.0.1", config.fixturePort);
   await assertPortAvailable(config.host, config.webPort);
-  if (options.compile !== false) compileDemo();
+  if (options.compile !== false) compileDemo(options.mode === 'dev' && options.compile !== true);
   const webDir = options.webDir ?? join(rootDir, 'apps/web');
   const next = options.entries?.next ?? runtime('apps/web', 'next/dist/bin/next');
   const fixture = options.entries?.fixture ?? join(rootDir, 'apps/gateway-fixture/dist/main.js');

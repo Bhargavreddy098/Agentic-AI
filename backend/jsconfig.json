@@ -5,5 +5,5 @@
     "useUnknownInCatchVariables":false,"skipLibCheck":true,"types":["node"]
   },
   "include":["*.js","config/**/*.js","controllers/**/*.js","middlewares/**/*.js","models/**/*.js","routes/**/*.js","schemas/**/*.js","services/**/*.js","utils/**/*.js"],
-  "exclude":["modules","workers","node_modules","tests","database/migrate.js"]
+  "exclude":["modules","workers","node_modules","tests","database/migrate.js","services/*/tests","services/*/node_modules"]
 }

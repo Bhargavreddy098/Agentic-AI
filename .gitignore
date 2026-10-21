@@ -24,3 +24,5 @@ docs/release-evidence/**/raw/
 .claude/settings.local.json
 .superpowers/*
 !.superpowers/*.md
+.antigravity/
+.vscode/

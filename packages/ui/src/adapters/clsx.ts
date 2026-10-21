@@ -1,1 +1,0 @@
-export { clsx, type ClassValue } from "../vendor/clsx/index.js";

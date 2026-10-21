@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "platform": "windows-first",
+  "startupOrder": [
+    "core",
+    "memory",
+    "episode",
+    "inference",
+    "tool-runtime",
+    "specialist",
+    "orchestrator",
+    "api-gateway"
+  ],
+  "readinessTimeoutMs": 15000,
+  "shutdownTimeoutMs": 10000,
+  "services": {
+    "core": {
+      "package": "@asi/service-core",
+      "entry": "backend/services/core/server.js",
+      "host": "127.0.0.1",
+      "port": 4410,
+      "dependsOn": [],
+      "healthLivePath": "/health/live",
+      "healthReadyPath": "/health/ready",
+      "store": "postgres:asi_core"
+    },
+    "memory": {
+      "package": "@asi/service-memory",
+      "entry": "backend/services/memory/server.js",
+      "host": "127.0.0.1",
+      "port": 4420,
+      "dependsOn": ["core"],
+      "healthLivePath": "/health/live",
+      "healthReadyPath": "/health/ready",
+      "store": "postgres:asi_memory+pgvector"
+    },
+    "episode": {
+      "package": "@asi/service-episode",
+      "entry": "backend/services/episode/server.js",
+      "host": "127.0.0.1",
+      "port": 4430,
+      "dependsOn": ["core"],
+      "healthLivePath": "/health/live",
+      "healthReadyPath": "/health/ready",
+      "store": "sqlite:exclusive-local-wal"
+    },
+    "inference": {
+      "package": "@asi/service-inference",
+      "entry": "backend/services/inference/server.js",
+      "host": "127.0.0.1",
+      "port": 4440,
+      "dependsOn": ["core"],
+      "healthLivePath": "/health/live",
+      "healthReadyPath": "/health/ready",
+      "store": "stateless"
+    },
+    "tool-runtime": {
+      "package": "@asi/service-tool-runtime",
+      "entry": "backend/services/tool-runtime/server.js",
+      "host": "127.0.0.1",
+      "port": 4460,
+      "dependsOn": ["core"],
+      "healthLivePath": "/health/live",
+      "healthReadyPath": "/health/ready",
+      "store": "canonical-effects-via-core"
+    },
+    "specialist": {
+      "package": "@asi/service-specialist",
+      "entry": "backend/services/specialist/server.js",
+      "host": "127.0.0.1",
+      "port": 4470,
+      "dependsOn": ["core", "inference", "tool-runtime"],
+      "healthLivePath": "/health/live",
+      "healthReadyPath": "/health/ready",
+      "store": "canonical-tasks-via-core"
+    },
+    "orchestrator": {
+      "package": "@asi/service-orchestrator",
+      "entry": "backend/services/orchestrator/server.js",
+      "host": "127.0.0.1",
+      "port": 4450,
+      "dependsOn": ["core", "memory", "episode", "inference", "tool-runtime", "specialist"],
+      "healthLivePath": "/health/live",
+      "healthReadyPath": "/health/ready",
+      "store": "canonical-workflow-via-core"
+    },
+    "api-gateway": {
+      "package": "@asi/service-api-gateway",
+      "entry": "backend/services/api-gateway/server.js",
+      "host": "127.0.0.1",
+      "port": 4400,
+      "dependsOn": ["core", "orchestrator"],
+      "healthLivePath": "/health/live",
+      "healthReadyPath": "/health/ready",
+      "store": "stateless"
+    }
+  }
+}

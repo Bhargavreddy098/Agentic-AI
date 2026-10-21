@@ -2,51 +2,14 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "allowImportingTsExtensions": true,
-    "declaration": false,
-    "declarationMap": false,
-    "sourceMap": false,
-    "allowJs": true,
-    "checkJs": false,
-    "types": [
-      "node"
-    ],
-    "jsx": "react-jsx",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "paths": {
-      "@asi/web/*": [
-        "./apps/web/src/*"
-      ],
-      "@asi/gateway-fixture/*": [
-        "./apps/gateway-fixture/src/*"
-      ],
-      "@asi/gateway-app/*": [
-        "./backend/workers/gateway/src/*"
-      ],
-      "@asi/*": [
-        "./backend/modules/*/src/index.ts",
-        "./packages/*/src/index.ts"
-      ]
-    }
+    "lib": ["ES2022", "DOM"]
   },
   "include": [
-    "tests/**/*.ts",
-    "scripts/**/*.mjs",
-    "packages/**/*.ts",
-    "vitest.config.ts",
-    "eslint.config.js",
-    "apps/**/*.ts",
-    "apps/**/*.tsx",
-    "backend/modules/**/*.ts",
-    "backend/workers/**/*.ts"
+    "packages/contracts/src/**/*.ts"
   ],
   "exclude": [
-    "tests/fixtures/**",
-    "apps/web/**",
-    "apps/gateway-fixture/**"
+    "node_modules",
+    "dist",
+    "third_party"
   ]
 }

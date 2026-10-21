@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedAt": "2026-10-21T00:00:00.000Z",
-  "status": "proposed ownership map; no service processes exist yet",
+  "status": "implemented microservices with 43 domain model families; live infrastructure qualification remains gated per owner",
   "ports": {
     "api-gateway": 4400,
     "core": 4410,
@@ -195,7 +195,6 @@
     "no service may write another service's authoritative table"
   ],
   "notYetBuilt": [
-    "backend/services/{api-gateway,core,memory,episode,inference,orchestrator,tool-runtime,specialist}",
     "packages/service-clients",
     "packages/contracts/src/services/*"
   ],
