@@ -1,6 +1,0 @@
-{
-  "code": "INVALID_INPUT",
-  "message": "The request could not be parsed",
-  "retryable": false,
-  "stack": "Error: parse failure\n    at parse (worker.js:1:1)"
-}
