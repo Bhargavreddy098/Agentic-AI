@@ -1,0 +1,5 @@
+{
+  "name": "ASI V1 Local-First Backend Control Plane",
+  "description": "Local-first, single-user governed digital creation and operations platform backend with durable PostgreSQL orchestration, Build Contracts, policy enforcement, and independent verification.",
+  "requestFramePermissions": []
+}

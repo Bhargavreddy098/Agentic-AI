@@ -1,0 +1,1487 @@
+You are the principal backend implementation engineer for the ASI repository currently open in this workspace.
+
+Your job is now to **BUILD the backend**, not redesign it and not produce another architecture document.
+
+The architecture and implementation plans already exist.
+
+Follow them exactly.
+
+---
+
+# PRIMARY OBJECTIVE
+
+Build the complete **local-first ASI V1 backend** according to the repository's approved architecture and implementation roadmap.
+
+The target is:
+
+**Stage 01 → Stage 17**
+
+Do NOT silently implement Stage 18 SaaS/cloud/remote-worker expansion.
+
+Do NOT build frontend code.
+
+Do NOT redesign the product.
+
+Do NOT introduce a competing architecture.
+
+Do NOT replace the approved stack merely because you prefer another technology.
+
+Do NOT stop after giving me another implementation plan.
+
+First understand the repository.
+
+Then begin implementation immediately.
+
+---
+
+# STEP 0 — READ THE REPOSITORY BEFORE TOUCHING CODE
+
+Before making any implementation change, read these documents completely:
+
+1. `AGENTS.md`
+2. `PRODUCT_IDEA.md`
+3. `README.md`
+4. `docs/backend/00-CLEANUP-RECORD.md`
+5. `docs/backend/01-MASTER-ARCHITECTURE.md`
+6. `docs/backend/02-REPOSITORY-REALITY.md`
+7. `docs/backend/03-BACKEND-STRUCTURE.md`
+8. `docs/backend/04-DATABASE.md`
+9. `docs/backend/05-API-CONTRACTS.md`
+10. `docs/backend/06-INTELLIGENCE-AND-CONTRACTS.md`
+11. `docs/backend/07-ORCHESTRATION-AND-RECOVERY.md`
+12. `docs/backend/08-SECURITY-AND-RUNTIME.md`
+13. `docs/backend/09-PROVIDERS-AND-MEMORY.md`
+14. `docs/backend/10-VERIFICATION-AND-OPERATIONS.md`
+15. `docs/backend/11-IMPLEMENTATION-ROADMAP.md`
+16. `docs/backend/12-DECISIONS-AND-RESEARCH.md`
+17. `docs/backend/13-DOCUMENTATION-VALIDATION.md`
+
+Also inspect:
+
+- all retained backend source,
+- migrations,
+- tests,
+- scripts,
+- environment/configuration files,
+- `.node-version`,
+- `.npmrc`,
+- Git status and current user modifications.
+
+Do not rely only on filenames or previous completion claims.
+
+Determine what is actually:
+
+- implemented,
+- partially implemented,
+- mocked,
+- in-memory,
+- broken,
+- obsolete,
+- reusable,
+- planned,
+- missing,
+- unverified.
+
+Do NOT modify `PRODUCT_IDEA.md`.
+
+Do NOT restore historical V1/V2 architecture simply because files are available through Git history.
+
+---
+
+# FIRST RESPONSE BEFORE IMPLEMENTATION
+
+Give me only a concise repository-understanding section containing:
+
+### Product understanding
+
+What ASI is and its core lifecycle.
+
+### Architecture understanding
+
+Identify the responsibilities of:
+
+- ASI orchestrator,
+- models/providers,
+- specialist agents,
+- coding/developer-environment adapters,
+- tool runtime,
+- policy/approval system,
+- execution sandbox,
+- verification engine,
+- PostgreSQL,
+- artifact storage.
+
+### Current repository state
+
+State what can actually be reused and what is currently unqualified.
+
+### Current implementation stage
+
+Confirm which roadmap stage is next.
+
+After this concise analysis, **continue directly into implementation**.
+
+Do not stop and ask me whether you should start.
+
+---
+
+# NON-NEGOTIABLE ARCHITECTURE
+
+ASI follows:
+
+```text
+User Intent
+    ↓
+Intent / Research
+    ↓
+Requirements
+    ↓
+Planning
+    ↓
+Immutable Build Contract
+    ↓
+User Approval
+    ↓
+Policy / Budget Evaluation
+    ↓
+Durable Orchestrator
+    ↓
+Qualified Model / Worker / Tool
+    ↓
+Isolated Execution
+    ↓
+Artifacts / Receipts
+    ↓
+Independent Verification
+    ↓
+Evidence-Backed Completion
+```
+
+Models propose.
+
+Trusted code authorizes.
+
+Qualified runtimes execute.
+
+Independent evidence determines completion.
+
+---
+
+# SELECTED BACKEND STACK
+
+Preserve the architecture-selected stack:
+
+- Node.js 24 LTS
+- Express 5
+- JavaScript ES modules
+- `// @ts-check`
+- checked JSDoc interfaces
+- Zod runtime schemas
+- PostgreSQL
+- pgvector
+- `pg`
+- SQL-first repositories
+- Pino structured logging
+- OpenTelemetry where its roadmap stage requires it
+- content-addressed local artifact storage
+- supported official provider SDKs only when required
+- supported coding SDK/CLI adapters only when their stage requires them
+- Windows-first local execution
+- isolated worker runtime for untrusted generated code
+
+Existing TypeScript modules may remain where useful.
+
+Do NOT perform a repository-wide TypeScript rewrite.
+
+---
+
+# PRODUCT BOUNDARY
+
+This version is:
+
+**local-first + single-user + Windows-first**
+
+Do NOT add:
+
+- organizations,
+- teams,
+- enterprise roles,
+- product RBAC,
+- invitations,
+- billing,
+- subscriptions,
+- marketplace functionality,
+- cloud sync,
+- multi-tenant SaaS architecture,
+- Kubernetes,
+- Kafka,
+- unnecessary Redis/BullMQ workflow authority,
+- unnecessary microservices.
+
+Local identity, worker identity, capabilities, policy and permission enforcement are still required.
+
+"No product RBAC" does NOT mean "no security."
+
+---
+
+# BACKEND DEPLOYMENT MODEL
+
+Build one modular backend/control plane.
+
+Primary trusted entry points:
+
+```text
+HTTP API
+Durable Dispatcher
+```
+
+Security-sensitive execution may use separately isolated processes.
+
+Do not create network microservices for every domain.
+
+Domain modules remain in-process boundaries until measured evidence justifies extraction.
+
+Target organization comes from:
+
+`docs/backend/03-BACKEND-STRUCTURE.md`
+
+Do not create hundreds of empty placeholder files.
+
+Create directories/modules when actual implementation reaches them.
+
+---
+
+# IMPLEMENTATION STRATEGY
+
+Implement the backend **strictly in roadmap order**.
+
+Never jump several stages ahead because an interface is easy to create.
+
+The sequence is:
+
+```text
+01 Foundation
+↓
+02 PostgreSQL
+↓
+03 Local identity/session
+↓
+04 Projects/conversations/snapshots/artifacts
+↓
+05 Policy/approvals/budgets/audit
+↓
+06 Providers/model registry/router
+↓
+07 Durable orchestration/effects/checkpoints/SSE
+↓
+08 Intent/research/requirements/decisions
+↓
+09 Planning/Build Contracts
+↓
+10 Windows isolation
+↓
+11 Tool runtime + first coding backend
+↓
+12 Independent verification
+↓
+13 Complete killer workflow / MVP
+↓
+14 Memory/project intelligence
+↓
+15 Scheduling/events
+↓
+16 Browser QA + one deployment adapter
+↓
+17 Windows V1 release qualification
+```
+
+Stage 18 is not part of this build unless I separately authorize it.
+
+---
+
+# START IMPLEMENTATION NOW
+
+## STAGE 01 — RESTORE A MINIMAL HONEST BACKEND BASELINE
+
+Complete Stage 01 completely before moving further.
+
+### Inspect retained dependencies
+
+Scan all retained backend imports.
+
+Identify:
+
+- dependencies actually needed now,
+- later-stage dependencies,
+- obsolete imports,
+- frontend-only dependencies,
+- removed historical dependencies.
+
+Do not install every package mentioned anywhere in the architecture.
+
+Install only Stage-01-required dependencies.
+
+### Restore backend package configuration
+
+Create the minimal supported package configuration required by the retained backend.
+
+Establish:
+
+- root/backend package ownership,
+- Node engine requirement,
+- ES module configuration,
+- scripts,
+- lockfile,
+- checked JSDoc/TypeScript configuration,
+- lint configuration integration,
+- test configuration.
+
+Respect:
+
+`.node-version`
+
+and:
+
+`.npmrc`
+
+Do not globally re-enable arbitrary dependency install scripts.
+
+If a dependency requires an install script, investigate it explicitly first.
+
+### Establish actual commands
+
+Create and verify real commands for:
+
+- install
+- development
+- start
+- lint
+- type check
+- unit tests
+- integration tests where Stage 01 permits them
+- build/check
+- database migration command placeholder/entry point
+
+Do not document commands that have not actually executed successfully.
+
+Update the Commands section of `AGENTS.md` only after commands are real.
+
+### Restore safe HTTP foundation
+
+Implement/qualify:
+
+```text
+GET /health/live
+GET /health/ready
+```
+
+Liveness must mean process health.
+
+Readiness must reflect required dependency/capability availability.
+
+Do not fake readiness.
+
+Implement stable safe problem responses according to:
+
+`docs/backend/05-API-CONTRACTS.md`
+
+Move toward:
+
+```text
+application/problem+json
+```
+
+without breaking unrelated behavior casually.
+
+### Configuration
+
+Reconcile retained environment configuration with the new configuration contract.
+
+The repository currently contains legacy/current variables such as:
+
+```text
+DATABASE_URL
+DATABASE_POOL_MAX
+DATABASE_TIMEOUT_MS
+HOST
+ASI_ALLOWED_ORIGINS
+SHUTDOWN_TIMEOUT_MS
+```
+
+The architecture discusses `ASI_HOST`.
+
+Make an explicit compatibility decision.
+
+Do not leave ambiguous duplicate environment names indefinitely.
+
+Validate security-sensitive configuration on startup.
+
+Missing mandatory production configuration must fail closed.
+
+### Logging
+
+Qualify structured safe logging.
+
+Never log:
+
+- authorization headers,
+- session cookies,
+- provider credentials,
+- full prompts by default,
+- secrets,
+- raw sensitive URLs,
+- unrestricted tool output.
+
+### Startup/shutdown
+
+Verify:
+
+- clean startup,
+- graceful shutdown,
+- owned resource cleanup,
+- invalid configuration,
+- missing mandatory owner,
+- unavailable dependency,
+- unexpected async failures.
+
+### Remove obsolete ledger coupling
+
+Current historical migration/test code references removed V1/V2 task ledgers/package inputs.
+
+Do NOT recreate those ledgers merely to satisfy the code.
+
+Replace obsolete ledger dependencies with:
+
+- explicit migration metadata,
+- checksums,
+- current behavioral tests,
+- current architecture invariants.
+
+Do not weaken migration safety.
+
+### Preserve sandbox fail-closed behavior
+
+The current Windows sandbox reports itself unavailable/unqualified.
+
+Keep it unavailable.
+
+Do not create a host-shell fallback.
+
+Do not fake Stage 10 qualification during Stage 01.
+
+### Stage 01 tests
+
+At minimum verify:
+
+- imports,
+- configuration,
+- startup,
+- shutdown,
+- health live,
+- health ready,
+- safe errors,
+- structured redacted logs,
+- missing dependency behavior,
+- unavailable capability behavior,
+- no synthetic production service owner,
+- no frontend dependency requirement.
+
+### STAGE 01 EXIT GATE
+
+Do not continue until Stage 01 has actual evidence.
+
+At the end produce:
+
+```text
+STAGE 01 STATUS
+
+Implementation:
+...
+
+Commands:
+...
+
+Tests:
+...
+
+Evidence:
+...
+
+Remaining limitations:
+...
+```
+
+Only call Stage 01 `PASS` when the evidence exists.
+
+---
+
+# STAGE 02 — POSTGRESQL PREPARATION
+
+I will connect PostgreSQL locally myself.
+
+After Stage 01 passes, proceed immediately with the **implementation portion** of Stage 02 that does not require a live database.
+
+Prepare:
+
+- PostgreSQL configuration adapter,
+- `pg` pool owner,
+- connection timeout,
+- statement timeout,
+- pool sizing,
+- graceful pool shutdown,
+- same-client transaction helper,
+- repository ports,
+- SQL repository infrastructure,
+- migration journal,
+- migration checksum mechanism,
+- immutable ordered migration loading,
+- logical schema migrations,
+- required roles/grants scripts,
+- pgvector provisioning expectations,
+- RLS/scoping foundations,
+- workspace/project composite foreign-key conventions,
+- idempotency foundations,
+- outbox foundations,
+- database health/readiness integration.
+
+Follow:
+
+`docs/backend/04-DATABASE.md`
+
+exactly.
+
+Target logical schemas include:
+
+```text
+identity
+product
+planning
+control
+inference
+knowledge
+verification
+automation
+ops
+```
+
+These are PostgreSQL schemas.
+
+They are NOT independent database servers or microservices.
+
+---
+
+# DATABASE RULES
+
+PostgreSQL is the durable authority.
+
+Never silently fall back to:
+
+```text
+Map
+in-memory repositories
+SQLite
+Redis
+filesystem state
+vector storage
+```
+
+for canonical production state.
+
+Retained SQLite episodic storage may be treated as a future import source.
+
+It is not the new canonical store.
+
+Use:
+
+- parameterized SQL,
+- explicit transactions,
+- one checked-out `pg` client per transaction,
+- bounded query/statement timeouts,
+- composite scope foreign keys,
+- explicit indexes,
+- database constraints,
+- migrations for every schema change.
+
+Do not introduce an ORM unless I separately approve an architecture change.
+
+Do not store monetary authority as floating point.
+
+Do not treat UUID possession as authorization.
+
+---
+
+# DATABASE CONNECTION GATE
+
+Because I will connect my local PostgreSQL database myself, do NOT invent a database or claim integration tests passed.
+
+Once all connection-independent Stage 02 code is ready:
+
+STOP progression to Stage 03.
+
+Print exactly:
+
+```text
+DATABASE_CONNECTION_REQUIRED
+```
+
+Then tell me precisely:
+
+1. supported PostgreSQL major/version expected,
+2. pgvector requirement,
+3. database name requirements,
+4. runtime database role requirements,
+5. installer/migration role requirements,
+6. required environment variables,
+7. example values using placeholders only,
+8. command I need to run after setting `DATABASE_URL`,
+9. migration command,
+10. database verification command,
+11. expected successful health/readiness result,
+12. tests that will run after connection.
+
+Do not ask me for my actual password.
+
+Do not put my password into source code.
+
+Do not commit `.env`.
+
+Wait at this material external dependency gate.
+
+---
+
+# AFTER I SAY "DATABASE CONNECTED — CONTINUE"
+
+Resume Stage 02.
+
+Then run against the real local PostgreSQL database:
+
+- clean migration,
+- repeated migration,
+- checksum verification,
+- transaction rollback,
+- composite FK isolation,
+- RLS missing-context denial,
+- pool context reset,
+- pgvector availability,
+- backup smoke test,
+- restore smoke test where feasible,
+- restart persistence.
+
+Only after those tests pass may Stage 02 pass.
+
+Then continue automatically through Stages 03–17 in order.
+
+Do not ask me permission between every ordinary stage unless:
+
+- architecture must materially change,
+- security would be weakened,
+- destructive migration is necessary,
+- external credentials are required,
+- paid infrastructure would be created,
+- high-impact external action requires approval,
+- or the roadmap explicitly requires user action.
+
+---
+
+# STAGE 03 — LOCAL IDENTITY
+
+Implement the approved local identity/session architecture.
+
+Include:
+
+- local owner principal,
+- workspace,
+- opaque session tokens,
+- token hashing,
+- CSRF,
+- Origin validation,
+- Host validation,
+- expiry,
+- revocation,
+- worker identity separation,
+- scoped request context,
+- bootstrap lifecycle.
+
+Do NOT add organizations, teams, invitations or enterprise RBAC.
+
+---
+
+# STAGE 04 — PROJECTS / CONVERSATIONS / SNAPSHOTS / ARTIFACTS
+
+Implement:
+
+- workspaces/projects,
+- conversations/messages,
+- authorized repository roots,
+- repository snapshots,
+- exact content digests,
+- local content-addressed artifact storage,
+- staged uploads,
+- integrity checking,
+- quarantine,
+- safe downloads,
+- operations/idempotency.
+
+No arbitrary filesystem access.
+
+No user DTO should grant a new host filesystem root automatically.
+
+---
+
+# STAGE 05 — GOVERNANCE
+
+Implement:
+
+- four autonomy modes:
+
+```text
+plan_only
+ask_before_every_change
+autonomous_coding
+full_autonomous_build
+```
+
+- deterministic policy engine,
+- immutable policy revisions,
+- capabilities/grants,
+- approvals,
+- contract approval binding,
+- effect approval,
+- one-time nonce semantics,
+- budgets,
+- reservations,
+- cost usage,
+- audit.
+
+Do not preserve the old `observe/assist/execute` model as target architecture.
+
+Migrate it intentionally.
+
+Models must never decide authorization.
+
+---
+
+# STAGE 06 — PROVIDER SYSTEM
+
+Implement the provider-neutral inference architecture.
+
+Include:
+
+- provider port,
+- provider adapters,
+- model registry,
+- capability registry,
+- model router,
+- hard constraints,
+- cost estimation,
+- price revisions,
+- usage normalization,
+- deadlines,
+- cancellation,
+- streaming,
+- health,
+- circuit breaker,
+- privacy constraints.
+
+Begin with ONE real supported provider.
+
+Do not implement every provider.
+
+Do not scatter provider-specific conditionals across domain code.
+
+Do not extract private tokens from Codex, Claude, Antigravity or browser sessions.
+
+Use official supported APIs/SDKs/authentication only.
+
+If real provider credentials are required and unavailable:
+
+stop at:
+
+```text
+PROVIDER_QUALIFICATION_REQUIRED
+```
+
+and tell me exactly what supported credential/configuration is required.
+
+Never fake the provider qualification gate.
+
+---
+
+# STAGE 07 — DURABLE ORCHESTRATION
+
+Implement PostgreSQL-backed:
+
+- operations,
+- runs,
+- tasks,
+- dependencies,
+- leases,
+- fencing epochs,
+- effects,
+- checkpoints,
+- failures,
+- outbox,
+- receipts,
+- ordered run events,
+- cancellation,
+- pause,
+- recovery,
+- SSE replay.
+
+Remove process-local `Map` as production orchestration authority.
+
+Unknown external effects must reconcile before retry.
+
+Never blindly replay high-impact side effects.
+
+---
+
+# STAGE 08 — INTELLIGENCE
+
+Implement:
+
+- Intent Engine,
+- Research Engine,
+- Requirements Engine,
+- Decision Engine,
+- clarification policy,
+- measurable acceptance criteria,
+- research provenance,
+- trusted/untrusted source handling.
+
+The system should ask only material questions.
+
+It should challenge bad decisions with evidence.
+
+Research content must remain untrusted data.
+
+Do not allow research text to change policy/security.
+
+---
+
+# STAGE 09 — PLANNING + BUILD CONTRACTS
+
+Implement all approved planning layers from:
+
+`docs/backend/06-INTELLIGENCE-AND-CONTRACTS.md`
+
+Implement:
+
+- planning revisions,
+- DAG,
+- dependency validation,
+- architecture alternatives,
+- Build Contract generation,
+- canonical serialization,
+- immutable revisions,
+- SHA-256 digest,
+- material diff,
+- approval invalidation,
+- reapproval.
+
+Approved bytes cannot be mutated.
+
+Material changes require a new revision.
+
+---
+
+# STAGE 10 — WINDOWS ISOLATION
+
+Do not execute generated hostile code on the host.
+
+Implement/qualify the architecture-defined Windows execution boundary:
+
+- broker/guest protocol,
+- VM lifecycle,
+- canonical paths,
+- artifact transfer,
+- resource limits,
+- egress control,
+- cancellation,
+- host-secret isolation.
+
+No:
+
+- home-directory sharing,
+- `.ssh`,
+- `.aws`,
+- `.codex`,
+- browser profiles,
+- Docker socket,
+- broad environment inheritance,
+- host-shell fallback.
+
+If the Windows environment cannot qualify the required isolation:
+
+mark capability unavailable.
+
+Do not fake readiness.
+
+---
+
+# STAGE 11 — TOOL RUNTIME + FIRST CODING BACKEND
+
+Implement typed/versioned tool contracts containing:
+
+- inputs,
+- outputs,
+- permissions,
+- risk,
+- timeout,
+- cancellation,
+- retry policy,
+- idempotency,
+- audit fields,
+- secret references,
+- receipt schema.
+
+Then implement ONE supported coding backend first.
+
+Examples may include a supported Codex SDK/app-server/CLI or another officially supported adapter.
+
+ASI remains orchestrator.
+
+The coding backend is a worker.
+
+Do not let it control:
+
+- requirements,
+- approval,
+- budgets,
+- security,
+- completion.
+
+---
+
+# STAGE 12 — INDEPENDENT VERIFICATION
+
+Implement verification independent enough to challenge producer output.
+
+Verification must bind:
+
+```text
+Requirement
+→ Criterion
+→ Contract revision
+→ Repository/artifact digest
+→ Test/evidence
+→ Pass / Fail / Unknown
+```
+
+Required `unknown` means not verified.
+
+The implementation worker must not be able to:
+
+- delete protected tests,
+- skip required tests,
+- lower thresholds,
+- change acceptance criteria,
+- change verifier configuration,
+- call itself complete.
+
+---
+
+# STAGE 13 — MVP KILLER WORKFLOW
+
+Build the real workflow:
+
+```text
+Idea
+→ Intent
+→ Requirements
+→ Plan
+→ Build Contract
+→ Approval
+→ Run
+→ Coding Worker
+→ Artifact
+→ Verification
+→ Bounded Repair
+→ Evidence-backed completion
+```
+
+This is the MVP gate.
+
+Test using multiple frozen small application briefs.
+
+Test:
+
+- provider failure,
+- host restart,
+- rejected approval,
+- exhausted budget,
+- regression,
+- owner edits,
+- repair,
+- honest failure.
+
+Do not claim MVP until the end-to-end chain really passes.
+
+---
+
+# STAGE 14 — MEMORY / PROJECT INTELLIGENCE
+
+Only after MVP.
+
+Implement:
+
+- user memory,
+- project memory,
+- task memory,
+- episodic memory,
+- semantic knowledge,
+- decision memory,
+- failure memory,
+- evaluation memory,
+- provenance,
+- correction,
+- deletion,
+- expiry,
+- lexical search,
+- exact vector reference search,
+- pgvector semantic retrieval,
+- embedding spaces,
+- project graph,
+- incremental source invalidation.
+
+Memory is not security authority.
+
+Vector similarity does not grant permission.
+
+---
+
+# STAGE 15 — AUTOMATION
+
+Implement:
+
+- schedules,
+- recurrence,
+- timezone behavior,
+- occurrences,
+- overlap policy,
+- missed-run behavior,
+- webhook/event inbox,
+- signature validation,
+- deduplication,
+- bounded recurring budgets,
+- pause/resume,
+- notifications.
+
+Event content cannot grant itself new capabilities.
+
+---
+
+# STAGE 16 — BROWSER QA + DEPLOYMENT ADAPTER
+
+Only now implement:
+
+- Playwright inside qualified guest isolation,
+- browser evidence,
+- separate authenticated browser contexts,
+- hostile-page handling,
+- one deployment adapter,
+- deployment preview,
+- preflight,
+- exact action approval,
+- execute,
+- reconcile,
+- health evidence,
+- rollback eligibility.
+
+No general desktop control.
+
+No host browser profile reuse.
+
+Production deployment always requires exact approval.
+
+---
+
+# STAGE 17 — WINDOWS V1 RELEASE
+
+Complete the local-first V1 backend with:
+
+- lifecycle management,
+- installer/runtime expectations,
+- startup behavior,
+- diagnostics,
+- quotas,
+- retention,
+- updates,
+- recovery,
+- backup/restore,
+- migration compatibility,
+- dependency provenance,
+- disk-pressure behavior,
+- telemetry,
+- incident controls,
+- Windows release qualification.
+
+Do not add SaaS organizations or billing to compensate for unfinished local reliability.
+
+---
+
+# DO NOT BUILD STAGE 18 AUTOMATICALLY
+
+Stage 18 contains future extensions such as:
+
+- remote workers,
+- cloud identity,
+- cloud object storage,
+- organizations,
+- collaboration,
+- SaaS seams,
+- additional provider/worker integrations,
+- distributed orchestration.
+
+Stop after Stage 17 and report V1 status.
+
+Stage 18 requires separate authorization.
+
+---
+
+# API IMPLEMENTATION
+
+Follow:
+
+`docs/backend/05-API-CONTRACTS.md`
+
+Target public API:
+
+```text
+/api/v1
+```
+
+Do not assume legacy:
+
+```text
+/api/ui/v1
+```
+
+is the final API.
+
+Perform an explicit migration.
+
+Every public endpoint must implement applicable:
+
+- strict validation,
+- session authentication,
+- scope checks,
+- policy checks,
+- idempotency,
+- optimistic concurrency,
+- pagination,
+- safe errors,
+- request/trace correlation,
+- observability.
+
+Do not expose internal provider/worker implementation details unnecessarily.
+
+---
+
+# PROVIDER VS CODING BACKEND
+
+Keep these separate.
+
+### Inference provider
+
+Provides model reasoning/generation.
+
+### Coding backend
+
+Performs bounded code implementation.
+
+A system may expose both kinds of capability, but ASI architecture must keep them separated.
+
+---
+
+# NO FAKE IMPLEMENTATION
+
+Never call a capability complete because:
+
+- a class exists,
+- an interface compiles,
+- a mock works,
+- HTTP returns `200`,
+- an agent says success,
+- a README says complete,
+- a test file exists.
+
+Use:
+
+```text
+Requirement
+→ Implementation
+→ Verification
+→ Evidence
+→ PASS / FAIL / UNKNOWN
+```
+
+If required verification is unavailable:
+
+```text
+UNVERIFIED
+```
+
+is the correct state.
+
+---
+
+# NO FAKE INTEGRATIONS
+
+Never invent:
+
+- provider APIs,
+- authentication mechanisms,
+- IDE APIs,
+- cloud APIs,
+- browser integrations.
+
+Never:
+
+- scrape browser credentials,
+- copy session cookies,
+- steal subscription tokens,
+- impersonate unsupported clients.
+
+Mocks belong only in tests/fixtures.
+
+---
+
+# SECURITY
+
+Trusted code, not prompts, enforces:
+
+- filesystem scope,
+- project scope,
+- session validity,
+- policy,
+- capabilities,
+- network access,
+- secret access,
+- budgets,
+- tool permissions,
+- execution boundaries,
+- approvals.
+
+Treat as untrusted:
+
+- model output,
+- repository content,
+- README content,
+- websites,
+- retrieved documents,
+- generated code,
+- worker success claims,
+- tool output.
+
+---
+
+# TESTING
+
+Write tests alongside implementation.
+
+Use the subsystem matrix from:
+
+`docs/backend/10-VERIFICATION-AND-OPERATIONS.md`
+
+At minimum include appropriate:
+
+- unit,
+- API contract,
+- real PostgreSQL integration,
+- migration,
+- security,
+- provider contract,
+- orchestration/fault-injection,
+- worker conformance,
+- verification,
+- retrieval,
+- scheduling,
+- acceptance,
+- recovery tests.
+
+Do not weaken tests to make implementation pass.
+
+---
+
+# REFACTORING
+
+Reuse compatible retained backend source where appropriate.
+
+Do not delete working behavior merely to make the repository look cleaner.
+
+Do not perform unrelated repository-wide cleanup.
+
+Migrate incrementally toward the approved:
+
+```text
+backend/src/
+```
+
+architecture.
+
+Do not create empty architecture theater.
+
+---
+
+# DEPENDENCIES
+
+Before adding any package, determine:
+
+- whether existing functionality is sufficient,
+- whether the current stage actually needs it,
+- maintenance status,
+- license,
+- security posture,
+- Windows compatibility,
+- complexity reduction,
+- architecture fit.
+
+Do not add large agent frameworks merely to accelerate development.
+
+Do not make OpenClaw, Hermes, LangChain, Temporal or another framework the ASI orchestrator unless a separately approved architectural decision changes the design.
+
+---
+
+# DO NOT MODIFY USER WORK
+
+Before editing:
+
+```text
+git status --short
+git diff --stat
+```
+
+Preserve unrelated user changes.
+
+Do not:
+
+```text
+git reset --hard
+git clean -fd
+```
+
+or perform equivalent destructive workspace operations.
+
+---
+
+# WORKING STYLE
+
+Do not repeatedly ask me about minor implementation details.
+
+Use engineering judgment inside the approved architecture.
+
+Stop and ask only when there is a genuine material gate such as:
+
+- required local database connection,
+- provider credential/qualification,
+- Windows virtualization requirement,
+- coding adapter authentication,
+- destructive database migration,
+- material architecture conflict,
+- required security weakening,
+- paid infrastructure,
+- production/external side effect.
+
+For ordinary implementation choices:
+
+make the best architecture-compliant decision and continue.
+
+---
+
+# AFTER EVERY STAGE
+
+Produce:
+
+```text
+STAGE XX — <name>
+
+Implemented:
+- ...
+
+Files changed:
+- ...
+
+Database changes:
+- ...
+
+APIs:
+- ...
+
+Tests:
+- ...
+
+Verification:
+PASS / FAIL / UNVERIFIED
+
+Architecture compliance:
+- ...
+
+Not implemented:
+- ...
+
+Known blockers:
+- ...
+```
+
+Then continue to the next stage only if its dependencies genuinely passed.
+
+---
+
+# DEFINITION OF DONE
+
+The local-first backend is not complete until Stage 17 is qualified.
+
+A stage is complete only when:
+
+- required implementation exists,
+- architecture boundaries are preserved,
+- migrations exist where needed,
+- API contracts match,
+- security is enforced,
+- failure paths exist,
+- tests exist,
+- applicable tests pass,
+- type checking passes,
+- lint passes,
+- startup/build passes,
+- observability is sufficient,
+- required evidence exists,
+- no fake/mock production path remains,
+- deferred functionality is explicit.
+
+---
+
+# BEGIN NOW
+
+Start with repository analysis.
+
+Then immediately implement:
+
+**STAGE 01 — Restore a minimal, honest backend baseline.**
+
+Do not build frontend.
+
+Do not jump to providers, agents, browser automation or memory.
+
+Do not produce another huge plan and stop.
+
+Make the code changes, run the checks, fix failures, and complete Stage 01.
+
+After Stage 01 passes, prepare Stage 02 until the local PostgreSQL connection is the only remaining external requirement.
+
+Then stop at:
+
+```text
+DATABASE_CONNECTION_REQUIRED
+```
+
+and give me the exact local PostgreSQL + pgvector connection/setup checklist.
+
+I will connect the database and tell you:
+
+```text
+DATABASE CONNECTED — CONTINUE
+```
+
+After that, resume the roadmap from Stage 02 and keep implementing sequentially toward the complete Stage 17 local-first backend.

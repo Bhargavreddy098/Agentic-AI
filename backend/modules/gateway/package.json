@@ -1,0 +1,12 @@
+{
+  "name": "@asi/gateway",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./ui": "./dist/ui/index.js",
+    "./ui/*": "./dist/ui/*.js"
+  }
+}

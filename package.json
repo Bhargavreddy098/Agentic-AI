@@ -1,0 +1,53 @@
+{
+  "name": "asi-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local-first ASI V1 modular monolith backend and control plane",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0 <25.0.0"
+  },
+  "workspaces": [
+    "packages/contracts",
+    "backend/modules/gateway"
+  ],
+  "scripts": {
+    "predev": "npm run build:internal",
+    "dev": "node backend/server.js",
+    "prestart": "npm run build:internal",
+    "start": "node backend/server.js",
+    "build:internal": "node scripts/build-internal.mjs",
+    "build": "npm run build:internal && tsc -p tsconfig.json --noEmit",
+    "typecheck": "npm run build:internal && tsc -p tsconfig.json --noEmit",
+    "lint": "eslint backend/server.js backend/app.js backend/config backend/controllers backend/database backend/middlewares backend/routes backend/services backend/src backend/utils scripts",
+    "test": "npm run build:internal && node --test backend/tests/*.test.js backend/tests/models/*.test.js backend/tests/stage02/*.test.js",
+    "test:unit": "npm run build:internal && node --test backend/tests/http-foundation.test.js backend/tests/lifecycle.test.js backend/tests/migration-relocation.test.js backend/tests/models/all-models.test.js backend/tests/stage02/database-unit.test.js",
+    "test:integration": "npm run build:internal && node --test backend/tests/database.test.js backend/tests/api-parity.test.js backend/tests/stage02/postgres-integration.test.js",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "db:verify": "node scripts/db-verify.mjs"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "hono": "^4.7.4",
+    "pg": "^8.14.1",
+    "pgvector": "^0.2.0",
+    "pino": "^9.6.0",
+    "pino-http": "^10.4.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.10",
+    "@types/pg": "^8.11.11",
+    "eslint": "^9.22.0",
+    "globals": "^16.0.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1",
+    "vitest": "^3.0.8"
+  }
+}

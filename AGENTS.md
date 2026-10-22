@@ -291,12 +291,17 @@ Original product hash: `4776824a4ab012e6c6f84c4737906de1f3faf21edbc80314e60cd0c1
 
 | Requested action | Currently supported command |
 | --- | --- |
-| Install / development / start | None established: package manifests and workspace lock/configuration were removed |
-| Type checking / lint / formatting / build | None established: restored configuration and dependencies are prerequisites |
-| Unit / integration / contract / security / E2E suites | No qualified project invocation currently established; source tests remain |
-| Database migrations | Do not run the legacy runner: `backend/database/migrate.js` requires removed task ledgers and package inputs |
+| Install dependencies | `npm install` |
+| Development / start server | `npm run dev` / `npm start` (`node backend/server.js`) |
+| Internal contract/gateway module build | `npm run build:internal` (`node scripts/build-internal.mjs`) |
+| Type checking & build check | `npm run typecheck` / `npm run build` (`tsc -p tsconfig.json --noEmit`) |
+| Lint | `npm run lint` |
+| Full test suite (unit + integration) | `npm test` (`npm run test:unit`, `npm run test:integration`) |
+| Stage 02 database migrations | `npm run db:migrate -- --plan` (offline plan/checksum verify) / `npm run db:migrate` (apply to PostgreSQL) |
+| Stage 02 database verification | `npm run db:verify -- --offline` (offline checksum verify) / `npm run db:verify` (live PostgreSQL + pgvector + schema verify) |
+| Legacy reviewed migration compatibility | `node backend/database/migrate.js --target M04` |
 
-Do not present historical `pnpm`/`npm` scripts or guessed commands as working instructions. Do not install an ad-hoc tool through `npx` just to bypass absent manifests. When stage 01 is assigned, restore minimal tooling, execute the actual scripts, and update this command section with verified commands and prerequisites. `git diff --check` checks whitespace, not application correctness. Check newly created/untracked documents separately; Git diff alone may omit them.
+Do not present unverified commands as working instructions. Do not install an ad-hoc tool through `npx` just to bypass manifests. `git diff --check` checks whitespace, not application correctness. Check newly created/untracked documents separately; Git diff alone may omit them.
 
 ## 30. Definition of done
 

@@ -101,6 +101,7 @@ export function requireInternalAuth(expectedAudience, expectedToken = 'asi-local
 }
 
 export function serviceErrorHandler(error, _req, res, _next) {
+    void _next;
     const requestId = String(res.getHeader('x-request-id') ?? '');
     if (error instanceof ModelDomainError) {
         res.status(error.status || 400).json({
