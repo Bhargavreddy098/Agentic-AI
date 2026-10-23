@@ -1,2 +1,5 @@
-import { Console } from '@/components/console';
-export default function Page() { return <Console />; }
+import { redirect } from 'next/navigation';
+
+export default function Page() {
+  redirect('/studio');
+}

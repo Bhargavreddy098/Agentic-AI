@@ -3,7 +3,10 @@
   "configurations": [
     {
       "name": "frontend",
-      "url": "http://127.0.0.1:3200"
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "frontend/my-app",
+      "port": 3001
     }
   ]
 }
