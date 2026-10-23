@@ -1,0 +1,444 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ASI Stage 03 Local Identity",
+    "version": "1.0.0",
+    "description": "Qualified local identity surface only. Challenges are delivered by the native launcher, never issued over HTTP. Use the same loopback hostname for browser and backend cookies. All responses are no-store. HEAD follows GET authentication. Credentialed CORS preflight is available only for configured exact Origins and identity routes."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:3000/api/v1"
+    }
+  ],
+  "security": [
+    {
+      "localSession": []
+    }
+  ],
+  "paths": {
+    "/session/bootstrap": {
+      "post": {
+        "operationId": "bootstrapLocalSession",
+        "security": [],
+        "description": "Single-use challenge is the replay boundary; no Idempotency-Key. Rotates and revokes the previous presented owner cookie. Host and exact Origin are required.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "challenge",
+                  "clientNonce"
+                ],
+                "properties": {
+                  "challenge": {
+                    "$ref": "#/components/schemas/Token"
+                  },
+                  "clientNonce": {
+                    "$ref": "#/components/schemas/Token"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Session"
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "429": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/session": {
+      "get": {
+        "operationId": "getLocalSession",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Session"
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "revokeLocalSession",
+        "description": "Revokes the presented session. Repeating the same session/key returns 204. Reusing that key for another session returns 409. Clears the /api/v1 cookie.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          },
+          {
+            "$ref": "#/components/parameters/Csrf"
+          },
+          {
+            "$ref": "#/components/parameters/Idempotency"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Revoked; no response body"
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/workspaces": {
+      "get": {
+        "operationId": "listOwnerWorkspaces",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": "Opaque canonical base64url cursor returned by this endpoint"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Only workspaces owned by the authenticated principal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "maxItems": 100,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "id",
+                          "name",
+                          "ownerPrincipalId",
+                          "status"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "ownerPrincipalId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "status": {
+                            "const": "active"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "requestId",
+                        "nextCursor"
+                      ],
+                      "properties": {
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "nextCursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/capabilities": {
+      "get": {
+        "operationId": "getQualifiedCapabilities",
+        "responses": {
+          "200": {
+            "description": "Identity available; later-stage operations disabled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "items"
+                      ],
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "name",
+                              "state"
+                            ],
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "state": {
+                                "enum": [
+                                  "available",
+                                  "disabled"
+                                ]
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "qualificationRef": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "localSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "asi_local_session",
+        "description": "Opaque HttpOnly SameSite=Strict cookie; Path=/api/v1. Server enforces idle/absolute expiry and owner status. Secure when HTTPS is configured."
+      }
+    },
+    "parameters": {
+      "Origin": {
+        "name": "Origin",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Must exactly match a configured allowed Origin"
+      },
+      "Csrf": {
+        "name": "x-csrf-token",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/Token"
+        }
+      },
+      "Idempotency": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[!-~]{1,128}$"
+        }
+      }
+    },
+    "schemas": {
+      "Token": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_-]{43}$"
+      },
+      "Meta": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requestId"
+        ],
+        "properties": {
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "principalId",
+          "workspaceId",
+          "expiresAt",
+          "csrfToken"
+        ],
+        "properties": {
+          "principalId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "csrfToken": {
+            "$ref": "#/components/schemas/Token"
+          }
+        }
+      },
+      "Problem": {
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "detail",
+          "requestId",
+          "retryable"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          },
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "responses": {
+      "Session": {
+        "description": "Local owner session; cookie token is never in JSON",
+        "headers": {
+          "Set-Cookie": {
+            "schema": {
+              "type": "string"
+            },
+            "description": "Set by bootstrap only"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "data",
+                "meta"
+              ],
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/Session"
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/Meta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Problem": {
+        "description": "Safe error without database credentials, token values, or SQL",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      }
+    }
+  }
+}

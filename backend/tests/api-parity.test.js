@@ -12,11 +12,12 @@ async function scenario(work) {
     server.listen(0, '127.0.0.1');
     await once(server, 'listening');
     const base = `http://127.0.0.1:${server.address().port}/api/ui/v1`;
+    try {
     const login = await fetch(base + '/auth/session', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ assertion: 'assert-workspace-a' }) });
+    assert.equal(login.status, 200);
     const cookie = login.headers.get('set-cookie').split(';')[0], { csrfToken } = await login.json();
     const headers = { 'content-type': 'application/json', cookie, origin, 'x-csrf-token': csrfToken };
     const call = (path, method = 'GET', body, override = {}) => fetch(base + path, { method, headers: { ...headers, ...override }, ...(body === undefined ? {} : { body: Buffer.isBuffer(body) ? body : JSON.stringify(body) }) });
-    try {
         await work(call);
     }
     finally {

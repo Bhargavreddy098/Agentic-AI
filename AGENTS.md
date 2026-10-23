@@ -2,6 +2,8 @@
 
 Applies to coding agents working anywhere in this repository. Implement the selected architecture within the assigned task; do not redesign the product unless the user explicitly requests architectural work. This file summarizes execution rules and points to the detailed specifications; it does not replace them.
 
+**Active implementation:** Stage 02, Stage 03, Stage 04, Stage 05, and Stage 06 are locally qualified on 2026-10-22. Read [PostgreSQL qualification](docs/backend/15-LOCAL-POSTGRESQL-QUALIFICATION.md), [identity/session qualification](docs/backend/16-LOCAL-IDENTITY-QUALIFICATION.md), [product qualification](docs/backend/17-LOCAL-PRODUCT-QUALIFICATION.md), [governance qualification](docs/backend/18-LOCAL-GOVERNANCE-QUALIFICATION.md), [Stage 06 provider status](docs/backend/19-LOCAL-PROVIDER-QUALIFICATION.md), and [implementation evidence](docs/backend/14-IMPLEMENTATION-STATUS.md). Normal startup composes Stage 06 providers with Stage 05 governance and Stage 04 product services using migrations 001-013. Stage 06 is implemented and qualified with a capped live call against an operator-allowlisted OpenAI-compatible endpoint plus live revoked-auth, 429, and timeout paths; the official OpenAI target remains live-unverified after rejecting the configured credential. `npm run provider:verify` selects the configured target. No later stage or production release is qualified by this note.
+
 **Baseline inspected: 2026-10-22.** The checkout is documentation-first, with retained legacy backend source. Package manifests, lockfiles, compiler configurations and old task ledgers are absent. No roadmap stage is recorded as production-qualified. Reinspect evidence on each task; do not keep treating this dated baseline as current after verified implementation progresses.
 
 ## 1. Repository mission
@@ -85,7 +87,7 @@ Do not replace working components unnecessarily, re-create the removed frontend,
 
 **Build now, when implementation is assigned:** stage 01, the minimal backend baseline. Inventory retained imports, restore minimal manifests/lockfile/checking/test configuration, establish real startup/readiness/error/shutdown behavior, replace obsolete ledger-dependent tooling without removing its protections, and document tested commands. Inspect existing database/migration state read-only. Do not implement stages 02–18 as incidental foundation work.
 
-**Build later, after their prerequisites and assignment:** persistence (02), local identity (03), projects/artifacts (04), governance (05), one real provider (06), durable execution (07), intelligence/planning/contracts (08–09), isolation (10), one coding adapter (11), verification (12), MVP workflow (13), memory (14), scheduling (15), browser/deployment (16), Windows release qualification (17), and approved extensions (18).
+**Build later, after their prerequisites and assignment:** persistence (02), local identity (03), projects/artifacts (04), governance (05), one real provider (06), durable execution (07), intelligence/planning/contracts (08–09), isolation (10), one coding adapter (11), verification (12), MVP workflow (13), memory (14), scheduling (15), browser/deployment (16), Windows release qualification (17), and approved extensions (18). This is the original boundary: stages 02-06 have since been assigned and locally qualified, except the official OpenAI positive path which remains live-unverified after rejecting the configured credential, as recorded at the top of this file.
 
 **Require separate approval:** material architectural departures; high-impact external actions; future SaaS/remote/billing/collaboration capabilities; changing acceptance or security requirements. A later-phase assignment still does not approve a real production effect.
 
@@ -268,7 +270,7 @@ Apply [10-VERIFICATION-AND-OPERATIONS.md](docs/backend/10-VERIFICATION-AND-OPERA
 | Browser/deployment | Hostile pages/session isolation, unknown submits, exact target/approval, health failure and rollback eligibility |
 | MVP/release | Real provider/worker end-to-end acceptance, failure/repair paths, Windows install/update/restore and documented performance |
 
-Tests already exist under `backend/tests/`, `backend/modules/*/test/`, `packages/contracts/test/` and `tests/`. Read them; do not equate their names with their coverage. For example, `backend/tests/database.test.js` uses fake clients for some checks and cannot qualify real RLS/vector behavior. `tests/setup.ts` still imports a UI testing helper; reconcile only when stage 01 addresses test setup, not by disabling backend coverage.
+Tests already exist under `backend/tests/`, `backend/modules/*/test/`, `packages/contracts/test/` and `tests/`. Read them; do not equate their names with their coverage. For example, `backend/tests/database.test.js` uses fake clients for some checks and cannot qualify real RLS/vector behavior. The unused UI-only `tests/setup.ts` and unreferenced vendor snapshot were archived during the [owner-requested cleanup](docs/backend/20-REPOSITORY-CLEANUP.md); backend/security tests and third-party license recovery were preserved.
 
 ## 29. Commands: current checkout truth
 
@@ -325,7 +327,7 @@ Known issues at this baseline:
 | `infra/policies/default.yaml` observe/assist/execute versus four target autonomy modes | Migrate deliberately under stage 05 with tests; no silent string mapping or permission widening |
 | `/api/ui/v1` source versus `/api/v1` target | Follow current API specification through an assigned compatibility/migration change; do not claim target routes already exist |
 | Legacy SQLite episodes versus PostgreSQL target | Inventory/import and validate existing data under the migration plan; never silently delete/reinterpret it |
-| Goal lifecycle vocabulary differs within current docs | Database `product.goals` row lists states without `awaiting_approval`; orchestration text says goal states include it. Before implementing that enum/transition, present the discrepancy and obtain a consistent approved contract. Do not guess an enum or copy it into execution-run states |
+| Goal lifecycle vocabulary resolved by owner on 2026-10-22 | The owner explicitly approved adding `awaiting_approval` to `product.goals`; the database dictionary now matches orchestration. Apply this state to goals only; execution-run states retain their own contract. This approval does not establish implementation or verification of goal workflows |
 | Existing vector test accepts an all-zero vector, while database target rejects zero vectors for cosine retrieval | Treat as a documented source-to-target mismatch; when memory migration is assigned, implement the specified validation and replace that fixture with valid scoped data plus a zero-rejection test. Do not weaken the target to preserve an old fixture |
 
 This file documents these differences without changing application code or silently amending the source specifications.

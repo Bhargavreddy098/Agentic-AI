@@ -3,8 +3,7 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { loadConfig } from './config/env.js';
 import { createLogger } from './config/logger.js';
-import { createDatabase } from './config/database.js';
-import { createApp } from './app.js';
+import { createContainer } from './src/bootstrap/container.js';
 /** @param {{app: import('express').Express, config: ReturnType<typeof loadConfig>, resources?: Array<{close:()=>Promise<void>}>}} options */
 export async function startServer({ app, config, resources = [] }) {
     const server = createServer(app);
@@ -26,20 +25,26 @@ export async function startServer({ app, config, resources = [] }) {
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
     const logger = createLogger();
     try {
-        process.loadEnvFile?.(fileURLToPath(new URL('./.env', import.meta.url)));
+        process.loadEnvFile?.(fileURLToPath(new URL('../.env.runtime', import.meta.url)));
+    } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+    }
+    try {
+        process.loadEnvFile?.(fileURLToPath(new URL('../.env', import.meta.url)));
     }
     catch (error) {
         if (error.code !== 'ENOENT')
             throw error;
     }
     try {
-        const config = loadConfig(), database = createDatabase(config);
+        const config = loadConfig();
+        const container = await createContainer({ config, logger });
         let running;
         try {
-            running = await startServer({ app: createApp({ config, logger, readiness: () => database.readiness() }), config, resources: [database] });
+            running = await startServer({ app: container.app, config, resources: container.resources });
         }
         catch (error) {
-            await database.close();
+            await Promise.allSettled(container.resources.map(resource => resource.close()));
             throw error;
         }
         logger.info({ host: config.HOST, port: config.PORT }, 'ASI Express backend listening');

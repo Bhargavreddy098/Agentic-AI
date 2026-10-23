@@ -34,18 +34,34 @@ test('Stage 02 target logical schemas match 04-DATABASE.md exactly', () => {
 
 test('Stage 02 migration plan verifies SHA-256 checksums and rejects tampered checksum manifests', () => {
     const plan = loadStage02MigrationPlan();
-    assert.equal(plan.length, 3);
+    assert.equal(plan.length, 13);
     assert.deepEqual(
         plan.map(m => m.id),
         [
             '001-schemas-and-journal.sql',
             '002-scope-and-rls-foundations.sql',
             '003-idempotency-and-outbox.sql',
+            '004-receipt-scope.sql',
+            '005-local-identity.sql',
+            '006-identity-references.sql',
+            '007-project-content.sql',
+            '008-content-operations.sql',
+            '009-planning-identities.sql',
+            '010-governance.sql',
+            '011-inference-providers.sql',
+            '012-openai-compatible-providers.sql',
+            '013-inference-output-artifacts.sql',
         ]
     );
     for (const m of plan) {
         assert.equal(m.checksum, STAGE02_MIGRATION_CHECKSUMS[m.id]);
     }
+    assert.deepEqual(loadStage02MigrationPlan({ stage02Only: true }).map(row => row.id), plan.slice(0, 4).map(row => row.id));
+    assert.deepEqual(loadStage02MigrationPlan({ stage03Only: true }).map(row => row.id), plan.slice(0, 6).map(row => row.id));
+    assert.deepEqual(loadStage02MigrationPlan({ stage04Only: true }).map(row => row.id), plan.slice(0, 8).map(row => row.id));
+    assert.deepEqual(loadStage02MigrationPlan({ stage05Only: true }).map(row => row.id), plan.slice(0, 10).map(row => row.id));
+    assert.deepEqual(loadStage02MigrationPlan({ stage06Only: true }).map(row => row.id), plan.slice(0, 13).map(row => row.id));
+    assert.throws(() => loadStage02MigrationPlan({ stage02Only: true, stage03Only: true }), /exactly one/);
 
     assert.throws(
         () =>
@@ -110,6 +126,22 @@ test('withScopedTransaction rejects missing or invalid UUID workspace scope befo
     assert.equal(connected, false);
 });
 
+test('transaction rejects invalid isolation before checkout and discards a connection after failed rollback', async () => {
+    let connected = false;
+    await assert.rejects(withTransaction({ connect: async () => { connected = true; } }, async () => {}, {
+        isolationLevel: 'SERIALIZABLE; DROP SCHEMA product CASCADE',
+    }), /Invalid isolationLevel/);
+    assert.equal(connected, false);
+    let discarded;
+    const original = new Error('work failed');
+    const client = {
+        async query(sql) { if (sql === 'ROLLBACK') throw new Error('connection lost'); },
+        release(error) { discarded = error; },
+    };
+    await assert.rejects(withTransaction({ connect: async () => client }, async () => { throw original; }), error => error === original);
+    assert.ok(discarded instanceof Error);
+});
+
 test('applyStage02Migrations applies unapplied migrations, skips applied ones, and rejects checksum drift', async () => {
     /** @type {Map<string, string>} */
     const journal = new Map();
@@ -132,8 +164,8 @@ test('applyStage02Migrations applies unapplied migrations, skips applied ones, a
     };
 
     const firstRun = await applyStage02Migrations(client);
-    assert.equal(firstRun.applied.length, 3);
-    assert.equal(journal.size, 3);
+    assert.equal(firstRun.applied.length, 13);
+    assert.equal(journal.size, 13);
 
     const secondRun = await applyStage02Migrations(client);
     assert.equal(secondRun.applied.length, 0);

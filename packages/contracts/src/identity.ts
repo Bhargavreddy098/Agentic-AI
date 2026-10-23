@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { FutureUtcTimestampSchema, OpaqueIdSchema } from "./primitives.js";
 
 export const PrincipalSchema = z.strictObject({

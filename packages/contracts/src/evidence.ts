@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { OpaqueIdSchema, BoundedTextSchema } from "./primitives.js";
 
 export const EvidenceSchemaVersionSchema = z.literal(1);

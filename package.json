@@ -5,11 +5,12 @@
   "description": "Local-first ASI V1 modular monolith backend and control plane",
   "type": "module",
   "engines": {
-    "node": ">=22.0.0 <25.0.0"
+    "node": "24.19.0"
   },
   "workspaces": [
     "packages/contracts",
-    "backend/modules/gateway"
+    "backend/modules/gateway",
+    "frontend"
   ],
   "scripts": {
     "predev": "npm run build:internal",
@@ -20,34 +21,47 @@
     "build": "npm run build:internal && tsc -p tsconfig.json --noEmit",
     "typecheck": "npm run build:internal && tsc -p tsconfig.json --noEmit",
     "lint": "eslint backend/server.js backend/app.js backend/config backend/controllers backend/database backend/middlewares backend/routes backend/services backend/src backend/utils scripts",
-    "test": "npm run build:internal && node --test backend/tests/*.test.js backend/tests/models/*.test.js backend/tests/stage02/*.test.js",
-    "test:unit": "npm run build:internal && node --test backend/tests/http-foundation.test.js backend/tests/lifecycle.test.js backend/tests/migration-relocation.test.js backend/tests/models/all-models.test.js backend/tests/stage02/database-unit.test.js",
-    "test:integration": "npm run build:internal && node --test backend/tests/database.test.js backend/tests/api-parity.test.js backend/tests/stage02/postgres-integration.test.js",
-    "db:migrate": "node scripts/db-migrate.mjs",
-    "db:verify": "node scripts/db-verify.mjs"
+    "test": "npm run build:internal && node --env-file-if-exists=.env --env-file-if-exists=.env.admin --test backend/tests/*.test.js backend/tests/models/*.test.js backend/tests/stage02/*.test.js",
+    "test:unit": "npm run build:internal && node --env-file-if-exists=.env --env-file-if-exists=.env.admin --test backend/tests/http-foundation.test.js backend/tests/lifecycle.test.js backend/tests/migration-relocation.test.js backend/tests/models/all-models.test.js backend/tests/stage02/database-unit.test.js",
+    "test:integration": "npm run build:internal && node --env-file-if-exists=.env --env-file-if-exists=.env.admin --test backend/tests/database.test.js backend/tests/api-parity.test.js backend/tests/identity-integration.test.js backend/tests/stage02/postgres-integration.test.js",
+    "db:migrate": "node --env-file-if-exists=.env.admin scripts/db-migrate.mjs",
+    "db:verify": "node --env-file-if-exists=.env.runtime scripts/db-verify.mjs",
+    "test:postgres": "node --env-file-if-exists=.env --env-file-if-exists=.env.admin --test backend/tests/stage02/postgres-integration.test.js",
+    "test:identity": "npm run build:internal && node --env-file-if-exists=.env.admin --test backend/tests/identity-integration.test.js",
+    "test:product": "npm run build:internal && node --env-file-if-exists=.env --env-file-if-exists=.env.admin --test backend/tests/product-integration.test.js backend/tests/repository-snapshot.test.js",
+    "test:governance": "npm run build:internal && node --env-file-if-exists=.env --env-file-if-exists=.env.admin --test backend/tests/governance-unit.test.js backend/tests/governance-integration.test.js",
+    "test:providers": "npm run build:internal && node --env-file-if-exists=.env --env-file-if-exists=.env.admin --test backend/tests/provider-unit.test.js backend/tests/provider-integration.test.js backend/tests/provider-http.test.js backend/tests/provider-contract.test.js",
+    "api:providers": "node scripts/export-provider-openapi.mjs",
+    "provider:verify": "npm run build:internal && node --env-file-if-exists=.env.runtime --env-file-if-exists=.env --env-file-if-exists=.env.admin scripts/provider-verify.mjs",
+    "identity:verify": "npm run build:internal && node --env-file-if-exists=.env.runtime scripts/identity-verify.mjs",
+    "product:verify": "npm run build:internal && node --env-file-if-exists=.env.runtime scripts/product-verify.mjs",
+    "db:setup": "node --env-file-if-exists=.env scripts/db-setup.mjs",
+    "session:challenge": "node --env-file-if-exists=.env.runtime scripts/session-challenge.mjs",
+    "db:backup": "node --env-file-if-exists=.env.admin scripts/db-backup.mjs",
+    "db:recover-config": "node --env-file-if-exists=.env scripts/db-recover-config.mjs"
   },
   "dependencies": {
-    "cookie-parser": "^1.4.7",
-    "express": "^5.1.0",
-    "express-rate-limit": "^7.5.0",
-    "helmet": "^8.1.0",
-    "hono": "^4.7.4",
-    "pg": "^8.14.1",
-    "pgvector": "^0.2.0",
-    "pino": "^9.6.0",
-    "pino-http": "^10.4.0",
-    "zod": "^3.24.2"
+    "cookie-parser": "1.4.7",
+    "express": "5.3.0",
+    "express-rate-limit": "7.5.1",
+    "helmet": "8.3.0",
+    "hono": "4.13.13",
+    "pg": "8.23.1",
+    "pgvector": "0.2.1",
+    "pino": "9.14.0",
+    "pino-http": "10.5.0",
+    "zod": "3.25.76"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "@types/cookie-parser": "^1.4.8",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.13.10",
-    "@types/pg": "^8.11.11",
-    "eslint": "^9.22.0",
-    "globals": "^16.0.0",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1",
-    "vitest": "^3.0.8"
+    "@eslint/js": "9.39.5",
+    "@types/cookie-parser": "1.4.10",
+    "@types/express": "5.0.6",
+    "@types/node": "22.20.5",
+    "@types/pg": "8.23.1",
+    "eslint": "9.39.5",
+    "globals": "16.5.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.0",
+    "vitest": "3.2.7"
   }
 }

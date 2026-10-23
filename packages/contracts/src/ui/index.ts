@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { OpaqueIdSchema as Id, UtcTimestampSchema as Timestamp, MicroUsdSchema } from "../primitives.js";
 import { RunStatusSchema, NormalizedErrorSchema } from "../task.js";
 const Revision = z.number().int().nonnegative();

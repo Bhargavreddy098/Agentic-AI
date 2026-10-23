@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { OpaqueIdSchema, Sha256HexSchema, BoundedTextSchema } from "../primitives.js";
 import { ConfidenceBasisSchema, EvidenceClaimSchema } from "../evidence.js";
 

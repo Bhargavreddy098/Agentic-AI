@@ -4,6 +4,10 @@ export function healthController(readiness) {
         ready: async (_req, res) => { let state = { postgres: false, vector: false }; try {
             state = await readiness();
         }
-        catch { /* Readiness never leaks driver errors. */ } res.status(state.postgres && state.vector ? 200 : 503).json({ status: state.postgres && state.vector ? 'ready' : 'unavailable', ...state }); },
+        catch { /* Readiness never leaks driver errors. */ }
+            const ready = state.postgres === true && state.vector === true && state.schemas === true
+                && state.migrations === true && state.runtimeRole === true;
+            res.status(ready ? 200 : 503).json({ ...state, status: ready ? 'ready' : 'unavailable' });
+        },
     };
 }

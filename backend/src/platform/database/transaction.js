@@ -17,7 +17,11 @@ export async function withTransaction(pool, work, options = {}) {
         throw new Error('withTransaction requires a PostgreSQL pool with connect()');
     }
     options.signal?.throwIfAborted();
+    if (options.isolationLevel !== undefined && !['READ COMMITTED', 'REPEATABLE READ', 'SERIALIZABLE'].includes(options.isolationLevel)) {
+        throw new Error('Invalid isolationLevel');
+    }
     const client = await pool.connect();
+    let discard;
     try {
         options.signal?.throwIfAborted();
         const beginSql = options.isolationLevel
@@ -39,11 +43,12 @@ export async function withTransaction(pool, work, options = {}) {
         try {
             await client.query('ROLLBACK');
         } catch {
-            /* preserve original error */
+            // A connection whose rollback failed must never return to the idle pool.
+            discard = new Error('Transaction rollback failed');
         }
         throw error;
     } finally {
-        client.release();
+        client.release(discard);
     }
 }
 

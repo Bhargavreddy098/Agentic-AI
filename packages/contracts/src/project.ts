@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { OpaqueIdSchema, Sha256HexSchema } from "./primitives.js";
 import { BudgetRefSchema } from "./task.js";
 

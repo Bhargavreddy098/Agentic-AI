@@ -9,13 +9,17 @@ import { errorHandler } from './middlewares/error-handler.js';
 import { notFound } from './middlewares/not-found.js';
 import { healthRoutes } from './routes/health.routes.js';
 import { uiRoutes } from './routes/index.js';
+import { localIdentityRoutes } from './src/http/identity.routes.js';
+import { productRoutes } from './src/http/product.routes.js';
+import { governanceRoutes } from './src/http/governance.routes.js';
+import { providerRoutes } from './src/http/provider.routes.js';
 
 /**
  * @param {{
  *   config: ReturnType<import('./config/env.js').loadConfig>,
  *   services?: Object,
  *   logger?: import('pino').Logger,
- *   readiness?: () => Promise<{postgres: boolean, vector: boolean, migrations?: boolean}>
+ *   readiness?: () => Promise<{postgres: boolean, vector: boolean, schemas?: boolean, migrations?: boolean, runtimeRole?: boolean}>
  * }} options
  */
 export function createApp({
@@ -65,6 +69,10 @@ export function createApp({
     );
     app.use('/health', healthRoutes(readiness));
     app.use('/api/v1/health', healthRoutes(readiness));
+    app.use('/api/v1', localIdentityRoutes({ identity: services.identity, config }));
+    app.use('/api/v1', productRoutes(services));
+    app.use('/api/v1', governanceRoutes(services));
+    app.use('/api/v1', providerRoutes(services));
     app.use('/api/ui/v1', uiRoutes({ config, services }));
     app.use(notFound, errorHandler);
     return app;

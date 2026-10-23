@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { OpaqueIdSchema, FutureUtcTimestampSchema } from "./primitives.js";
 
 export const PlanSchemaVersionSchema = z.literal(1);

@@ -31,7 +31,7 @@ Inspected 2026-10-22 at baseline commit `96f82dfc`. This is a targeted source au
 | Frontend | Historical `apps/openclaw/src/api/*`, `apps/gateway-fixture/src/*`, `tests/ui/*`, `scripts/run-applet.mjs` | Client adapters, synthetic gateway, UI tests and launcher | Removed. README referenced Next.js UI and packages not all present in this checkout; do not claim a complete UI source existed |
 | Configuration | `.env.example`, `infra/policies/default.yaml` | Database/env keys; old observe/assist/execute mode policy | Retained migration inputs. Three old modes conflict with new four-mode product contract |
 | Deployment | Historical `infra/windows/services.example.json`, retained service launch sources | Multi-service process proposal | Removed JSON config; no installed service or production deployment verified |
-| Third-party source | `third_party/openclaw/` | Vendored backend helper/library code | Retained source and LICENSE; notice text preserved as `.txt`. Audit usefulness/licensing before future packaging |
+| Archived third-party source | Former `third_party/openclaw/` | Unreferenced vendor snapshot, not a runtime dependency | Archived with LICENSE/notices during the [owner-requested cleanup](20-REPOSITORY-CLEANUP.md); restore and audit only if a future assigned integration needs it |
 
 ## Inventory conclusions
 

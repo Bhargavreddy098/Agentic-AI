@@ -47,8 +47,8 @@ export function errorHandler(error, _req, res, _next) {
             status,
             detail: safeMessage,
             code,
-            safeMessage,
-            retryable: status >= 500,
+            ...(/^\/api\/v1(?:\/|\?|$)/.test(_req.originalUrl ?? '') ? {} : { safeMessage }),
+            retryable: status >= 500 || status === 429,
             requestId,
         });
 }

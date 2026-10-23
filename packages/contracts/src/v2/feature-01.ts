@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { OpaqueIdSchema, UtcTimestampSchema } from "../primitives.js";
 import { GoalStatusSchema } from "../goal.js";
 

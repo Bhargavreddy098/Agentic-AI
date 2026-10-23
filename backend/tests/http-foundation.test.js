@@ -23,6 +23,24 @@ async function serve(options, work) {
 
 const config = loadConfig({ DATABASE_URL: 'postgres://test:test@127.0.0.1/test' });
 
+test('public rate limiting returns the canonical correlated retryable problem', async () => {
+    await serve({ config }, async base => {
+        for (let i = 0; i < 300; i++) {
+            const response = await fetch(base + '/api/v1/health/live');
+            assert.equal(response.status, 200);
+            await response.arrayBuffer();
+        }
+        const response = await fetch(base + '/api/v1/health/live');
+        assert.equal(response.status, 429);
+        assert.match(response.headers.get('content-type'), /application\/problem\+json/);
+        const problem = await response.json();
+        assert.equal(problem.code, 'RATE_LIMITED');
+        assert.equal(problem.retryable, true);
+        assert.equal(problem.requestId, response.headers.get('x-request-id'));
+        assert.equal('safeMessage' in problem, false);
+    });
+});
+
 test('liveness remains healthy while database readiness fails across /health and /api/v1/health', async () => {
     await serve({ config, readiness: async () => ({ postgres: false, vector: false }) }, async (base) => {
         assert.equal((await fetch(base + '/health')).status, 200);
@@ -33,8 +51,8 @@ test('liveness remains healthy while database readiness fails across /health and
     });
 });
 
-test('readiness returns 200 only when both postgres and vector are ready', async () => {
-    await serve({ config, readiness: async () => ({ postgres: true, vector: true }) }, async (base) => {
+test('readiness requires verified migrations, schemas, and a least-privilege runtime role', async () => {
+    await serve({ config, readiness: async () => ({ postgres: true, vector: true, schemas: true, migrations: true, runtimeRole: true }) }, async (base) => {
         const res = await fetch(base + '/health/ready');
         assert.equal(res.status, 200);
         const body = await res.json();
@@ -42,6 +60,14 @@ test('readiness returns 200 only when both postgres and vector are ready', async
         assert.equal(body.postgres, true);
         assert.equal(body.vector, true);
     });
+});
+
+test('reachable PostgreSQL and vector alone cannot claim readiness', async () => {
+    for (const missing of ['schemas', 'migrations', 'runtimeRole']) {
+        await serve({ config, readiness: async () => ({ postgres: true, vector: true, schemas: true, migrations: true, runtimeRole: true, [missing]: false }) }, async base => {
+            assert.equal((await fetch(base + '/health/ready')).status, 503);
+        });
+    }
 });
 
 test('invalid configuration rejects without echoing credentials and reconciles ASI_HOST/HOST', () => {

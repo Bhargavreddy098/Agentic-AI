@@ -4,3 +4,6 @@ docs/v2-source-manifest.json text eol=lf
 
 # Preserve the upstream snapshot's byte-level integrity manifest on Windows.
 third_party/openclaw/** -text
+
+# SQL checksums cover exact immutable LF bytes on every supported host.
+backend/database/**/*.sql text eol=lf

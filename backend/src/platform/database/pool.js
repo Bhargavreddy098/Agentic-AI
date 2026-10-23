@@ -1,19 +1,11 @@
 // @ts-check
 import pg from 'pg';
+import { TARGET_LOGICAL_SCHEMAS } from './schemas.js';
+import { loadStage02MigrationPlan } from './migrate.js';
 
 const { Pool } = pg;
 
-export const TARGET_LOGICAL_SCHEMAS = Object.freeze([
-    'identity',
-    'product',
-    'planning',
-    'control',
-    'inference',
-    'knowledge',
-    'verification',
-    'automation',
-    'ops',
-]);
+export { TARGET_LOGICAL_SCHEMAS } from './schemas.js';
 
 /**
  * Create the canonical PostgreSQL connection pool owner with bounded connection/statement timeouts,
@@ -25,7 +17,7 @@ export const TARGET_LOGICAL_SCHEMAS = Object.freeze([
  *   DATABASE_TIMEOUT_MS?: number,
  *   DATABASE_STATEMENT_TIMEOUT_MS?: number
  * }} config
- * @param {{ PoolClass?: typeof Pool }} [deps]
+ * @param {{ PoolClass?: typeof Pool, stage02Only?: boolean, stage03Only?: boolean, stage04Only?: boolean, stage05Only?: boolean, stage06Only?: boolean }} [deps]
  */
 export function createPostgresPool(config, deps = {}) {
     if (!config?.DATABASE_URL || !/^postgres(?:ql)?:\/\//.test(config.DATABASE_URL)) {
@@ -35,6 +27,8 @@ export function createPostgresPool(config, deps = {}) {
     const connectionTimeoutMillis = config.DATABASE_TIMEOUT_MS ?? 5000;
     const statementTimeoutMs = config.DATABASE_STATEMENT_TIMEOUT_MS ?? 15000;
     const max = config.DATABASE_POOL_MAX ?? 5;
+    const expectedMigrations = loadStage02MigrationPlan({ stage02Only: deps.stage02Only, stage03Only: deps.stage03Only, stage04Only: deps.stage04Only, stage05Only: deps.stage05Only, stage06Only: deps.stage06Only });
+    const knownMigrations = loadStage02MigrationPlan();
 
     const pool = new PoolImpl({
         connectionString: config.DATABASE_URL,
@@ -71,11 +65,36 @@ export function createPostgresPool(config, deps = {}) {
                         to_regclass('ops.schema_migrations') IS NOT NULL AS migrations_journal`
                 );
                 const row = extResult.rows?.[0] ?? {};
+                const schemaResult = await client.query(
+                    'SELECT nspname FROM pg_namespace WHERE nspname = ANY($1::text[])',
+                    [TARGET_LOGICAL_SCHEMAS]
+                );
+                const schemas = TARGET_LOGICAL_SCHEMAS.every(schema =>
+                    schemaResult.rows.some(record => record.nspname === schema));
+                let migrations = false;
+                if (row.migrations_journal) {
+                    const journal = await client.query('SELECT migration_id, checksum FROM ops.schema_migrations');
+                    migrations = expectedMigrations.every(expected => journal.rows.some(
+                        actual => actual.migration_id === expected.id && actual.checksum === expected.checksum
+                    )) && journal.rows.every(actual => knownMigrations.some(
+                        expected => actual.migration_id === expected.id && actual.checksum === expected.checksum));
+                }
+                const roleResult = await client.query(`SELECT NOT (
+                    r.rolsuper OR r.rolbypassrls OR r.rolcreatedb OR r.rolcreaterole
+                    OR EXISTS (SELECT 1 FROM pg_namespace n WHERE n.nspname = ANY($1::text[])
+                        AND has_schema_privilege(current_user, n.oid, 'CREATE'))
+                    OR EXISTS (SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+                        WHERE n.nspname = ANY($1::text[]) AND c.relkind IN ('r', 'p')
+                        AND pg_has_role(current_user, c.relowner, 'USAGE'))
+                ) AS runtime_role FROM pg_roles r WHERE r.rolname = current_user`, [TARGET_LOGICAL_SCHEMAS]);
                 return {
                     postgres: true,
                     vector: Boolean(row.vector_installed),
                     vectorAvailable: Boolean(row.vector_available || row.vector_installed),
                     migrationsJournal: Boolean(row.migrations_journal),
+                    schemas,
+                    migrations,
+                    runtimeRole: roleResult.rows[0]?.runtime_role === true,
                 };
             } catch {
                 return {
@@ -83,6 +102,9 @@ export function createPostgresPool(config, deps = {}) {
                     vector: false,
                     vectorAvailable: false,
                     migrationsJournal: false,
+                    schemas: false,
+                    migrations: false,
+                    runtimeRole: false,
                 };
             } finally {
                 client?.release();

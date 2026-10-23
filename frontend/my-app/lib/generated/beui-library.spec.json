@@ -1,0 +1,236 @@
+{
+  "root": "Stack",
+  "components": {
+    "Stack": {
+      "signature": "Stack(children: any[])",
+      "description": "Vertical layout container. Use it as the root of every reply and stack children in reading order."
+    },
+    "Text": {
+      "signature": "Text(value: string, muted?: boolean)",
+      "description": "A paragraph of prose. The default for written content; keep each one under four sentences."
+    },
+    "Heading": {
+      "signature": "Heading(value: string)",
+      "description": "A short section title. Use sparingly, only when a reply has distinct sections."
+    },
+    "Button": {
+      "signature": "Button(label: string, action: string, variant?: \"primary\" | \"secondary\" | \"ghost\" | \"outline\")",
+      "description": "Spring-pressed action button. Its action sends a follow-up message back into the chat."
+    },
+    "Badge": {
+      "signature": "Badge(label: string, status?: \"neutral\" | \"info\" | \"success\" | \"warning\" | \"danger\" | \"loading\", size?: \"sm\" | \"md\")",
+      "description": "Status badge with an animated icon. Use it to label a state such as qualified, pending or blocked."
+    },
+    "Stat": {
+      "signature": "Stat(label: string, value: number, suffix?: string)",
+      "description": "A single key figure: one animated number with a small label. Use it for counts, versions and stage numbers."
+    }
+  },
+  "componentGroups": [
+    {
+      "name": "Layout",
+      "components": [
+        "Stack"
+      ],
+      "notes": [
+        "Always use Stack as the root and nest it for grouped rows."
+      ]
+    },
+    {
+      "name": "Content",
+      "components": [
+        "Text",
+        "Heading"
+      ],
+      "notes": [
+        "Prefer Text for prose and Heading only for real sections."
+      ]
+    },
+    {
+      "name": "Status",
+      "components": [
+        "Badge",
+        "Stat"
+      ],
+      "notes": [
+        "Badge for state labels, Stat for a numeric figure with a caption."
+      ]
+    },
+    {
+      "name": "Interaction",
+      "components": [
+        "Button"
+      ],
+      "notes": [
+        "Offer at most three follow-up buttons per reply."
+      ]
+    }
+  ],
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "Stack": {
+        "$ref": "#/$defs/Stack"
+      },
+      "Text": {
+        "$ref": "#/$defs/Text"
+      },
+      "Heading": {
+        "$ref": "#/$defs/Heading"
+      },
+      "Button": {
+        "$ref": "#/$defs/Button"
+      },
+      "Badge": {
+        "$ref": "#/$defs/Badge"
+      },
+      "Stat": {
+        "$ref": "#/$defs/Stat"
+      }
+    },
+    "required": [
+      "Stack",
+      "Text",
+      "Heading",
+      "Button",
+      "Badge",
+      "Stat"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+      "Stack": {
+        "type": "object",
+        "properties": {
+          "children": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "children"
+        ],
+        "additionalProperties": false,
+        "description": "Vertical layout container. Use it as the root of every reply and stack children in reading order."
+      },
+      "Text": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "muted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false,
+        "description": "A paragraph of prose. The default for written content; keep each one under four sentences."
+      },
+      "Heading": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false,
+        "description": "A short section title. Use sparingly, only when a reply has distinct sections."
+      },
+      "Button": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "variant": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "secondary",
+              "ghost",
+              "outline"
+            ]
+          }
+        },
+        "required": [
+          "label",
+          "action"
+        ],
+        "additionalProperties": false,
+        "description": "Spring-pressed action button. Its action sends a follow-up message back into the chat."
+      },
+      "Badge": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "neutral",
+              "info",
+              "success",
+              "warning",
+              "danger",
+              "loading"
+            ]
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "sm",
+              "md"
+            ]
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false,
+        "description": "Status badge with an animated icon. Use it to label a state such as qualified, pending or blocked."
+      },
+      "Stat": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "suffix": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ],
+        "additionalProperties": false,
+        "description": "A single key figure: one animated number with a small label. Use it for counts, versions and stage numbers."
+      }
+    }
+  },
+  "id": "beui-openui",
+  "promptOptions": {
+    "preamble": "You are the ASI console, the operator interface for a governed digital creation platform. Answer with a compact OpenUI Lang interface, never Markdown. Keep prose short and use Badge and Stat for status facts.",
+    "additionalRules": [
+      "Never claim a roadmap stage is complete unless the conversation context says it is qualified.",
+      "Use Button only for follow-up questions that make sense inside this console.",
+      "Keep each reply to at most six components."
+    ],
+    "examples": [
+      "root = Stack([title, summary, status, next])\ntitle = Heading(\"Provider status\")\nsummary = Text(\"Stage 06 is locally qualified. The official OpenAI target is still unverified.\")\nstatus = Badge(\"live-unverified\", \"warning\")\nnext = Button(\"What is blocking stage 07?\", \"What is blocking stage 07?\")"
+    ]
+  }
+}
