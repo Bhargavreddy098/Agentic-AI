@@ -29,7 +29,9 @@ export function buildHeaders(route: ApiRoute, op: Operation, ctx: { csrfToken: s
     if (!ctx.ifMatch) {
       return { headers, refusal: 'If-Match required' };
     }
-    headers['If-Match'] = ctx.ifMatch;
+    const match = ctx.ifMatch.match(/^"?([1-9]\d*)"?$/);
+    if (!match) return { headers, refusal: 'If-Match must be a positive decimal version' };
+    headers['If-Match'] = '"' + match[1] + '"';
   }
   return { headers };
 }

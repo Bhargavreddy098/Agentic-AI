@@ -16,10 +16,10 @@ export function StatusBar() {
   const c = coverage();
   const reach = frontendReach();
   const [health, setHealth] = useState<'checking' | 'ready' | 'unready'>('checking');
-  const [mounted, setMounted] = useState(false);
+
 
   useEffect(() => {
-    setMounted(true);
+
     let cancelled = false;
     fetch('/health/ready', { credentials: 'include', cache: 'no-store' })
       .then(res => { if (!cancelled) setHealth(res.ok ? 'ready' : 'unready'); })
@@ -28,7 +28,7 @@ export function StatusBar() {
   }, []);
 
   const dot = health === 'ready' ? 'bg-green-500' : health === 'unready' ? 'bg-red-500' : 'bg-yellow-500';
-  const label = mounted && health !== 'checking' ? health : 'checking';
+  const label = health;
 
   return (
     <div className="h-6 border-t text-xs flex items-center px-2 gap-3">
@@ -36,7 +36,7 @@ export function StatusBar() {
         <i className={`inline-block w-1.5 h-1.5 rounded-full ${dot}`} />
         backend {label}
       </span>
-      <span className="opacity-60">{formatCoverage(c)}</span>
+      <span className="opacity-60">Backend manifest: {formatCoverage(c)}</span>
       <span title={reach.missing.length ? 'No UI path: ' + reach.missing.join(', ') : 'Every route has a UI path'}>
         {formatReach(reach)}
       </span>

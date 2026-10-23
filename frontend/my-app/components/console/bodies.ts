@@ -35,7 +35,8 @@ const KNOWN_CLASSIFICATIONS = ['public', 'internal'];
 export function buildBody(
   route: { path: string; method: string },
   positional: string[],
-  flags: Record<string, string>
+  flags: Record<string, string>,
+  selectedBytes?: Uint8Array
 ): BodyResult | { error: string } {
   const p = route.path;
   const m = route.method;
@@ -72,20 +73,15 @@ export function buildBody(
     const text = flags.text ?? positional[1];
     if (!text) return { error: 'send message needs --text' };
     if (text.length > 32000) return { error: 'message text exceeds 32000 characters' };
-    return json({ text });
+    return json({ text, ...(flags['attachment-ids'] ? { attachmentIds: flags['attachment-ids'].split(',') } : {}) });
   }
 
   // ---- stage 4: uploads ----
   // PUT content expects raw bytes with the digest header supplied by the caller.
   if (p === '/uploads/:uploadId/content') {
-    if (flags.file) {
-      return { kind: 'bytes', bytes: new TextEncoder().encode(`<file:${flags.file}>`) };
-    }
-    if (flags.bytes !== undefined) {
-      if (!/^\d+$/.test(flags.bytes)) return { error: '--bytes must be digits' };
-      return { kind: 'bytes', bytes: new Uint8Array(Number(flags.bytes)) };
-    }
-    return { error: 'upload content needs --file <path> or --bytes <count>' };
+    if (!selectedBytes) return { error: 'Choose a real file before uploading content.' };
+    if (selectedBytes.byteLength > 16777216) return { error: 'File exceeds the 16 MiB upload limit.' };
+    return { kind: 'bytes', bytes: selectedBytes };
   }
   if (p === '/projects/:projectId/uploads') {
     if (!flags.filename) return { error: 'create upload needs --filename' };
@@ -144,7 +140,7 @@ export function buildBody(
     const scope = parseJsonFlag(flags['resource-scope'], 'resource-scope');
     if (!scope.ok) return { error: scope.error };
     if (!flags['expires-at']) return { error: 'create grant needs --expires-at (ISO datetime)' };
-    return json({ capability: flags.capability, resourceScope: scope.value, expiresAt: flags['expires-at'] });
+    return json({ capability: flags.capability, resourceScope: scope.value, expiresAt: flags['expires-at'], ...(flags['contract-revision-id'] ? { contractRevisionId: flags['contract-revision-id'] } : {}) });
   }
   if (p.endsWith('/revoke')) {
     if (!flags.reason) return { error: 'revoke needs --reason' };
@@ -204,15 +200,16 @@ export function buildBody(
     const body: Record<string, unknown> = {};
     if (flags['display-name']) body.displayName = flags['display-name'];
     if (flags.enabled) body.enabled = flags.enabled === 'true';
-    if (flags.privacy) {
-      const parsed = parseJsonFlag(flags.privacy, 'privacy-policy');
+    if (flags['privacy-policy']) {
+      const parsed = parseJsonFlag(flags['privacy-policy'], 'privacy-policy');
       if (!parsed.ok) return { error: parsed.error };
       body.privacyPolicy = parsed.value;
     }
+    if (flags['secret-reference-id']) body.secretReferenceId = flags['secret-reference-id'];
     if (!Object.keys(body).length) return { error: 'patch provider needs --display-name, --enabled or --privacy-policy' };
     return json(body);
   }
-  if (p.endsWith('/discovery')) return json({ probe: flags.probe === 'true' });
+  if (p.endsWith('/discovery')) return json({ probe: flags.probe === 'true', ...(flags['budget-ceiling'] ? { budgetCeilingMicroUsd: flags['budget-ceiling'] } : {}) });
 
   if (p === '/routing/preview') {
     if (!flags['task-type']) return { error: 'preview routing needs --task-type' };

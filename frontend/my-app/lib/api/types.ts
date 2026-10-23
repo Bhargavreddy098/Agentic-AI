@@ -30,7 +30,7 @@ export type ProblemDetails = {
   requestId?: string;
 };
 
-export type ApiResult<T> = { ok: true; data: T; status: number; meta?: object } | { ok: false; problem: ProblemDetails };
+export type ApiResult<T> = { ok: true; data: T; status: number; meta?: {requestId?:string;version?:string;nextCursor?:string|null} } | { ok: false; problem: ProblemDetails };
 
 export type RequestLogRecord = {
   id: string;

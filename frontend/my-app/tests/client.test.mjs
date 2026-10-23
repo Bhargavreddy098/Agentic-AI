@@ -1,3 +1,4 @@
+const paramsFor = route => Object.fromEntries([...route.path.matchAll(/:([A-Za-z]+)/g)].map(m=>[m[1],'11111111-1111-4111-8111-111111111111']));
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { MANIFEST_ROUTES } from '../lib/api/manifest.ts';
@@ -87,7 +88,7 @@ test('If-Match refusal when the manifest requires it and none supplied', () => {
 
 test('If-Match sent when supplied', () => {
   const r = MANIFEST_ROUTES.find(x => x.ifMatchRequired);
-  assert.equal(buildHeaders(r, beginOperation(r), { csrfToken: 't', ifMatch: 'v1' }).headers['If-Match'], 'v1');
+  assert.equal(buildHeaders(r, beginOperation(r), { csrfToken: 't', ifMatch: '1' }).headers['If-Match'], '"1"');
 });
 
 test('idempotency key only where required', () => {
@@ -110,7 +111,7 @@ test('a retried logical operation reuses one idempotency key', async () => {
   };
   const client = createClient({ transport, getCsrfToken: () => 't' });
   const route = MANIFEST_ROUTES.find(r => r.idempotencyKeyRequired && r.method === 'POST');
-  const res = await client.request(route, { body: {} });
+  const res = await client.request(route, { body: {}, pathParams: paramsFor(route) });
   assert.equal(res.ok, true);
   assert.equal(seen.length, 2);
   assert.equal(seen[0], seen[1]);
@@ -121,8 +122,8 @@ test('a new operation gets a new key', async () => {
   const transport = async (u, init) => { keys.push(init.headers['Idempotency-Key']); return { ok: true, status: 201, json: async () => ({ data: {} }) }; };
   const client = createClient({ transport, getCsrfToken: () => 't' });
   const route = MANIFEST_ROUTES.find(r => r.idempotencyKeyRequired && r.method === 'POST');
-  await client.request(route, { body: {} });
-  await client.request(route, { body: {} });
+  await client.request(route, { body: {}, pathParams: paramsFor(route) });
+  await client.request(route, { body: {}, pathParams: paramsFor(route) });
   assert.notEqual(keys[0], keys[1]);
 });
 

@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ItemList } from '@/components/stages/item-list';
-import { createClient } from '@/lib/api/client';
-import { findRoute } from '@/lib/api/manifest';
 
 type ListSpec = { id: string; title: string; method: string; path: string };
 
@@ -27,29 +25,8 @@ const SURFACES: Record<string, ListSpec[]> = {
   ]
 };
 
-function ProjectPicker({ csrfToken, onPick }: { csrfToken: string; onPick: (id: string) => void }) {
-  const [projects, setProjects] = useState<Array<{ id: string; name: string }>>([]);
-  useEffect(() => {
-    const route = findRoute('GET', '/projects');
-    if (!route) return;
-    createClient({ getCsrfToken: () => csrfToken }).request(route, {}).then((res: any) => {
-      if (!res.ok) return;
-      const d = res.data;
-      const list = Array.isArray(d) ? d : (d?.items ?? []);
-      setProjects(list.map((p: any) => ({ id: String(p.id), name: String(p.name ?? 'Untitled') })));
-    });
-  }, [csrfToken]);
-
-  if (!projects.length) return <p className="text-xs text-muted-foreground p-2">No projects to scope this to.</p>;
-  return (
-    <ul className="text-xs">
-      {projects.map(p => (
-        <li key={p.id}>
-          <button className="w-full text-left p-2 hover:bg-muted truncate" onClick={() => onPick(p.id)}>{p.name}</button>
-        </li>
-      ))}
-    </ul>
-  );
+function ProjectPicker({csrfToken,onPick}:{csrfToken:string;onPick:(id:string)=>void}) {
+ return <ItemList method="GET" path="/projects" csrfToken={csrfToken} label="projects" render={project=><button className="w-full text-left" onClick={()=>onPick(String(project.id))}>{String(project.name)}</button>}/>;
 }
 
 export function TreeSidebar({ active, csrfToken }: { active: string; csrfToken?: string | null }) {
@@ -84,9 +61,9 @@ export function TreeSidebar({ active, csrfToken }: { active: string; csrfToken?:
               <button className="text-[11px] underline opacity-70" onClick={() => setProjectId(null)}>change project</button>
             </div>
             <h3 className="text-[11px] font-semibold px-2 pt-2 pb-1 opacity-70">Artifacts</h3>
-            <ItemList method="GET" path="/projects/:projectId/artifacts" pathParams={{ projectId }} csrfToken={csrfToken} label="artifacts" />
+            <ItemList method="GET" key={projectId+"artifacts"} path="/projects/:projectId/artifacts" pathParams={{ projectId }} csrfToken={csrfToken} label="artifacts" />
             <h3 className="text-[11px] font-semibold px-2 pt-2 pb-1 opacity-70">Conversations</h3>
-            <ItemList method="GET" path="/projects/:projectId/conversations" pathParams={{ projectId }} csrfToken={csrfToken} label="conversations" />
+            <ItemList method="GET" key={projectId+"conversations"} path="/projects/:projectId/conversations" pathParams={{ projectId }} csrfToken={csrfToken} label="conversations" />
             <h3 className="text-[11px] font-semibold px-2 pt-2 pb-1 opacity-70">Budgets</h3>
             <ItemList method="GET" path="/projects/:projectId/budgets" pathParams={{ projectId }} csrfToken={csrfToken} label="budgets" />
             <h3 className="text-[11px] font-semibold px-2 pt-2 pb-1 opacity-70">Grants</h3>

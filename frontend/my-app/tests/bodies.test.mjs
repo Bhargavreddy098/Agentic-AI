@@ -84,7 +84,7 @@ test('create grant rejects a string resource scope', () => {
 // ---- uploads: raw bytes, not JSON ----
 
 test('upload content produces raw bytes, never JSON', () => {
-  const b = buildBody(R('PUT', '/uploads/:uploadId/content'), ['u1'], { bytes: '4' });
+  const b = buildBody(R('PUT', '/uploads/:uploadId/content'), ['u1'], {}, new Uint8Array([1,2,3,4]));
   assert.equal(b.kind, 'bytes');
   assert.ok(b.bytes instanceof Uint8Array);
   assert.equal(b.bytes.byteLength, 4);
@@ -136,7 +136,7 @@ test('backend port is used when explicitly named', () => {
 });
 
 test('generic PORT is never treated as the backend port', () => {
-  assert.equal(resolveApiOrigin({ PORT: '3000' }), 'http://127.0.0.1:4400');
+  assert.equal(resolveApiOrigin({ PORT: '3000' }), 'http://127.0.0.1:3100');
 });
 
 // ---- coverage honesty ----

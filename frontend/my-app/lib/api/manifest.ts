@@ -18,8 +18,8 @@ function toPath(canonicalRoute: string): string {
   return canonicalRoute;
 }
 
-function normalizeRoute(r: any): ApiRoute {
-  const canonicalRoute = r.canonicalRoute || r.path;
+function normalizeRoute(r: Omit<ApiRoute,'path'|'responseEnvelope'> & {path?:string;responseEnvelope:string}): ApiRoute {
+  const canonicalRoute = r.canonicalRoute;
   const path = r.path && (r.path.startsWith('/') ? r.path : toPath(canonicalRoute)) || toPath(canonicalRoute);
   const rawEnvelope = r.responseEnvelope || 'Unwrapped JSON';
   return {
@@ -43,7 +43,7 @@ function normalizeRoute(r: any): ApiRoute {
   };
 }
 
-const rawRoutes = (manifestData as any).routes || [];
+const rawRoutes = manifestData.routes;
 export const MANIFEST_ROUTES: ApiRoute[] = rawRoutes.map(normalizeRoute);
 
 export function routeKey(method: string, path: string): string {

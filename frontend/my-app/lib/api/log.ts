@@ -7,7 +7,7 @@ export function redactPath(path: string): string {
              .replace(/\/[A-Za-z0-9_-]{20,}/g, '/:param');
 }
 
-export function makeRecord(input: any): RequestLogRecord {
+export function makeRecord(input: {method:string;path:string;status:number;latencyMs:number;requestId?:string;contentType?:string}): RequestLogRecord {
   const rec: RequestLogRecord = {
     id: `req-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     method: input.method,
