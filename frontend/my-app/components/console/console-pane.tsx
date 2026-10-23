@@ -34,9 +34,13 @@ function flagsToBody(route: { path: string; method: string }, positional: string
   }
   if (route.path.endsWith('/discovery')) return { probe: flags.probe === 'true' };
   if (route.path === '/routing/preview') return {
-    taskType: flags['task-type'], capabilities: flags.capabilities ? flags.capabilities.split(',') : [],
-    estimatedInputTokens: Number(flags['input-tokens'] ?? 0), maxOutputTokens: Number(flags['max-output-tokens'] ?? 0),
-    classification: flags.classification, budgetCeilingMicroUsd: flags['budget-ceiling'] ? Number(flags['budget-ceiling']) : undefined
+    taskType: flags['task-type'],
+    capabilities: flags.capabilities ? flags.capabilities.split(',') : [],
+    estimatedInputTokens: Number(flags['input-tokens'] ?? 1),
+    maxOutputTokens: Number(flags['max-output-tokens'] ?? 1),
+    classification: flags.classification,
+    // Contract type is a decimal string, not a number.
+    budgetCeilingMicroUsd: flags['budget-ceiling'] ?? '0'
   };
   if (route.path.endsWith('/grants') && route.method === 'POST') return { capability: flags.capability, resourceScope: flags['resource-scope'], expiresAt: flags['expires-at'] };
   if (route.path === '/session/bootstrap') return { challenge: flags.challenge, clientNonce: flags.nonce };
