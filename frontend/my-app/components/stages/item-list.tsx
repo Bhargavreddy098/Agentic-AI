@@ -25,11 +25,15 @@ export function ItemList({
   useEffect(() => {
     const route = findRoute(method, path);
     if (!route) { setError(`No manifest route for ${method} ${path}`); return; }
-    const client = createClient({ getCsrfToken: () => csrfToken ?? null });
+    // Wait until a session exists; otherwise every list would 401 on first paint.
+    if (!csrfToken) { setItems(null); setError(''); return; }
+    const client = createClient({ getCsrfToken: () => csrfToken });
     client.request(route, {}).then((res: any) => {
       if (res.ok) {
         const d = res.data;
         setItems(Array.isArray(d) ? d : (d?.items ?? []));
+      } else if (res.problem.status === 401) {
+        setError('Session required');
       } else {
         setError(`${res.problem.code}: ${res.problem.title}`);
       }
@@ -37,7 +41,7 @@ export function ItemList({
   }, [method, path, csrfToken]);
 
   if (error) return <p className="text-xs text-red-500 p-2">{error}</p>;
-  if (!items) return <p className="text-xs text-muted-foreground p-2">Loading {label}…</p>;
+  if (!items) return <p className="text-xs text-muted-foreground p-2">Connect a session to load {label}.</p>;
   if (!items.length) return <p className="text-xs text-muted-foreground p-2">No {label} yet.</p>;
 
   return (

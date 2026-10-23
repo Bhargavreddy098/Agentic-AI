@@ -29,7 +29,40 @@ export const COMMANDS: CommandSpec[] = [
   { name: 'list budgets', routeKey: 'GET /projects/:projectId/budgets', positional: 1, flags: [] },
   { name: 'list usage', routeKey: 'GET /usage', positional: 0, flags: ['project-id', 'run-id', 'from', 'to', 'category'] },
   { name: 'list workspaces', routeKey: 'GET /workspaces', positional: 0, flags: [] },
-  { name: 'list capabilities', routeKey: 'GET /capabilities', positional: 0, flags: [] }
+  { name: 'list capabilities', routeKey: 'GET /capabilities', positional: 0, flags: [] },
+
+  // Stage 1 — health
+  { name: 'health live', routeKey: 'GET /health/live', positional: 0, flags: [] },
+  { name: 'health ready', routeKey: 'GET /health/ready', positional: 0, flags: [] },
+
+  // Stage 3 — session
+  { name: 'get session', routeKey: 'GET /session', positional: 0, flags: [] },
+  { name: 'logout', routeKey: 'DELETE /session', positional: 0, flags: [] },
+  { name: 'connect session', routeKey: 'POST /session/bootstrap', positional: 0, flags: ['challenge', 'nonce'] },
+
+  // Stage 4 — reads by id
+  { name: 'get project', routeKey: 'GET /projects/:projectId', positional: 1, flags: [] },
+  { name: 'get conversation', routeKey: 'GET /conversations/:conversationId', positional: 1, flags: [] },
+  { name: 'get artifact', routeKey: 'GET /artifacts/:artifactId', positional: 1, flags: [] },
+  { name: 'artifact content', routeKey: 'GET /artifacts/:artifactId/content', positional: 1, flags: [] },
+  { name: 'export artifact', routeKey: 'POST /artifacts/:artifactId/export', positional: 1, flags: ['destination-ref'] },
+  { name: 'get operation', routeKey: 'GET /operations/:operationId', positional: 1, flags: [] },
+
+  // Stage 4 — uploads
+  { name: 'create upload', routeKey: 'POST /projects/:projectId/uploads', positional: 1, flags: ['filename', 'media-type', 'bytes', 'digest'] },
+  { name: 'upload content', routeKey: 'PUT /uploads/:uploadId/content', positional: 1, flags: ['bytes', 'digest'] },
+  { name: 'complete upload', routeKey: 'POST /uploads/:uploadId/complete', positional: 1, flags: ['digest'] },
+
+  // Stage 5 — write paths
+  { name: 'create policy revision', routeKey: 'POST /policies/revisions', positional: 0, flags: ['base-revision-id', 'rules', 'reason'] },
+  { name: 'activate policy', routeKey: 'POST /policies/:revisionId/activate', positional: 1, flags: ['digest'] },
+  { name: 'revoke grant', routeKey: 'POST /grants/:grantId/revoke', positional: 1, flags: ['reason'] },
+  { name: 'request approval', routeKey: 'POST /contract-revisions/:revisionId/approval-requests', positional: 1, flags: ['digest'] },
+  { name: 'create budget', routeKey: 'POST /projects/:projectId/budgets', positional: 1, flags: ['scope-kind', 'run-id', 'limit-micro-usd', 'reason'] },
+  { name: 'patch budget', routeKey: 'PATCH /budgets/:budgetId', positional: 1, flags: ['limit-micro-usd', 'reason', 'if-match'] },
+
+  // Stage 6 — read by id
+  { name: 'get provider', routeKey: 'GET /providers/:providerId', positional: 1, flags: [] }
 ];
 
 export function commandsForSurface(surface: string): CommandSpec[] {

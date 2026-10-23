@@ -2,12 +2,16 @@
 
 import { ItemList } from '@/components/stages/item-list';
 
-type Surface = { id: string; title: string; method: string; path: string };
+type ListSpec = { id: string; title: string; method: string; path: string };
 
-const SURFACES: Record<string, Surface[]> = {
-  overview: [],
+const SURFACES: Record<string, ListSpec[]> = {
+  overview: [
+    { id: 'workspaces', title: 'Workspaces', method: 'GET', path: '/workspaces' },
+    { id: 'capabilities', title: 'Capabilities', method: 'GET', path: '/capabilities' }
+  ],
   projects: [
-    { id: 'projects', title: 'Projects', method: 'GET', path: '/projects' }
+    { id: 'projects', title: 'Projects', method: 'GET', path: '/projects' },
+    { id: 'artifacts', title: 'Artifacts', method: 'GET', path: '/projects/:projectId/artifacts' }
   ],
   approvals: [
     { id: 'approvals', title: 'Approvals', method: 'GET', path: '/approvals' }
@@ -24,7 +28,7 @@ const SURFACES: Record<string, Surface[]> = {
 export function TreeSidebar({ active, csrfToken }: { active: string; csrfToken?: string | null }) {
   const lists = SURFACES[active] ?? [];
   if (!lists.length) {
-    return <aside className="w-64 border-r p-2 text-xs text-muted-foreground">Overview</aside>;
+    return <aside className="w-64 border-r p-2 text-xs text-muted-foreground">No records on this surface.</aside>;
   }
   return (
     <aside className="w-64 border-r overflow-auto">

@@ -39,6 +39,16 @@ function flagsToBody(route: { path: string; method: string }, positional: string
     classification: flags.classification, budgetCeilingMicroUsd: flags['budget-ceiling'] ? Number(flags['budget-ceiling']) : undefined
   };
   if (route.path.endsWith('/grants') && route.method === 'POST') return { capability: flags.capability, resourceScope: flags['resource-scope'], expiresAt: flags['expires-at'] };
+  if (route.path === '/session/bootstrap') return { challenge: flags.challenge, clientNonce: flags.nonce };
+  if (route.path === '/artifacts/:artifactId/export') return { destinationRef: flags['destination-ref'] };
+  if (route.path === '/projects/:projectId/uploads') return { filename: flags.filename, mediaType: flags['media-type'], bytes: flags.bytes, digest: flags.digest };
+  if (route.path === '/uploads/:uploadId/content') return { bytes: flags.bytes, digest: flags.digest };
+  if (route.path === '/uploads/:uploadId/complete') return { digest: flags.digest };
+  if (route.path === '/policies/revisions') return { baseRevisionId: flags['base-revision-id'], rules: flags.rules ? JSON.parse(flags.rules) : {}, reason: flags.reason };
+  if (route.path.endsWith('/activate')) return { digest: flags.digest };
+  if (route.path.endsWith('/approval-requests')) return { digest: flags.digest };
+  if (route.path.endsWith('/budgets') && route.method === 'POST') return { scopeKind: flags['scope-kind'], runId: flags['run-id'], limitMicroUsd: Number(flags['limit-micro-usd'] ?? 0), reason: flags.reason };
+  if (route.path === '/budgets/:budgetId' && route.method === 'PATCH') return { limitMicroUsd: Number(flags['limit-micro-usd'] ?? 0), reason: flags.reason };
   return undefined;
 }
 
