@@ -2,15 +2,19 @@
 
 import { useEffect, useState } from 'react';
 import { coverage } from '@/lib/api/manifest';
+import { frontendReach, formatStageRange } from '@/lib/api/status';
 
-export function formatCoverage(c: any) {
-  const stages = Object.keys(c.byStage || {}).map(Number).sort((a, b) => a - b);
-  const label = stages.length ? `Stage ${stages[0].toString().padStart(2, '0')}–${stages[stages.length - 1].toString().padStart(2, '0')}` : 'Stage 01–06';
-  return `${label} · ${c.implemented}/${c.expected}`;
+export function formatCoverage(c: { implemented: number; expected: number; byStage: Record<number, number> }) {
+  return `${formatStageRange(c.byStage)} · backend ${c.implemented}/${c.expected}`;
+}
+
+export function formatReach(r: { reachable: number; total: number }) {
+  return `frontend ${r.reachable}/${r.total}`;
 }
 
 export function StatusBar() {
   const c = coverage();
+  const reach = frontendReach();
   const [health, setHealth] = useState<'checking' | 'ready' | 'unready'>('checking');
   const [mounted, setMounted] = useState(false);
 
@@ -24,7 +28,6 @@ export function StatusBar() {
   }, []);
 
   const dot = health === 'ready' ? 'bg-green-500' : health === 'unready' ? 'bg-red-500' : 'bg-yellow-500';
-  // Server and first client render must agree; health is only known after mount.
   const label = mounted && health !== 'checking' ? health : 'checking';
 
   return (
@@ -33,7 +36,10 @@ export function StatusBar() {
         <i className={`inline-block w-1.5 h-1.5 rounded-full ${dot}`} />
         backend {label}
       </span>
-      <span>{formatCoverage(c)}</span>
+      <span className="opacity-60">{formatCoverage(c)}</span>
+      <span title={reach.missing.length ? 'No UI path: ' + reach.missing.join(', ') : 'Every route has a UI path'}>
+        {formatReach(reach)}
+      </span>
     </div>
   );
 }

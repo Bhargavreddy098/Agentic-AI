@@ -34,7 +34,12 @@ export function createClient({ transport = fetch as any, getCsrfToken = () => nu
         if (refusal) {
           return { ok: false, problem: parseProblem(400, { code: 'BAD_REQUEST', title: refusal, detail: refusal }) };
         }
-        if (opts.body !== undefined && !headers['Content-Type'] && !(opts.body instanceof FormData)) {
+        // Raw byte bodies must reach the server untouched: the upload route
+        // reads express.raw(), so JSON.stringify would corrupt the payload.
+        const isRaw = opts.rawBody instanceof Uint8Array || opts.rawBody instanceof ArrayBuffer || (opts.rawBody && typeof opts.rawBody === 'object' && 'byteLength' in opts.rawBody);
+        if (isRaw) {
+          headers['Content-Type'] = 'application/octet-stream';
+        } else if (opts.body !== undefined && !headers['Content-Type'] && !(opts.body instanceof FormData)) {
           headers['Content-Type'] = 'application/json';
         }
         try {
@@ -42,7 +47,13 @@ export function createClient({ transport = fetch as any, getCsrfToken = () => nu
             method: route.method,
             credentials: 'include',
             headers,
-            body: opts.body instanceof FormData ? opts.body : (opts.body !== undefined ? JSON.stringify(opts.body) : undefined),
+            body: isRaw
+              ? opts.rawBody
+              : opts.body instanceof FormData
+                ? opts.body
+                : opts.body !== undefined
+                  ? JSON.stringify(opts.body)
+                  : undefined,
             signal: opts.signal
           });
           const latencyMs = Date.now() - start;

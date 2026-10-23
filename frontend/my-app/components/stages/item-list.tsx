@@ -9,12 +9,14 @@ type AnyRecord = Record<string, any>;
 export function ItemList({
   method,
   path,
+  pathParams,
   csrfToken,
   label,
   render
 }: {
   method: string;
   path: string;
+  pathParams?: Record<string, string>;
   csrfToken?: string | null;
   label: string;
   render?: (item: AnyRecord) => React.ReactNode;
@@ -28,7 +30,7 @@ export function ItemList({
     // Wait until a session exists; otherwise every list would 401 on first paint.
     if (!csrfToken) { setItems(null); setError(''); return; }
     const client = createClient({ getCsrfToken: () => csrfToken });
-    client.request(route, {}).then((res: any) => {
+    client.request(route, { pathParams }).then((res: any) => {
       if (res.ok) {
         const d = res.data;
         setItems(Array.isArray(d) ? d : (d?.items ?? []));
@@ -38,7 +40,7 @@ export function ItemList({
         setError(`${res.problem.code}: ${res.problem.title}`);
       }
     });
-  }, [method, path, csrfToken]);
+  }, [method, path, csrfToken, pathParams?.projectId]);
 
   if (error) return <p className="text-xs text-red-500 p-2">{error}</p>;
   if (!items) return <p className="text-xs text-muted-foreground p-2">Connect a session to load {label}.</p>;
