@@ -12,13 +12,10 @@ const nextConfig: NextConfig = {
       { source: '/health/:path*', destination: `${origin}/health/:path*` },
     ];
   },
-  /* config options here */
   experimental: {
     cpus: 1,
     agentFeedback: false,
   },
-  cacheComponents: true,
-  partialPrefetching: true,
   turbopack: {
     rules: {
       "*.css": {

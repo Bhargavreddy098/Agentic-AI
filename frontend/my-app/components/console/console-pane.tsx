@@ -134,7 +134,7 @@ export function ConsolePane() {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div className="flex-1 overflow-auto p-2 text-xs font-mono space-y-2">
+      <div className="console-transcript flex-1 overflow-auto p-2 text-xs font-mono space-y-2">
         {entries.map((en, i) => {
           if (en.kind === 'input') return <div key={i} className="text-foreground">{'> '}{en.text}</div>;
           if (en.kind === 'note') return <div key={i} className="opacity-60">{en.text}</div>;
@@ -152,13 +152,14 @@ export function ConsolePane() {
           );
         })}
       </div>
-      <div className="border-t p-2 flex gap-2 flex-wrap shrink-0">
+      <div className="console-upload border-t p-2 flex gap-2 flex-wrap shrink-0">
         <label className="text-xs">File <input type="file" aria-label="Select file to upload" disabled={busy} onChange={e => setFile(e.target.files?.[0] ?? null)} /></label>
         <input aria-label="Upload project UUID" placeholder="Project UUID for upload" value={uploadProject} onChange={e=>setUploadProject(e.target.value)} className="border px-2 text-xs bg-transparent"/>
         <button onClick={()=>void uploadSelected()} disabled={!file || !csrf || busy} className="border px-2 text-xs">Upload selected file</button>
       </div>
-      <div className="border-t p-2 flex gap-2 shrink-0">
+      <div className="console-command border-t p-2 flex gap-2 shrink-0">
         <input
+          aria-label="API command"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter') void run(); }}
