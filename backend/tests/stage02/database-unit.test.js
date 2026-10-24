@@ -34,7 +34,7 @@ test('Stage 02 target logical schemas match 04-DATABASE.md exactly', () => {
 
 test('Stage 02 migration plan verifies SHA-256 checksums and rejects tampered checksum manifests', () => {
     const plan = loadStage02MigrationPlan();
-    assert.equal(plan.length, 13);
+    assert.equal(plan.length, 15);
     assert.deepEqual(
         plan.map(m => m.id),
         [
@@ -51,6 +51,8 @@ test('Stage 02 migration plan verifies SHA-256 checksums and rejects tampered ch
             '011-inference-providers.sql',
             '012-openai-compatible-providers.sql',
             '013-inference-output-artifacts.sql',
+            '014-repository-snapshots.sql',
+            '015-durable-execution.sql',
         ]
     );
     for (const m of plan) {
@@ -60,7 +62,7 @@ test('Stage 02 migration plan verifies SHA-256 checksums and rejects tampered ch
     assert.deepEqual(loadStage02MigrationPlan({ stage03Only: true }).map(row => row.id), plan.slice(0, 6).map(row => row.id));
     assert.deepEqual(loadStage02MigrationPlan({ stage04Only: true }).map(row => row.id), plan.slice(0, 8).map(row => row.id));
     assert.deepEqual(loadStage02MigrationPlan({ stage05Only: true }).map(row => row.id), plan.slice(0, 10).map(row => row.id));
-    assert.deepEqual(loadStage02MigrationPlan({ stage06Only: true }).map(row => row.id), plan.slice(0, 13).map(row => row.id));
+    assert.deepEqual(loadStage02MigrationPlan({ stage06Only: true }).map(row => row.id), plan.slice(0, 14).map(row => row.id));
     assert.throws(() => loadStage02MigrationPlan({ stage02Only: true, stage03Only: true }), /exactly one/);
 
     assert.throws(
@@ -164,8 +166,8 @@ test('applyStage02Migrations applies unapplied migrations, skips applied ones, a
     };
 
     const firstRun = await applyStage02Migrations(client);
-    assert.equal(firstRun.applied.length, 13);
-    assert.equal(journal.size, 13);
+    assert.equal(firstRun.applied.length, 15);
+    assert.equal(journal.size, 15);
 
     const secondRun = await applyStage02Migrations(client);
     assert.equal(secondRun.applied.length, 0);

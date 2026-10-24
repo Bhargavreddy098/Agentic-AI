@@ -60,7 +60,7 @@ export function createProjects({ pool }) {
             return executeCommand(pool, scope, 'POST /projects/' + id + '/archive', key, input, async tx => {
                 const existing = await read(tx, id, true);
                 if ((await tx.query("SELECT to_regclass('control.runs') AS runs")).rows[0].runs) {
-                    throw apiError('CAPABILITY_UNAVAILABLE', 'Archiving requires a qualified active-run guard for this schema.', 503);
+                    if ((await tx.query("SELECT 1 FROM control.runs WHERE project_id=$1 AND state NOT IN ('verified','failed','cancelled') LIMIT 1", [id])).rows.length) throw apiError('ACTIVE_RUNS_EXIST', 'Reconcile or finish active runs before archiving.', 409);
                 }
                 if (existing.status === 'archived') return { status: 200, projectId: id, data: projectView(existing) };
                 const row = (await tx.query("UPDATE product.projects SET status='archived',revision=revision+1,updated_at=clock_timestamp() WHERE project_id=$1 RETURNING *", [id])).rows[0];

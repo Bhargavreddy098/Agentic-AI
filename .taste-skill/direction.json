@@ -1,87 +1,83 @@
 {
  "version": 1,
  "kind": "app",
- "at": "2026-10-23T02:46:56.260Z",
- "seed": 1638540485,
+ "at": "2026-10-23T11:51:55.174Z",
+ "seed": 23,
  "input": {
   "kind": "devtools",
-  "brief": "ASI governed local creation control plane projects approvals providers evidence",
-  "theme": null,
+  "brief": "",
+  "theme": "dark",
   "screens": [
    "overview",
    "list",
    "settings"
   ],
-  "keep": [],
-  "style": "framed-sheet"
+  "keep": [
+   "type"
+  ],
+  "style": "true-black-flat"
  },
  "style": {
-  "id": "framed-sheet",
-  "name": "Framed sheet",
-  "theme": "light",
-  "basis": "6 screens: a developer platform overview, an analytics overview, an events analytics tab, a list detail, a reports dashboard, a flow builder",
+  "id": "true-black-flat",
+  "name": "True-black flat",
+  "theme": "dark",
+  "basis": "5 screens: an events back office, an event analytics tab, a community overview, an artist studio home, an artist insights page",
   "suits": [
-   "analytics",
-   "devtools",
-   "builder",
-   "smb-admin",
-   "support",
-   "commerce",
-   "report"
+   "community",
+   "creator",
+   "markets"
   ],
-  "idea": "The app chrome is one tinted L-shaped frame; the work sits on a white sheet with a hairline edge and soft corners, so depth comes from a single tone step and no shadow.",
-  "colourBudget": "under 3%; the brand shrinks to the logo and a 2px tab underline, the data carries the chroma",
+  "idea": "Night mode on true black: sidebar, top bar and page share one ground, elevation is a lightness step alone, and colour is confined to data marks.",
+  "colourBudget": "at or under 3%; the accent never touches buttons, tabs or nav",
   "tokens": {
-   "ground": "#f9fbfc",
-   "surface": "#ffffff",
-   "raised": "#f4f6f8",
-   "active": "#ebedee",
-   "border": "#e8eaec",
-   "rule": "#f0f1f2",
-   "control": "#cdced1",
-   "text": "#131416",
-   "muted": "#5d5f60",
-   "accent": "#1b6c80",
-   "positive": "#1e7b4f",
-   "negative": "#c4242a",
-   "warning": "#92400e",
+   "ground": "#000000",
+   "surface": "#111111",
+   "raised": "#2a2a2a",
+   "border": "#1a1a1a",
+   "rule": "#161616",
+   "control": "#444444",
+   "text": "#ffffff",
+   "muted": "#b4b4b4",
+   "faint": "#949494",
+   "accent": "#c6f24e",
+   "positive": "#c6f24e",
+   "negative": "#e5484d",
+   "warning": "#e5a93b",
    "chart": [
-    "#1b6c80",
-    "#2f70bb",
-    "#a86f0c"
+    "#c6f24e",
+    "#e6e6e6",
+    "#6b6b6b"
    ],
    "pills": {
     "positive": [
-     "#dcfae5",
-     "#04250e"
+     "#222a10",
+     "#c6f24e"
     ],
     "negative": [
-     "#ffedea",
-     "#831c1e"
+     "#2c1a20",
+     "#e5566f"
     ],
     "warning": [
-     "#fffbeb",
-     "#92400e"
+     "#2b2414",
+     "#e5a93b"
     ],
     "neutral": [
-     "#ebedee",
-     "#353736"
+     "#222222",
+     "#ffffff"
     ]
    },
    "radius": {
-    "card": 8,
-    "control": 6,
-    "sheet": 16
+    "card": 20,
+    "control": 999
    },
-   "sheetInset": 8,
    "font": {
-    "family": "IBM Plex Sans",
-    "second": "IBM Plex Mono, for IDs and keys only",
-    "fallback": "Inter, system-ui, sans-serif",
+    "family": "Inter",
+    "second": null,
+    "fallback": "system-ui, sans-serif",
     "sizes": {
-     "title": 22,
+     "title": 20,
      "section": 16,
-     "kpi": 28,
+     "kpi": 24,
      "body": 14,
      "small": 12
     },
@@ -90,55 +86,53 @@
      500,
      600
     ],
-    "note": "KPI values at 400; the semibold goes on the label and the active tab."
+    "note": "Nothing above 600; inactive nav labels #bbb, active #fff."
    },
    "density": "medium",
-   "rowHeight": 48,
-   "sidebarWidth": 228,
-   "gap": 24,
-   "pad": 24,
-   "controlHeight": 32
+   "rowHeight": 80,
+   "sidebarWidth": 210,
+   "gap": 14,
+   "pad": 22,
+   "controlHeight": 36
   },
-  "shell": "framed-sheet",
-  "shellAlternatives": [],
-  "signature": "One tinted frame holds the sidebar and the 48px top bar with no rule between them; the page is a white sheet inset 8px from the window's right and bottom edges, with a 1px edge, 16px corners and no shadow. The active tab is a 2px underline in ink or the accent; everything else in the chrome is grey.",
+  "shell": "ruled-t-frame",
+  "shellAlternatives": [
+   "no-sidebar"
+  ],
+  "signature": "Elevation by lightness alone (#000 ground, #111 card, #2a2a2a nested panel) with no borders or shadows on cards; the active nav item is marked only by its label going from #bbb to #fff; the primary control is made primary by inversion, a white 36px pill with black text.",
   "identity": [
-   "The frame tinted from the product's colour in place of #f9fbfc: one low-chroma step of its hue (a green-grey for a climate or farm tool, a blue-grey for an observability tool, a stone for a print shop). The sheet stays white.",
-   "The brand's own hue from the brief as --chart-1 in place of the dealt teal, on the main series and the one selected state, at 3:1 or more on white, never violet or indigo.",
-   "IBM Plex Mono for IDs, keys and the figures in tables (one job): its figures have their own drawing, and a developer reads them as the product's."
+   "The one data hue from the product's world in place of the dealt lime: a solar amber (#f2b33d) for an energy home, a sky blue (#4cb3f0) for water or weather, a lime only for sport. It is still the only hue on data and never touches buttons, tabs or nav. A green or yellow-green hue is also --positive; an amber that sits beside --warning leaves the warning to its pill pair.",
+   "A ground with the product's temperature: the studied #000 for media and events, a warm near-black (#0e0d0c) for a home, a cool one (#0c0d0f) for a monitor, with cards one lightness step above it (#181716, #15171a). Never navy or slate.",
+   "A signature element from the product's world as the lead: the energy home's power flow (sun, house, battery and grid with their live kW), an event's doors against capacity, an artist's release with its cover."
   ],
   "avoid": [
-   "a border between the sidebar and the top bar",
-   "a shadow under the sheet",
-   "cards whose border is heavier than the sheet's (#cdcfcf on cards read as heavy in the study)",
-   "a fourth nesting level: frame, sheet and card are enough",
-   "different gutters for the KPI row and the chart row (20 against 24 was flagged)"
+   "a navy or slate dark theme",
+   "glow, neon borders or shadows",
+   "a hue per chart (five hues across four charts was flagged)",
+   "the accent on buttons, tabs or nav",
+   "a 64px top bar left empty across most of its width (flagged twice)"
   ],
-  "notes": "The study's second data hue in this style was an orange (#e88e46) that falls inside the house terracotta range; the third chart colour here is an amber moved out of that range and darkened to 3:1 on white."
+  "notes": "The studied screens of this kind used a violet-magenta (#dd6cff) and an orange (#ff5500) as their one data hue. The library deals a lime, which keeps the move and stays clear of the violet ban; because the lime is a yellow-green, it is also the positive colour (a second, mint green beside it read as two greens). The greys are #b4b4b4 for secondary text and #949494 for meta, 32 levels apart rather than the 20 of the measured #aaa and #969696, which read as one grey; #949494 still holds 4.5:1 on the #2a2a2a nested panel."
  },
  "shell": {
-  "id": "framed-sheet",
-  "name": "Tinted frame, white sheet",
-  "basis": "8 of 23 screens, in three variants",
+  "id": "ruled-t-frame",
+  "name": "Ruled T-frame",
+  "basis": "4 of 23 screens (3 dark, 1 light)",
   "suits": [
-   "analytics",
-   "devtools",
-   "builder",
-   "smb-admin",
-   "support"
+   "community",
+   "creator",
+   "smb-admin"
   ],
   "numbers": {
-   "chrome": "#f6f6f6-#f9fbfc (a warm #f7f6f2 once)",
-   "sheetInset": "8px from the window's right and bottom edges (12 and 16 once each)",
-   "sheetRadius": "10-16, median 16",
-   "sheetEdge": "1px #eaeaea-#ededed, no shadow",
-   "sidebarWidth": "220-263 (228 on two screens)",
-   "topBar": "48px on the chrome ground with no rule; search 548x32 centred on the window with a shortcut hint",
-   "contentPadding": 24,
-   "floatingVariant": "both panels inset 12px with a 12px gutter, radius 10"
+   "sidebarWidth": "210-240",
+   "topBar": "64px with a 1px bottom rule",
+   "rules": "1px; #1a1a1a on #000, #f2f2f2 on white",
+   "navPitch": "34 (dark) or 40 (light)",
+   "switcher": "at the top bar's right end, behind a full-height 1px divider",
+   "contentGutter": "29px from the sidebar rule and the window edge"
   },
-  "blueprint": "Sidebar and top bar share one tinted ground with no rule between them, forming an L; the page lives on a white sheet. Variant one: the sheet butts against the sidebar and the top bar and is inset 8px from the right and bottom edges, 16px radius, 1px edge. Variant two: a flush L-frame with no inset, the frame marked by one rule. Variant three: sidebar and content are two floating panels inset 12px from every edge with a 12px gutter. The top bar, when present, is 48px and holds a centred search, the account button and a help or AI icon. Inside the sheet the content has 24px padding and starts with the breadcrumb or title row.",
-  "phone": "The frame disappears: the sheet becomes the screen, with a 48px top bar (menu button, title, one action) on the chrome tint. The search moves into the menu sheet or behind an icon."
+  "blueprint": "A 210-240px sidebar and a 64px top bar share one ground, divided only by 1px rules. The workspace or community switcher sits at the right end of the top bar behind a full-height divider; the sidebar holds the wordmark and the nav on a 34px pitch with sentence-case group labels. On dark, the active item is its label going from #bbb to #fff. The top bar must carry something real (search, the back link and object name, the switcher): two studied screens left about 1070px of it blank and were flagged.",
+  "phone": "The top bar stays at 48-56px with the switcher reduced to its mark; the sidebar becomes a full-screen menu sheet or a bottom bar of four or five destinations."
  },
  "screens": [
   {

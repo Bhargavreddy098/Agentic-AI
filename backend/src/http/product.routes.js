@@ -9,7 +9,7 @@ import { contentRoutes } from './content.routes.js';
 const createProject = z.object({ name: z.string().trim().min(1).max(200), kind: z.enum(['greenfield', 'existing']), workspaceRootRef: uuid.optional(), repositoryConnectionId: uuid.optional() }).strict();
 const patchProject = z.object({ name: z.string().trim().min(1).max(200).optional(), description: z.string().max(8192).optional() }).strict().refine(value => Object.keys(value).length > 0);
 
-export function productRoutes({ identity, projects, conversations, artifacts, uploads, operations }) {
+export function productRoutes({ identity, projects, conversations, artifacts, uploads, operations, snapshots, exports }) {
     const router = express.Router();
     const owner = () => { if (!identity || !projects) throw apiError('CAPABILITY_UNAVAILABLE', 'Product services are not configured.', 503); return projects; };
     router.use(async (req, res, next) => {
@@ -26,8 +26,15 @@ export function productRoutes({ identity, projects, conversations, artifacts, up
         res.json({ data: await uploads.write(res.locals.scope, parse(uuid, req.params.uploadId), bytes), meta: { requestId: res.locals.requestId } });
     });
     router.use(express.json({ limit: '256kb' }));
-    router.use(contentRoutes({ conversations, artifacts, uploads, operations }));
+    router.use(contentRoutes({ conversations, artifacts, uploads, operations, exports }));
     const id = req => parse(uuid, req.params.projectId);
+    router.post('/projects/:projectId/snapshots', async (req, res) => {
+        if (!snapshots) throw apiError('CAPABILITY_UNAVAILABLE', 'Snapshot service is unavailable.', 503);
+        const input = parse(z.object({ includeUncommitted: z.boolean() }).strict(), req.body);
+        const response = await snapshots.create(res.locals.scope, id(req), req.get('idempotency-key'), input);
+        res.set('location', '/api/v1/operations/' + response.data.id);
+        res.status(response.status).json({ data: response.data, meta: { requestId: res.locals.requestId } });
+    });
     const send = (res, response) => {
         if (response.data.version) res.set('etag', '"' + response.data.version + '"');
         if (response.status === 201) res.set('location', '/api/v1/projects/' + response.data.id);

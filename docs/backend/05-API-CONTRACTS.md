@@ -129,7 +129,7 @@ List query `Page = {limit?:1..100(default50),cursor?:opaque}` with deterministic
 | POST `/projects/:projectId/uploads` | `{filename,mediaType,bytes:string,digest}` | `Upload` | Owner-W | `QUOTA_EXCEEDED`, `MEDIA_TYPE_DENIED` |
 | PUT `/uploads/:uploadId/content` | Bounded binary stream; expected length/digest | `Upload` | Owner-W, upload-ID idempotency | `HASH_MISMATCH`, `UPLOAD_EXPIRED` |
 | POST `/uploads/:uploadId/complete` | `{digest}` | `Operation` → `Artifact` | Owner-W | `INCOMPLETE_UPLOAD`, `QUARANTINED` |
-| GET `/projects/:projectId/artifacts` | `Page & {runId?,kind?}` | `Artifact[]` | Owner-R | none |
+| GET `/projects/:projectId/artifacts` | `Page` | `Artifact[]` | Owner-R | none |
 | GET `/artifacts/:artifactId` | Metadata and evidence links | `Artifact` | Owner-R | `QUARANTINED` |
 | GET `/artifacts/:artifactId/content` | Authorized byte stream; Range only if supported | bytes with digest, safe Content-Disposition | Owner-R | `ARTIFACT_UNAVAILABLE`, 416 invalid range |
 | POST `/artifacts/:artifactId/export` | `{destinationRef}` authorized local destination | `Operation` | Owner-W | `DESTINATION_NOT_ALLOWED`, `OVERWRITE_APPROVAL_REQUIRED` |
@@ -220,3 +220,27 @@ Broker interface (not public HTTP): `claimTask`, `heartbeatTask`, `proposeEffect
 ## End-to-end example contract
 
 Create project → conversation → message → goal → intent/research → requirement revision → plan revision → contract revision → approval request → human approval → repository snapshot → run. Observe SSE and respond to effect approvals. Read verification report for the exact final artifact. Request deployment preview only after required checks pass; approve its separate digest before deployment. This sequence is the API acceptance test for the flagship workflow.
+
+## Stage 01–06 contract reconciliation — 2026-10-23
+
+Canonical health is outside `/api/v1` and returns exactly `{status:"live"}` or `{ready:boolean}`. `/api/v1/health/*` and the directory health paths are compatibility aliases; their older diagnostic projection is retained. The implemented owner cookie is `asi_local_session` (HttpOnly, SameSite=Strict, Path=/api/v1). Cookie tokens are never returned in Session JSON.
+
+The owner approved the following settings DTO refinement on 2026-10-23. `privacy` reuses Stage 05 `PolicyRules.privacyRules={denyEgress:boolean,allowedEgressHosts:string[0..64]}` (host length 1..256). `limits` reuses `PolicyRules.budgetRules={requireReservation:boolean,maxSingleActionMicroUsd:integer}` using the existing policy schema bounds. These are active-policy projections: changing them through settings returns `409 ACTIVE_POLICY_CONFLICT`; use immutable policy revision/activation for a real change. They cannot override policy. Without an active policy, conservative default policy projections apply.
+
+`retention={diagnosticLogDays:integer(1..3650),sseEventDays:integer(1..3650),temporaryUploadHours:integer(1..8760),failedWorkspaceDays:integer(1..3650)}`. Defaults are 14,30,24,7 respectively. These are persisted retention preferences, not an early purge scheduler; no evidence/artifact deletion is authorized by PATCH settings. `defaultAutonomy` uses the four defined autonomy states; it is a default preference, never authorization for execution. Partial top-level PATCH is supported; each supplied nested object must be complete and strict. Empty patches and unknown fields are rejected. Settings version is a decimal string, initial `"1"`; GET emits ETag, PATCH requires If-Match and durably binds it into idempotency input. Owner-H currently uses the authenticated local owner; no additional human-presence provider is configured.
+
+Stage 04 snapshot POST accepts only `{includeUncommitted:boolean}`, returns 202 Operation with Location even if its bounded read has already completed. It references an immutable scoped `RepositorySnapshot`; source bytes remain encrypted and quarantined, with indexStatus `not_indexed` until the later knowledge stage. A registered Git root is required, and no path is accepted from HTTP.
+
+Stage 04 export POST accepts only `{destinationRef:UUID}` and returns 202 Operation with Location. A trusted native owner command registers an exact new output filename, not a browser path. Windows handles pin each parent directory, reject indirect/reparse targets, and create a new file without overwrite. Only released artifacts can export. The export operation commits before host writing; retries never redispatch an accepted export. A refusal, crash, or uncertain receipt requires reconciliation before any new export, not a hidden retry. Native registration and export do not authorize arbitrary tool execution.
+
+Generated route-by-route evidence, supported subsets and limitations are in `api/frontend-stage01-06.manifest.json` and `22-FRONTEND-API-RECONCILIATION.md`. Later-stage routes in this document are not automatically enabled by this reconciliation.
+
+### Owner-approved artifact-list clarification — 2026-10-23
+
+`GET /projects/:projectId/artifacts` is frontend-ready in Stage 04 with only `limit` and `cursor`. `kind` is reserved/deferred until a canonical artifact taxonomy and storage semantics are approved; no column or enum is implied. `runId` is deferred to Stage 07 and may be added only if its approved schema establishes artifact-to-run ownership. Both parameters are rejected by strict runtime validation now, rather than ignored. These future query capabilities do not block Stage 04 artifact-list qualification.
+
+### Stage 07 reconciliation clarification (approved 2026-10-24)
+
+`externalReceiptRef` is an optional UUID referencing an artifact in the effect’s project. It supplies evidence to a trusted reconciler; the owner request never asserts a successful effect. Without a qualified reconciler the returned operation remains blocked with `OUTCOME_UNKNOWN`. Stage 07 does not expose a receipt-write endpoint or accept browser-supplied effect results.
+
+Run snapshot responses include decimal-string `meta.currentSequence`, allocated consistently with the projection. Subscribe after that sequence to avoid a snapshot/subscription gap. `/runs/:runId/events` uses canonical SSE, not a JSON response.

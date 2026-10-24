@@ -12,6 +12,7 @@ import { uiRoutes } from './routes/index.js';
 import { localIdentityRoutes } from './src/http/identity.routes.js';
 import { productRoutes } from './src/http/product.routes.js';
 import { governanceRoutes } from './src/http/governance.routes.js';
+import { executionRoutes } from './src/http/execution.routes.js';
 import { providerRoutes } from './src/http/provider.routes.js';
 
 /**
@@ -68,11 +69,12 @@ export function createApp({
         })
     );
     app.use('/health', healthRoutes(readiness));
-    app.use('/api/v1/health', healthRoutes(readiness));
+    app.use('/api/v1/health', healthRoutes(readiness, true));
     app.use('/api/v1', localIdentityRoutes({ identity: services.identity, config }));
     app.use('/api/v1', productRoutes(services));
     app.use('/api/v1', governanceRoutes(services));
     app.use('/api/v1', providerRoutes(services));
+    app.use('/api/v1', executionRoutes(services));
     app.use('/api/ui/v1', uiRoutes({ config, services }));
     app.use(notFound, errorHandler);
     return app;

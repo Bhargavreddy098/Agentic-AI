@@ -56,9 +56,11 @@ test('readiness requires verified migrations, schemas, and a least-privilege run
         const res = await fetch(base + '/health/ready');
         assert.equal(res.status, 200);
         const body = await res.json();
-        assert.equal(body.status, 'ready');
-        assert.equal(body.postgres, true);
-        assert.equal(body.vector, true);
+        assert.deepEqual(body, { ready: true });
+        assert.deepEqual(await (await fetch(base + '/health/live')).json(), { status: 'live' });
+        const alias = await (await fetch(base + '/api/v1/health/ready')).json();
+        assert.equal(alias.status, 'ready');
+        assert.equal(alias.vector, true);
     });
 });
 

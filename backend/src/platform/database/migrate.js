@@ -11,12 +11,14 @@ export const STAGE02_LAST_MIGRATION = '004-receipt-scope.sql';
 export const STAGE03_LAST_MIGRATION = '006-identity-references.sql';
 export const STAGE04_LAST_MIGRATION = '008-content-operations.sql';
 export const STAGE05_LAST_MIGRATION = '010-governance.sql';
-export const STAGE06_LAST_MIGRATION = '013-inference-output-artifacts.sql';
+export const STAGE06_LAST_MIGRATION = '014-repository-snapshots.sql';
 
 /**
  * Immutable SHA-256 checksum manifest for Stage 02 V1 logical-schema migrations.
  */
 export const STAGE02_MIGRATION_CHECKSUMS = Object.freeze({
+    '015-durable-execution.sql': '1e04c9924040a2e9417f677ec20435ff6af98e1251622d13e34d882ac445c0c4',
+    '014-repository-snapshots.sql': '0e0fa8797ba8917d68909da2bb73b18e996ece4892d8f8576b839caa87fdde6f',
     '001-schemas-and-journal.sql':
         'f3a93074c5bccbaa829d566751bd3f34238acc415d1c54b56c7be68b97cc678d',
     '002-scope-and-rls-foundations.sql':

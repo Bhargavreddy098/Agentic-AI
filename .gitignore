@@ -26,3 +26,5 @@ docs/release-evidence/**/raw/
 !.superpowers/*.md
 .antigravity/
 .vscode/
+.superdesign/
+docs.zip

@@ -1,5 +1,13 @@
 # ASI — Backend Architecture and Build Specification
 
+**Gateway UX correction, 2026-10-24:** The native `npm run gateway` launcher replaces manual challenge/nonce entry with a short-lived single-use browser handoff. The chat composer is always visible and the first confirmed message creates its conversation through the approved APIs. Session/CSRF protections remain enforced. See [gateway qualification](docs/backend/26-LOCAL-GATEWAY-QUALIFICATION.md).
+
+
+**Stage 07, locally qualified 2026-10-24:** Durable PostgreSQL tasks/effects/checkpoints/recovery/outbox/SSE and owner run projections/controls are implemented with migration 015. All 161 backend tests and 88 frontend tests pass; see [Stage 07 qualification](docs/backend/25-LOCAL-EXECUTION-QUALIFICATION.md). Qualification uses bounded safe activities and immutable contract fixtures. Public execution start remains disabled until Stages 09–12; gateway authentication replacement and Stage 08 are not implemented.
+
+
+**API reconciliation, 2026-10-23:** Canonical Stage 01–06 routes and limitations are recorded in [frontend API reconciliation](docs/backend/22-FRONTEND-API-RECONCILIATION.md). Migration 014 adds scoped snapshots, settings, and native export destination references; historical qualifications remain dated evidence. No Stage 07 implementation is implied.
+
 This repository holds the unchanged product vision, backend specifications, and an implementation in progress. PostgreSQL/pgvector, local identity, projects, conversations, and encrypted artifacts have executable integration tests. Stage 06 is locally qualified for the selected compatible provider; see [completion evidence](docs/backend/21-STAGE06-COMPLETION.md). The complete backend is still under construction; see [implementation evidence and remaining gaps](docs/backend/14-IMPLEMENTATION-STATUS.md).
 
 ## Start here
@@ -30,7 +38,7 @@ The initial target is a single-user Windows installation. Cloud control planes, 
 
 Unused UI assets, app-builder metadata, UI test setup, and an unreferenced vendor snapshot were removed in the [repository cleanup](docs/backend/20-REPOSITORY-CLEANUP.md). A verified recovery archive remains under ignored `data/cleanup/`; application data, credentials, and backend/security tests were preserved.
 
-For PostgreSQL setup and completed Stage 02 evidence, see [local PostgreSQL qualification](docs/backend/15-LOCAL-POSTGRESQL-QUALIFICATION.md). Completed dependencies are documented in [Stage 03 identity/session](docs/backend/16-LOCAL-IDENTITY-QUALIFICATION.md), [Stage 04 product](docs/backend/17-LOCAL-PRODUCT-QUALIFICATION.md), [Stage 05 governance](docs/backend/18-LOCAL-GOVERNANCE-QUALIFICATION.md), and [Stage 06 provider status](docs/backend/19-LOCAL-PROVIDER-QUALIFICATION.md) records. Normal startup enables identity, product, governance, and provider services with migrations 001-013. Stage 06 has a successful capped call against an operator-allowlisted OpenAI-compatible endpoint plus live revoked-auth, 429, and timeout qualification; the official OpenAI target remains unverified. Use `npm run db:verify -- --stage06` for current local readiness. The default migration command also includes unfinished later-stage work; use the explicit stage flag.
+For PostgreSQL setup and completed Stage 02 evidence, see [local PostgreSQL qualification](docs/backend/15-LOCAL-POSTGRESQL-QUALIFICATION.md). Completed dependencies are documented in [Stage 03 identity/session](docs/backend/16-LOCAL-IDENTITY-QUALIFICATION.md), [Stage 04 product](docs/backend/17-LOCAL-PRODUCT-QUALIFICATION.md), [Stage 05 governance](docs/backend/18-LOCAL-GOVERNANCE-QUALIFICATION.md), and [Stage 06 provider status](docs/backend/19-LOCAL-PROVIDER-QUALIFICATION.md) records. Normal startup enables identity, product, governance, provider and Stage 07 execution services with migrations 001–015. Stage 06 has a successful capped call against an operator-allowlisted OpenAI-compatible endpoint plus live revoked-auth, 429, and timeout qualification; the official OpenAI target remains unverified. Use `npm run db:verify` for current local readiness. Explicit stage flags retain historical migration boundaries.
 
 The documentation reset removed old manifests and ledgers. The subsequent authorized backend build restored pinned dependencies, compilation, tests, and forward SQL migrations. The earlier reset is recorded in the cleanup document; it does not describe the current implementation.
 

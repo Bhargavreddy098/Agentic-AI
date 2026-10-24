@@ -38,7 +38,12 @@
     "db:setup": "node --env-file-if-exists=.env scripts/db-setup.mjs",
     "session:challenge": "node --env-file-if-exists=.env.runtime scripts/session-challenge.mjs",
     "db:backup": "node --env-file-if-exists=.env.admin scripts/db-backup.mjs",
-    "db:recover-config": "node --env-file-if-exists=.env scripts/db-recover-config.mjs"
+    "db:recover-config": "node --env-file-if-exists=.env scripts/db-recover-config.mjs",
+    "artifact:authorize-export": "node --env-file-if-exists=.env.runtime scripts/authorize-export.mjs",
+    "api:frontend": "node scripts/export-frontend-manifest.mjs",
+    "repository:authorize-root": "node --env-file-if-exists=.env.runtime scripts/authorize-root.mjs",
+    "test:execution": "npm run build:internal && node --env-file-if-exists=.env.admin --test backend/tests/orchestration-*.test.js",
+    "gateway": "node --env-file-if-exists=.env.runtime scripts/gateway.mjs"
   },
   "dependencies": {
     "cookie-parser": "1.4.7",

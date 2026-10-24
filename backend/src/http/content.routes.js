@@ -4,10 +4,15 @@ import { z } from 'zod';
 import { parse, page, uuid, sendResponse } from './validation.js';
 import { apiError } from '../../middlewares/error-handler.js';
 
-export function contentRoutes({ conversations, artifacts, uploads, operations }) {
+export function contentRoutes({ conversations, artifacts, uploads, operations, exports }) {
     const router = Router();
     const owner = port => { if (!port) throw apiError('CAPABILITY_UNAVAILABLE', 'Content service is not configured.', 503); return port; };
     const list = (res, result) => res.json({ data: result.data, meta: { requestId: res.locals.requestId, nextCursor: result.nextCursor } });
+    router.post('/artifacts/:artifactId/export', async (req, res) => {
+        const response = await owner(exports).create(res.locals.scope, parse(uuid, req.params.artifactId), req.get('idempotency-key'),
+            parse(z.object({ destinationRef: uuid }).strict(), req.body));
+        sendResponse(res, response, '/api/v1/operations/' + response.data.id);
+    });
     router.post('/projects/:projectId/conversations', async (req, res) => {
         const projectId = parse(uuid, req.params.projectId);
         const input = parse(z.object({ title: z.string().trim().min(1).max(200).optional() }).strict(), req.body);

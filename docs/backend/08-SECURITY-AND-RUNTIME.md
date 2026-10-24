@@ -114,3 +114,7 @@ Execution acquires deployment lease, rechecks target/approval, invokes adapter w
 | Browser attack | Separate context/guest and action approvals | Hostile page cannot invoke local API |
 | Cost denial of service | Reservations/concurrency/output limits | Parallel calls cannot bypass ceilings |
 | Evidence forgery | Digest binding and independent checks | Swapped artifact invalidates result |
+
+## Native gateway browser handoff (owner-requested, 2026-10-24)
+
+The local gateway launcher may consume the existing single-use challenge directly within the trusted native process and deliver the resulting session through a single-use 256-bit temporary loopback handoff URL. No browser endpoint issues fresh owner proofs. The handoff must enforce exact loopback Host/Origin restrictions, bounded expiry, atomic single-use consumption, HttpOnly SameSite cookie scope, no-store/no-referrer and listener cleanup. Challenge, nonce, ticket and session token must not enter logs or frontend configuration. Canonical session, CSRF and authorization checks remain unchanged. See [gateway qualification](26-LOCAL-GATEWAY-QUALIFICATION.md).

@@ -5,6 +5,7 @@ import { apiError } from '../../middlewares/error-handler.js';
 import { LOCAL_SESSION_COOKIE } from './identity.routes.js';
 import { parse, page, sendResponse, uuid } from './validation.js';
 import { policyRulesSchema } from '../modules/governance/policy.js';
+import { settingsPatch } from '../modules/operations/settings.js';
 
 const digest = z.string().regex(/^[0-9a-f]{64}$/);
 const reason = z.string().trim().min(1).max(2048);
@@ -22,7 +23,7 @@ const decide = z.object({ decision: z.enum(['approve', 'reject']), nonce: z.stri
 const createBudget = z.object({ scopeKind: z.enum(['project', 'run']), runId: uuid.optional(), limitMicroUsd: z.string().regex(/^\d{1,19}$/), reason }).strict();
 const updateBudget = z.object({ limitMicroUsd: z.string().regex(/^\d{1,19}$/), reason }).strict();
 
-export function governanceRoutes({ identity, policies, grants, approvals, budgets }) {
+export function governanceRoutes({ identity, policies, grants, approvals, budgets, settings }) {
     const router = express.Router();
     router.use(async (req, res, next) => {
         if (!res.locals.scope) {
@@ -44,6 +45,16 @@ export function governanceRoutes({ identity, policies, grants, approvals, budget
     const projectId = req => parse(uuid, req.params.projectId);
     const list = (res, result) => res.json({ data: result.data, meta: { requestId: res.locals.requestId, ...(result.nextCursor !== undefined ? { nextCursor: result.nextCursor } : {}) } });
 
+    router.get('/settings', async (_req, res) => {
+        const data = await require(settings).read(res.locals.scope);
+        sendResponse(res, { status: 200, data });
+    });
+    router.patch('/settings', async (req, res) => {
+        const match = req.get('if-match');
+        if (!match) throw apiError('PRECONDITION_REQUIRED', 'If-Match is required.', 428);
+        if (!/^"[1-9]\d*"$/.test(match)) throw apiError('INVALID_INPUT', 'Invalid If-Match version.');
+        sendResponse(res, await require(settings).update(res.locals.scope, key(req), match.slice(1, -1), parse(settingsPatch, req.body)));
+    });
     router.get('/policies/current', async (req, res) => {
         res.json({ data: await require(policies).current(res.locals.scope), meta: { requestId: res.locals.requestId } });
     });

@@ -1,6 +1,6 @@
 {
- "url": "http://127.0.0.1:3200",
- "at": "2026-10-23T02:58:18.995Z",
+ "url": "http://127.0.0.1:3200/studio",
+ "at": "2026-10-23T11:52:55.957Z",
  "allow": [],
  "viewports": [
   {
@@ -12,10 +12,10 @@
     1
    ],
    "motion": {
-    "elements": 2,
+    "elements": 0,
     "css": 0,
-    "transitions": 1,
-    "scripted": 1,
+    "transitions": 0,
+    "scripted": 0,
     "videos": 0,
     "playingVideos": 0
    },
@@ -27,12 +27,12 @@
     "page": {
      "height": 900,
      "screens": 1,
-     "words": 221,
+     "words": 143,
      "img": 0,
      "video": 0,
      "canvas": 0,
-     "svg": 42,
-     "sections": 5,
+     "svg": 20,
+     "sections": 4,
      "horizontalOverflow": 0,
      "overflowCulprits": [],
      "uiFragments": 0,
@@ -48,149 +48,65 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "Workspace overview",
-     "words": 2,
-     "chars": 18,
+     "text": "Your local workspace",
+     "words": 3,
+     "chars": 20,
      "lines": 1,
      "size": 24,
      "vw": 1.7,
-     "font": "IBM Plex Sans",
-     "weight": 600,
-     "tracking": -0.03,
-     "leading": 1.25,
-     "top": 89,
+     "font": "Times New Roman",
+     "weight": 500,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 250,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
      "position": "left"
     },
     "h1": {
-     "text": "Workspace overview",
-     "words": 2,
+     "text": "Your local workspace",
+     "words": 3,
      "lines": 1,
      "size": 24,
-     "font": "IBM Plex Sans"
+     "font": "Times New Roman"
     },
     "headings": [
      {
-      "text": "asi",
+      "text": "ASI",
       "words": 1,
       "chars": 3,
       "lines": 1,
-      "size": 28,
-      "vw": 1.9,
-      "font": "IBM Plex Sans",
-      "weight": 700,
-      "tracking": -0.054,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.02,
-      "top": 22,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 28,
-      "vw": 1.9,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.025,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.16,
-      "top": 320,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 28,
-      "vw": 1.9,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.025,
+      "size": 38,
+      "vw": 2.6,
+      "font": "Times New Roman",
+      "weight": 600,
+      "tracking": -0.079,
       "leading": 1.5,
       "upper": false,
       "italic": false,
       "mono": false,
       "align": "left",
       "position": "center",
-      "widthRatio": 0.16,
-      "top": 320,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 28,
-      "vw": 1.9,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.025,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "right",
-      "widthRatio": 0.16,
-      "top": 320,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "Locked",
-      "words": 1,
-      "chars": 6,
-      "lines": 1,
-      "size": 28,
-      "vw": 1.9,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.025,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "right",
-      "widthRatio": 0.16,
-      "top": 320,
-      "tag": "strong",
+      "widthRatio": 0.47,
+      "top": 176,
+      "tag": "div",
       "kind": "heading"
      }
     ],
     "headingSummary": {
-     "count": 5,
+     "count": 1,
      "maxLines": 1,
      "over2Lines": 0,
      "statements": 0,
      "centered": 0,
-     "medianWords": 1,
+     "medianWords": null,
      "mixedFontHeadings": 0
     },
     "type": {
      "families": [
       {
-       "family": "IBM Plex Sans",
+       "family": "Times New Roman",
        "share": 1,
        "mono": false
       }
@@ -200,28 +116,26 @@
       11,
       12,
       13,
-      14,
-      15,
-      22,
+      19,
       24,
-      28
+      38
      ],
-     "sizeCount": 8,
+     "sizeCount": 6,
      "notLoaded": [],
      "body": {
-      "font": "IBM Plex Sans",
-      "size": 13,
-      "leading": 1.6,
+      "font": "Times New Roman",
+      "size": 12,
+      "leading": 1.7,
       "weight": 400,
       "tracking": 0,
-      "contrast": 5.5
+      "contrast": 7.3
      },
-     "measureChars": 58,
+     "measureChars": 142,
      "max": {
-      "size": 28,
-      "vw": 1.9,
-      "font": "IBM Plex Sans",
-      "text": "asi"
+      "size": 38,
+      "vw": 2.6,
+      "font": "Times New Roman",
+      "text": "A"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -231,117 +145,87 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.03,
-     "smallText": 16
+     "centerShare": 0.04,
+     "smallText": 14
     },
     "eyebrows": [
      {
-      "text": "Projects",
-      "above": "—",
+      "text": "workspace overview",
+      "above": "ASI",
       "upper": false,
       "tracked": false,
       "mono": false,
       "pill": false,
       "size": 12,
-      "top": 292
-     },
-     {
-      "text": "Approvals",
-      "above": "—",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 292
-     },
-     {
-      "text": "Providers",
-      "above": "—",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 292
-     },
-     {
-      "text": "Session",
-      "above": "Locked",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 292
+      "top": 77
      }
     ],
     "numbered": [],
     "color": {
-     "bodyBg": "#f3f5f4",
+     "bodyBg": "#ffffff",
      "bodyBgHsl": {
-      "h": 150,
-      "s": 0.09,
-      "l": 0.96
+      "h": 0,
+      "s": 0,
+      "l": 1
      },
      "dark": false,
      "sectionBgs": [
       {
-       "color": "#f3f6f6",
+       "color": "#141414",
        "top": 0,
-       "hsl": {
-        "h": 180,
-        "s": 0.14,
-        "l": 0.96
-       }
-      },
-      {
-       "color": "#ffffff",
-       "top": 56,
        "hsl": {
         "h": 0,
         "s": 0,
-        "l": 1
+        "l": 0.08
        }
       }
      ],
      "textColors": [
       {
-       "color": "#606b70",
-       "share": 0.75
+       "color": "#a3a3a3",
+       "share": 0.43
       },
       {
-       "color": "#202729",
+       "color": "#ffffff",
        "share": 0.24
       },
       {
-       "color": "#1b6c80",
-       "share": 0
+       "color": "#b4b4b4",
+       "share": 0.11
+      },
+      {
+       "color": "#c5c5c5",
+       "share": 0.06
+      },
+      {
+       "color": "#969696",
+       "share": 0.05
       }
      ],
      "button": {
-      "bg": "#e6ebeb",
+      "bg": "#141414",
       "hsl": {
-       "h": 180,
-       "s": 0.11,
-       "l": 0.91
+       "h": 0,
+       "s": 0,
+       "l": 0.08
       },
-      "fg": "#202729"
+      "fg": "#e5e5e5"
      },
      "lowContrast": []
     },
     "buttons": {
-     "count": 4,
-     "inHero": 4,
-     "radius": 8,
-     "height": 33,
-     "withShadow": 1,
+     "count": 3,
+     "inHero": 3,
+     "radius": 0,
+     "height": 37,
+     "withShadow": 0,
      "withGradient": 0,
      "mono": 0,
      "upper": 0,
      "heroLabels": [
       "Overview",
-      "Refresh"
+      "API console",
+      "Connect owner"
      ]
     },
     "surfaces": {
@@ -352,19 +236,19 @@
      "scrims": 0,
      "gradientSamples": [],
      "gradientText": 0,
-     "hairlines": 6,
+     "hairlines": 5,
      "hairlineSamples": [
-      "div.asi-stage 652px",
-      "div.asi-stage 652px",
-      "div.asi-stage 652px",
-      "div.asi-stage 652px",
-      "div.asi-stage 652px"
+      "header.studio-titlebar 1440px",
+      "div.studio-explorer 244px",
+      "div.studio-tabs 890px",
+      "div#console-panel.studio-console-region 890px",
+      "aside.studio-context 258px"
      ],
-     "outlinedBoxes": 6,
+     "outlinedBoxes": 0,
      "dashed": 0,
      "blurred": 0,
-     "roundedBoxes": 6,
-     "boxRadius": 8,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
      "squareMedia": 0,
      "roundedMedia": 0,
      "mediaRadius": 0,
@@ -375,15 +259,11 @@
     "nav": {
      "links": 0,
      "fixed": false,
-     "height": 317,
+     "height": 39,
      "floatingPill": false,
      "blur": false
     },
-    "fontsLoaded": [
-     "ibm plex sans",
-     "geist",
-     "openui devtools inter"
-    ]
+    "fontsLoaded": []
    },
    "layout": {
     "viewport": {
@@ -392,27 +272,27 @@
     },
     "pageH": 900,
     "margins": {
-     "left": 16,
-     "right": 41
+     "left": 0,
+     "right": 26
     },
     "sections": [
      {
-      "sel": "div.asi-metrics",
-      "tag": "div",
-      "top": 275,
-      "height": 131,
-      "words": 14,
+      "sel": "section#overview-panel.studio-welcome",
+      "tag": "section",
+      "top": 108,
+      "height": 432,
+      "words": 23,
       "media": 0,
-      "middle": 205,
+      "middle": 0,
       "heading": {
-       "text": "Locked",
-       "size": 28,
-       "tag": "strong"
+       "text": "SI",
+       "size": 38,
+       "tag": "span"
       },
-      "left": 286,
-      "right": 189,
-      "textLeft": 286,
-      "textRight": 189,
+      "left": 402,
+      "right": 708,
+      "textLeft": 402,
+      "textRight": 837,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -420,25 +300,21 @@
       "pinned": false
      },
      {
-      "sel": "div.asi-columns",
+      "sel": "div#console-panel.studio-console-region",
       "tag": "div",
-      "top": 429,
-      "height": 540,
-      "words": 128,
+      "top": 540,
+      "height": 334,
+      "words": 24,
       "media": 0,
-      "middle": 243,
-      "heading": {
-       "text": "Durable execution",
-       "size": 22,
-       "tag": "h3"
-      },
-      "left": 282,
-      "right": 62,
-      "textLeft": 282,
-      "textRight": 62,
+      "middle": 307,
+      "heading": null,
+      "left": 306,
+      "right": 274,
+      "textLeft": 306,
+      "textRight": 274,
       "fullBleed": false,
       "footer": true,
-      "hero": true,
+      "hero": false,
       "continues": false,
       "pinned": false
      }
@@ -446,38 +322,36 @@
     "gaps": [],
     "h1s": [
      {
-      "text": "Workspace overview",
+      "text": "Your local workspace",
       "size": 24,
-      "top": 89,
+      "top": 250,
       "firstScreen": true
      }
     ],
-    "edgeText": [],
+    "edgeText": [
+     {
+      "text": "backend",
+      "side": "left",
+      "px": 0
+     }
+    ],
     "edges": [
      {
-      "x": 1000,
-      "n": 3
-     },
-     {
-      "x": 282,
-      "n": 2
-     },
-     {
-      "x": 261,
+      "x": 402,
       "n": 1
      }
     ],
-    "leftBlocks": 6,
-    "bodySize": 13,
+    "leftBlocks": 1,
+    "bodySize": 12,
     "stage": false,
     "explains": false,
     "slivers": [],
-    "voidShare": 0.11,
+    "voidShare": 0.17,
     "voidBox": {
-     "x": 660,
-     "y": 120,
-     "w": 180,
-     "h": 780
+     "x": 540,
+     "y": 660,
+     "w": 900,
+     "h": 240
     }
    },
    "app": {
@@ -486,32 +360,32 @@
      "h": 900
     },
     "dark": false,
-    "ground": "#f3f5f4",
+    "ground": "#ffffff",
     "sidebar": {
-     "w": 228,
+     "w": 48,
      "tag": "aside",
-     "links": 8,
-     "share": 0.16
+     "links": 5,
+     "share": 0.03
     },
     "topbar": {
-     "h": 56
+     "h": 39
     },
     "canvas": {
-     "left": 33,
-     "right": 25
+     "left": 12,
+     "right": 16
     },
     "hero": {
-     "text": "Workspace overview",
-     "words": 2,
-     "chars": 18,
+     "text": "Your local workspace",
+     "words": 3,
+     "chars": 20,
      "lines": 1,
      "size": 24,
      "vw": 1.7,
-     "font": "IBM Plex Sans",
-     "weight": 600,
-     "tracking": -0.03,
-     "leading": 1.25,
-     "top": 89,
+     "font": "Times New Roman",
+     "weight": 500,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 250,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
@@ -519,22 +393,29 @@
     },
     "charts": 0,
     "layout": {
-     "panels": 1,
-     "firstScreen": 1,
+     "panels": 3,
+     "firstScreen": 3,
      "ragged": [],
-     "voids": []
+     "voids": [
+      {
+       "gap": 543,
+       "at": 331,
+       "panel": "Workspaces"
+      },
+      {
+       "gap": 161,
+       "at": 713,
+       "panel": "Console"
+      }
+     ]
     },
     "tiles": 0,
     "panels": {
-     "count": 7,
+     "count": 4,
      "radii": [
       [
-       8,
-       6
-      ],
-      [
-       16,
-       1
+       0,
+       4
       ]
      ],
      "heavyBorders": 0,
@@ -560,24 +441,21 @@
     "chartHues": 0,
     "placeholders": [],
     "type": {
-     "under13": 0.34,
+     "under13": 0.56,
      "tiny": 0,
      "tinySamples": [],
      "sizes": [
       11,
       12,
       13,
-      14,
-      15,
-      22,
       24,
-      28
+      38
      ]
     },
     "title": {
-     "text": "Workspace overview",
+     "text": "Your local workspace",
      "size": 24,
-     "top": 89
+     "top": 250
     },
     "colourShare": 0
    },
@@ -592,10 +470,10 @@
     1
    ],
    "motion": {
-    "elements": 2,
+    "elements": 0,
     "css": 0,
-    "transitions": 1,
-    "scripted": 1,
+    "transitions": 0,
+    "scripted": 0,
     "videos": 0,
     "playingVideos": 0
    },
@@ -607,12 +485,12 @@
     "page": {
      "height": 1024,
      "screens": 1,
-     "words": 201,
+     "words": 95,
      "img": 0,
      "video": 0,
      "canvas": 0,
-     "svg": 42,
-     "sections": 5,
+     "svg": 20,
+     "sections": 4,
      "horizontalOverflow": 0,
      "overflowCulprits": [],
      "uiFragments": 0,
@@ -628,149 +506,65 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "Workspace overview",
-     "words": 2,
-     "chars": 18,
+     "text": "Your local workspace",
+     "words": 3,
+     "chars": 20,
      "lines": 1,
      "size": 24,
      "vw": 3.1,
-     "font": "IBM Plex Sans",
-     "weight": 600,
-     "tracking": -0.03,
-     "leading": 1.25,
-     "top": 131,
+     "font": "Times New Roman",
+     "weight": 500,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 287,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
      "position": "left"
     },
     "h1": {
-     "text": "Workspace overview",
-     "words": 2,
+     "text": "Your local workspace",
+     "words": 3,
      "lines": 1,
      "size": 24,
-     "font": "IBM Plex Sans"
+     "font": "Times New Roman"
     },
     "headings": [
      {
-      "text": "asi",
+      "text": "ASI",
       "words": 1,
       "chars": 3,
       "lines": 1,
-      "size": 28,
-      "vw": 3.6,
-      "font": "IBM Plex Sans",
-      "weight": 700,
-      "tracking": -0.054,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.11,
-      "top": 12,
-      "tag": "a",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 28,
-      "vw": 3.6,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.025,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.18,
-      "top": 362,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 28,
-      "vw": 3.6,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.025,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.18,
-      "top": 362,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 28,
-      "vw": 3.6,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.025,
+      "size": 38,
+      "vw": 4.9,
+      "font": "Times New Roman",
+      "weight": 600,
+      "tracking": -0.079,
       "leading": 1.5,
       "upper": false,
       "italic": false,
       "mono": false,
       "align": "left",
       "position": "right",
-      "widthRatio": 0.18,
-      "top": 362,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "Locked",
-      "words": 1,
-      "chars": 6,
-      "lines": 1,
-      "size": 28,
-      "vw": 3.6,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.025,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "right",
-      "widthRatio": 0.19,
-      "top": 362,
-      "tag": "strong",
+      "widthRatio": 0.49,
+      "top": 213,
+      "tag": "div",
       "kind": "heading"
      }
     ],
     "headingSummary": {
-     "count": 5,
+     "count": 1,
      "maxLines": 1,
      "over2Lines": 0,
      "statements": 0,
      "centered": 0,
-     "medianWords": 1,
+     "medianWords": null,
      "mixedFontHeadings": 0
     },
     "type": {
      "families": [
       {
-       "family": "IBM Plex Sans",
+       "family": "Times New Roman",
        "share": 1,
        "mono": false
       }
@@ -780,28 +574,26 @@
       11,
       12,
       13,
-      14,
-      15,
-      22,
+      19,
       24,
-      28
+      38
      ],
-     "sizeCount": 8,
+     "sizeCount": 6,
      "notLoaded": [],
      "body": {
-      "font": "IBM Plex Sans",
-      "size": 13,
-      "leading": 1.6,
+      "font": "Times New Roman",
+      "size": 12,
+      "leading": 1.7,
       "weight": 400,
       "tracking": 0,
-      "contrast": 5.5
+      "contrast": 7.3
      },
-     "measureChars": 46,
+     "measureChars": 77,
      "max": {
-      "size": 28,
-      "vw": 3.6,
-      "font": "IBM Plex Sans",
-      "text": "asi"
+      "size": 38,
+      "vw": 4.9,
+      "font": "Times New Roman",
+      "text": "A"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -811,117 +603,75 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.03,
-     "smallText": 12
+     "centerShare": 0.07,
+     "smallText": 6
     },
-    "eyebrows": [
-     {
-      "text": "Projects",
-      "above": "—",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 334
-     },
-     {
-      "text": "Approvals",
-      "above": "—",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 334
-     },
-     {
-      "text": "Providers",
-      "above": "—",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 334
-     },
-     {
-      "text": "Session",
-      "above": "Locked",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 334
-     }
-    ],
+    "eyebrows": [],
     "numbered": [],
     "color": {
-     "bodyBg": "#f3f5f4",
+     "bodyBg": "#ffffff",
      "bodyBgHsl": {
-      "h": 150,
-      "s": 0.09,
-      "l": 0.96
+      "h": 0,
+      "s": 0,
+      "l": 1
      },
      "dark": false,
      "sectionBgs": [
       {
-       "color": "#f3f6f6",
+       "color": "#141414",
        "top": 0,
-       "hsl": {
-        "h": 180,
-        "s": 0.14,
-        "l": 0.96
-       }
-      },
-      {
-       "color": "#ffffff",
-       "top": 106,
        "hsl": {
         "h": 0,
         "s": 0,
-        "l": 1
+        "l": 0.08
        }
       }
      ],
      "textColors": [
       {
-       "color": "#606b70",
-       "share": 0.76
+       "color": "#a3a3a3",
+       "share": 0.32
       },
       {
-       "color": "#202729",
-       "share": 0.24
+       "color": "#ffffff",
+       "share": 0.28
       },
       {
-       "color": "#1b6c80",
-       "share": 0
+       "color": "#b4b4b4",
+       "share": 0.14
+      },
+      {
+       "color": "#c5c5c5",
+       "share": 0.08
+      },
+      {
+       "color": "#d4d4d4",
+       "share": 0.06
       }
      ],
      "button": {
-      "bg": "#e6ebeb",
+      "bg": "#141414",
       "hsl": {
-       "h": 180,
-       "s": 0.11,
-       "l": 0.91
+       "h": 0,
+       "s": 0,
+       "l": 0.08
       },
-      "fg": "#202729"
+      "fg": "#e5e5e5"
      },
      "lowContrast": []
     },
     "buttons": {
-     "count": 4,
-     "inHero": 4,
-     "radius": 8,
-     "height": 33,
-     "withShadow": 1,
+     "count": 2,
+     "inHero": 2,
+     "radius": 0,
+     "height": 37,
+     "withShadow": 0,
      "withGradient": 0,
      "mono": 0,
      "upper": 0,
      "heroLabels": [
       "Overview",
-      "Refresh"
+      "API console"
      ]
     },
     "surfaces": {
@@ -932,19 +682,18 @@
      "scrims": 0,
      "gradientSamples": [],
      "gradientText": 0,
-     "hairlines": 6,
+     "hairlines": 4,
      "hairlineSamples": [
-      "div.asi-stage 660px",
-      "div.asi-stage 660px",
-      "div.asi-stage 660px",
-      "div.asi-stage 660px",
-      "div.asi-stage 660px"
+      "header.studio-titlebar 768px",
+      "div.studio-explorer 220px",
+      "div.studio-tabs 500px",
+      "div#console-panel.studio-console-region 500px"
      ],
-     "outlinedBoxes": 6,
+     "outlinedBoxes": 0,
      "dashed": 0,
      "blurred": 0,
-     "roundedBoxes": 6,
-     "boxRadius": 8,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
      "squareMedia": 0,
      "roundedMedia": 0,
      "mediaRadius": 0,
@@ -955,15 +704,11 @@
     "nav": {
      "links": 0,
      "fixed": false,
-     "height": 37,
+     "height": 39,
      "floatingPill": false,
      "blur": false
     },
-    "fontsLoaded": [
-     "ibm plex sans",
-     "geist",
-     "openui devtools inter"
-    ]
+    "fontsLoaded": []
    },
    "layout": {
     "viewport": {
@@ -972,27 +717,27 @@
     },
     "pageH": 1024,
     "margins": {
-     "left": 33,
-     "right": 33
+     "left": 0,
+     "right": 16
     },
     "sections": [
      {
-      "sel": "div.asi-metrics",
-      "tag": "div",
-      "top": 317,
-      "height": 131,
-      "words": 14,
+      "sel": "section#overview-panel.studio-welcome",
+      "tag": "section",
+      "top": 108,
+      "height": 506,
+      "words": 23,
       "media": 0,
-      "middle": 96,
+      "middle": 0,
       "heading": {
-       "text": "Locked",
-       "size": 28,
-       "tag": "strong"
+       "text": "SI",
+       "size": 38,
+       "tag": "span"
       },
-      "left": 50,
-      "right": 80,
-      "textLeft": 50,
-      "textRight": 80,
+      "left": 329,
+      "right": 109,
+      "textLeft": 329,
+      "textRight": 238,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -1000,25 +745,21 @@
       "pinned": false
      },
      {
-      "sel": "div.asi-columns",
+      "sel": "div#console-panel.studio-console-region",
       "tag": "div",
-      "top": 471,
-      "height": 844,
-      "words": 128,
+      "top": 614,
+      "height": 384,
+      "words": 24,
       "media": 0,
-      "middle": 45,
-      "heading": {
-       "text": "Foundation readiness",
-       "size": 15,
-       "tag": "h2"
-      },
-      "left": 54,
-      "right": 54,
-      "textLeft": 54,
-      "textRight": 54,
+      "middle": 0,
+      "heading": null,
+      "left": 282,
+      "right": 16,
+      "textLeft": 282,
+      "textRight": 16,
       "fullBleed": false,
       "footer": true,
-      "hero": true,
+      "hero": false,
       "continues": false,
       "pinned": false
      }
@@ -1026,29 +767,27 @@
     "gaps": [],
     "h1s": [
      {
-      "text": "Workspace overview",
+      "text": "Your local workspace",
       "size": 24,
-      "top": 131,
+      "top": 287,
       "firstScreen": true
      }
     ],
-    "edgeText": [],
+    "edgeText": [
+     {
+      "text": "backend",
+      "side": "left",
+      "px": 0
+     }
+    ],
     "edges": [
      {
-      "x": 54,
-      "n": 4
-     },
-     {
-      "x": 33,
-      "n": 1
-     },
-     {
-      "x": 417,
+      "x": 329,
       "n": 1
      }
     ],
-    "leftBlocks": 6,
-    "bodySize": 13,
+    "leftBlocks": 1,
+    "bodySize": 12,
     "stage": false,
     "explains": false,
     "slivers": [],
@@ -1061,27 +800,32 @@
      "h": 1024
     },
     "dark": false,
-    "ground": "#f3f5f4",
-    "sidebar": null,
+    "ground": "#ffffff",
+    "sidebar": {
+     "w": 48,
+     "tag": "aside",
+     "links": 5,
+     "share": 0.06
+    },
     "topbar": {
-     "h": 66
+     "h": 39
     },
     "canvas": {
-     "left": 28,
-     "right": 24
+     "left": 12,
+     "right": 16
     },
     "hero": {
-     "text": "Workspace overview",
-     "words": 2,
-     "chars": 18,
+     "text": "Your local workspace",
+     "words": 3,
+     "chars": 20,
      "lines": 1,
      "size": 24,
      "vw": 3.1,
-     "font": "IBM Plex Sans",
-     "weight": 600,
-     "tracking": -0.03,
-     "leading": 1.25,
-     "top": 131,
+     "font": "Times New Roman",
+     "weight": 500,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 287,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
@@ -1089,22 +833,29 @@
     },
     "charts": 0,
     "layout": {
-     "panels": 1,
-     "firstScreen": 1,
+     "panels": 2,
+     "firstScreen": 2,
      "ragged": [],
-     "voids": []
+     "voids": [
+      {
+       "gap": 623,
+       "at": 375,
+       "panel": "Workspaces"
+      },
+      {
+       "gap": 210,
+       "at": 788,
+       "panel": "Console"
+      }
+     ]
     },
     "tiles": 0,
     "panels": {
-     "count": 7,
+     "count": 2,
      "radii": [
       [
-       8,
-       6
-      ],
-      [
-       16,
-       1
+       0,
+       2
       ]
      ],
      "heavyBorders": 0,
@@ -1130,24 +881,21 @@
     "chartHues": 0,
     "placeholders": [],
     "type": {
-     "under13": 0.34,
+     "under13": 0.57,
      "tiny": 0,
      "tinySamples": [],
      "sizes": [
       11,
       12,
       13,
-      14,
-      15,
-      22,
       24,
-      28
+      38
      ]
     },
     "title": {
-     "text": "Workspace overview",
+     "text": "Your local workspace",
      "size": 24,
-     "top": 131
+     "top": 287
     },
     "colourShare": 0
    },
@@ -1159,13 +907,13 @@
    "load": "load",
    "screens": 1,
    "filled": [
-    0.99
+    1
    ],
    "motion": {
-    "elements": 2,
+    "elements": 0,
     "css": 0,
-    "transitions": 1,
-    "scripted": 1,
+    "transitions": 0,
+    "scripted": 0,
     "videos": 0,
     "playingVideos": 0
    },
@@ -1177,12 +925,12 @@
     "page": {
      "height": 844,
      "screens": 1,
-     "words": 201,
+     "words": 58,
      "img": 0,
      "video": 0,
      "canvas": 0,
-     "svg": 42,
-     "sections": 5,
+     "svg": 20,
+     "sections": 4,
      "horizontalOverflow": 0,
      "overflowCulprits": [],
      "uiFragments": 0,
@@ -1198,191 +946,65 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "Workspace overview",
-     "words": 2,
-     "chars": 18,
+     "text": "Your local workspace",
+     "words": 3,
+     "chars": 20,
      "lines": 1,
      "size": 22,
      "vw": 5.6,
-     "font": "IBM Plex Sans",
-     "weight": 600,
+     "font": "Times New Roman",
+     "weight": 500,
      "tracking": -0.03,
-     "leading": 1.25,
-     "top": 165,
+     "leading": 1.5,
+     "top": 185,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
      "position": "left"
     },
     "h1": {
-     "text": "Workspace overview",
-     "words": 2,
+     "text": "Your local workspace",
+     "words": 3,
      "lines": 1,
      "size": 22,
-     "font": "IBM Plex Sans"
+     "font": "Times New Roman"
     },
     "headings": [
      {
-      "text": "asi",
-      "words": 1,
-      "chars": 3,
-      "lines": 1,
-      "size": 28,
-      "vw": 7.2,
-      "font": "IBM Plex Sans",
-      "weight": 700,
-      "tracking": -0.054,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "center",
-      "widthRatio": 0.92,
-      "top": 14,
-      "tag": "a",
-      "kind": "heading"
-     },
-     {
-      "text": "Workspace overview",
-      "words": 2,
-      "chars": 18,
+      "text": "Your local workspace",
+      "words": 3,
+      "chars": 20,
       "lines": 1,
       "size": 22,
       "vw": 5.6,
-      "font": "IBM Plex Sans",
-      "weight": 600,
-      "tracking": -0.032,
-      "leading": 1.25,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.62,
-      "top": 165,
-      "tag": "h1",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 24,
-      "vw": 6.2,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.029,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.35,
-      "top": 435,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 24,
-      "vw": 6.2,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.029,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "right",
-      "widthRatio": 0.35,
-      "top": 435,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "—",
-      "words": 1,
-      "chars": 1,
-      "lines": 1,
-      "size": 24,
-      "vw": 6.2,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.029,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "left",
-      "widthRatio": 0.35,
-      "top": 558,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "Locked",
-      "words": 1,
-      "chars": 6,
-      "lines": 1,
-      "size": 24,
-      "vw": 6.2,
-      "font": "IBM Plex Sans",
-      "weight": 450,
-      "tracking": -0.029,
-      "leading": 1.5,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "right",
-      "widthRatio": 0.35,
-      "top": 558,
-      "tag": "strong",
-      "kind": "heading"
-     },
-     {
-      "text": "Durable execution",
-      "words": 2,
-      "chars": 17,
-      "lines": 1,
-      "size": 22,
-      "vw": 5.6,
-      "font": "IBM Plex Sans",
+      "font": "Times New Roman",
       "weight": 500,
-      "tracking": -0.023,
+      "tracking": -0.027,
       "leading": 1.5,
       "upper": false,
       "italic": false,
       "mono": false,
       "align": "left",
       "position": "center",
-      "widthRatio": 0.76,
-      "top": 1394,
-      "tag": "h3",
+      "widthRatio": 0.77,
+      "top": 185,
+      "tag": "h1",
       "kind": "heading"
      }
     ],
     "headingSummary": {
-     "count": 7,
+     "count": 1,
      "maxLines": 1,
      "over2Lines": 0,
      "statements": 0,
      "centered": 0,
-     "medianWords": 1,
+     "medianWords": null,
      "mixedFontHeadings": 0
     },
     "type": {
      "families": [
       {
-       "family": "IBM Plex Sans",
+       "family": "Times New Roman",
        "share": 1,
        "mono": false
       }
@@ -1392,28 +1014,25 @@
       11,
       12,
       13,
-      14,
-      15,
-      22,
-      24,
-      28
+      19,
+      22
      ],
-     "sizeCount": 8,
+     "sizeCount": 5,
      "notLoaded": [],
      "body": {
-      "font": "IBM Plex Sans",
-      "size": 13,
-      "leading": 1.6,
+      "font": "Times New Roman",
+      "size": 12,
+      "leading": 1.7,
       "weight": 400,
       "tracking": 0,
-      "contrast": 5.5
+      "contrast": 7.3
      },
-     "measureChars": 46,
+     "measureChars": 51,
      "max": {
-      "size": 28,
-      "vw": 7.2,
-      "font": "IBM Plex Sans",
-      "text": "asi"
+      "size": 22,
+      "vw": 5.6,
+      "font": "Times New Roman",
+      "text": "Your local workspace"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -1422,118 +1041,76 @@
      "microLabels": 0,
      "microLabelShare": 0,
      "microSamples": [],
-     "upperShare": 0,
-     "centerShare": 0.03,
-     "smallText": 12
+     "upperShare": 0.01,
+     "centerShare": 0.11,
+     "smallText": 7
     },
-    "eyebrows": [
-     {
-      "text": "Projects",
-      "above": "—",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 407
-     },
-     {
-      "text": "Approvals",
-      "above": "—",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 407
-     },
-     {
-      "text": "Providers",
-      "above": "—",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 530
-     },
-     {
-      "text": "Session",
-      "above": "Locked",
-      "upper": false,
-      "tracked": false,
-      "mono": false,
-      "pill": false,
-      "size": 12,
-      "top": 530
-     }
-    ],
+    "eyebrows": [],
     "numbered": [],
     "color": {
-     "bodyBg": "#f3f5f4",
+     "bodyBg": "#ffffff",
      "bodyBgHsl": {
-      "h": 150,
-      "s": 0.09,
-      "l": 0.96
+      "h": 0,
+      "s": 0,
+      "l": 1
      },
      "dark": false,
      "sectionBgs": [
       {
-       "color": "#f3f6f6",
+       "color": "#141414",
        "top": 0,
-       "hsl": {
-        "h": 180,
-        "s": 0.14,
-        "l": 0.96
-       }
-      },
-      {
-       "color": "#ffffff",
-       "top": 144,
        "hsl": {
         "h": 0,
         "s": 0,
-        "l": 1
+        "l": 0.08
        }
       }
      ],
      "textColors": [
       {
-       "color": "#606b70",
-       "share": 0.76
+       "color": "#a3a3a3",
+       "share": 0.54
       },
       {
-       "color": "#202729",
-       "share": 0.24
+       "color": "#c5c5c5",
+       "share": 0.14
       },
       {
-       "color": "#1b6c80",
-       "share": 0
+       "color": "#ffffff",
+       "share": 0.12
+      },
+      {
+       "color": "#b4b4b4",
+       "share": 0.07
+      },
+      {
+       "color": "#969696",
+       "share": 0.05
       }
      ],
      "button": {
-      "bg": "#e6ebeb",
+      "bg": "#141414",
       "hsl": {
-       "h": 180,
-       "s": 0.11,
-       "l": 0.91
+       "h": 0,
+       "s": 0,
+       "l": 0.08
       },
-      "fg": "#202729"
+      "fg": "#e5e5e5"
      },
      "lowContrast": []
     },
     "buttons": {
-     "count": 4,
-     "inHero": 4,
-     "radius": 8,
-     "height": 33,
-     "withShadow": 1,
+     "count": 2,
+     "inHero": 2,
+     "radius": 0,
+     "height": 38,
+     "withShadow": 0,
      "withGradient": 0,
      "mono": 0,
      "upper": 0,
      "heroLabels": [
       "Overview",
-      "Refresh"
+      "API console"
      ]
     },
     "surfaces": {
@@ -1544,45 +1121,32 @@
      "scrims": 0,
      "gradientSamples": [],
      "gradientText": 0,
-     "hairlines": 6,
+     "hairlines": 3,
      "hairlineSamples": [
-      "div.asi-stage 298px",
-      "div.asi-stage 298px",
-      "div.asi-stage 298px",
-      "div.asi-stage 298px",
-      "div.asi-stage 298px"
+      "header.studio-titlebar 390px",
+      "div.studio-tabs 342px",
+      "div#console-panel.studio-console-region 342px"
      ],
-     "outlinedBoxes": 6,
+     "outlinedBoxes": 0,
      "dashed": 0,
      "blurred": 0,
-     "roundedBoxes": 7,
-     "boxRadius": 8,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
      "squareMedia": 0,
      "roundedMedia": 0,
      "mediaRadius": 0,
      "textShadow": 0,
-     "cardRows": [
-      {
-       "count": 3,
-       "iconTopped": false,
-       "rounded": true,
-       "top": 268
-      }
-     ]
+     "cardRows": []
     },
     "heroMedia": [],
     "nav": {
      "links": 0,
      "fixed": false,
-     "height": 36,
+     "height": 39,
      "floatingPill": false,
      "blur": false
     },
-    "fontsLoaded": [
-     "ibm plex sans",
-     "geist",
-     "openui devtools inter"
-    ]
+    "fontsLoaded": []
    },
    "layout": {
     "viewport": {
@@ -1591,27 +1155,27 @@
     },
     "pageH": 844,
     "margins": {
-     "left": 20,
-     "right": 25
+     "left": 0,
+     "right": 16
     },
     "sections": [
      {
-      "sel": "div.asi-metrics",
-      "tag": "div",
-      "top": 390,
-      "height": 248,
-      "words": 14,
+      "sel": "section#overview-panel.studio-welcome",
+      "tag": "section",
+      "top": 108,
+      "height": 375,
+      "words": 22,
       "media": 0,
-      "middle": 70,
+      "middle": 0,
       "heading": {
-       "text": "Locked",
-       "size": 24,
-       "tag": "strong"
+       "text": "Your local workspace",
+       "size": 22,
+       "tag": "h1"
       },
-      "left": 42,
-      "right": 66,
-      "textLeft": 42,
-      "textRight": 66,
+      "left": 68,
+      "right": 20,
+      "textLeft": 68,
+      "textRight": 121,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -1619,22 +1183,18 @@
       "pinned": false
      },
      {
-      "sel": "div.asi-columns",
+      "sel": "div#console-panel.studio-console-region",
       "tag": "div",
-      "top": 662,
-      "height": 1208,
-      "words": 128,
+      "top": 483,
+      "height": 336,
+      "words": 24,
       "media": 0,
       "middle": 0,
-      "heading": {
-       "text": "Foundation readiness",
-       "size": 15,
-       "tag": "h2"
-      },
-      "left": 46,
-      "right": 46,
-      "textLeft": 46,
-      "textRight": 46,
+      "heading": null,
+      "left": 62,
+      "right": 16,
+      "textLeft": 62,
+      "textRight": 16,
       "fullBleed": false,
       "footer": true,
       "hero": false,
@@ -1645,25 +1205,27 @@
     "gaps": [],
     "h1s": [
      {
-      "text": "Workspace overview",
+      "text": "Your local workspace",
       "size": 22,
-      "top": 165,
+      "top": 185,
       "firstScreen": true
      }
     ],
-    "edgeText": [],
+    "edgeText": [
+     {
+      "text": "backend",
+      "side": "left",
+      "px": 0
+     }
+    ],
     "edges": [
      {
-      "x": 46,
-      "n": 5
-     },
-     {
-      "x": 25,
+      "x": 68,
       "n": 1
      }
     ],
-    "leftBlocks": 6,
-    "bodySize": 13,
+    "leftBlocks": 1,
+    "bodySize": 12,
     "stage": false,
     "explains": false,
     "slivers": [],
@@ -1676,25 +1238,32 @@
      "h": 844
     },
     "dark": false,
-    "ground": "#f3f5f4",
-    "sidebar": null,
-    "topbar": null,
+    "ground": "#ffffff",
+    "sidebar": {
+     "w": 48,
+     "tag": "aside",
+     "links": 5,
+     "share": 0.12
+    },
+    "topbar": {
+     "h": 39
+    },
     "canvas": {
-     "left": 16,
-     "right": -69
+     "left": 0,
+     "right": 12
     },
     "hero": {
-     "text": "Workspace overview",
-     "words": 2,
-     "chars": 18,
+     "text": "Your local workspace",
+     "words": 3,
+     "chars": 20,
      "lines": 1,
      "size": 22,
      "vw": 5.6,
-     "font": "IBM Plex Sans",
-     "weight": 600,
+     "font": "Times New Roman",
+     "weight": 500,
      "tracking": -0.03,
-     "leading": 1.25,
-     "top": 165,
+     "leading": 1.5,
+     "top": 185,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
@@ -1705,19 +1274,21 @@
      "panels": 1,
      "firstScreen": 1,
      "ragged": [],
-     "voids": []
+     "voids": [
+      {
+       "gap": 107,
+       "at": 711,
+       "panel": "Console"
+      }
+     ]
     },
     "tiles": 0,
     "panels": {
-     "count": 7,
+     "count": 2,
      "radii": [
       [
-       8,
-       6
-      ],
-      [
-       16,
-       1
+       0,
+       2
       ]
      ],
      "heavyBorders": 0,
@@ -1743,26 +1314,23 @@
     "chartHues": 0,
     "placeholders": [],
     "type": {
-     "under13": 0.37,
+     "under13": 0.62,
      "tiny": 0,
      "tinySamples": [],
      "sizes": [
       11,
       12,
       13,
-      14,
-      15,
       22,
-      24,
-      28
+      38
      ]
     },
     "title": {
-     "text": "Workspace overview",
+     "text": "Your local workspace",
      "size": 22,
-     "top": 165
+     "top": 185
     },
-    "colourShare": 0.001
+    "colourShare": 0
    },
    "consoleErrors": []
   }
@@ -1770,14 +1338,32 @@
  "findings": [
   {
    "level": "FAIL",
-   "id": "button-fx",
+   "id": "edge-text",
    "width": 1440,
-   "message": "Buttons with shadow/glow.",
-   "fix": "Flat fill, one colour.",
+   "message": "1 text block(s) sit within 16px of the screen edge: \"backend\" (0px from the left)",
+   "fix": "Keep text inside the page margin (16–32px or more). Only display type deliberately bled past the edge may touch it.",
    "alsoAt": [
     768,
     390
    ]
+  },
+  {
+   "level": "WARN",
+   "id": "tiny-text",
+   "width": 1440,
+   "message": "56% of the text is under 13px.",
+   "fix": "Data and labels read at 13–14px; keep 11–12px for sublines and axis ticks.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "panel-void",
+   "width": 1440,
+   "message": "2 card(s) hold a blank band inside: 543px in \"Workspaces\", 161px in \"Console\".",
+   "fix": "A card stretches to its neighbour only when it has content to fill. Keep a legend or a note directly under its chart (only an action or a total may sit at a stretched card's foot), let a short card keep its own height (align-items: start), and let a filtered block shrink to its rows."
   }
  ],
  "images": [

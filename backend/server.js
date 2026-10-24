@@ -1,5 +1,6 @@
+import { loadRuntimeEnvironment } from './config/runtime-env.js';
 import { createServer } from 'node:http';
-import { pathToFileURL, fileURLToPath } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 import { loadConfig } from './config/env.js';
 import { createLogger } from './config/logger.js';
@@ -10,9 +11,11 @@ export async function startServer({ app, config, resources = [] }) {
     let closing;
     await new Promise((done, fail) => { server.once('error', fail); server.listen(config.PORT, config.HOST, () => { server.off('error', fail); done(undefined); }); });
     const close = () => closing ??= (async () => {
+        app.locals.shuttingDown = true;
         const timer = setTimeout(() => server.closeAllConnections(), config.SHUTDOWN_TIMEOUT_MS);
         timer.unref();
         try {
+            for (const resource of resources) if ('drain' in resource && typeof resource.drain === 'function') await resource.drain();
             await new Promise((done, fail) => server.close(error => error ? fail(error) : done(undefined)));
             await Promise.all(resources.map(resource => resource.close()));
         }
@@ -25,18 +28,7 @@ export async function startServer({ app, config, resources = [] }) {
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
     const logger = createLogger();
     try {
-        process.loadEnvFile?.(fileURLToPath(new URL('../.env.runtime', import.meta.url)));
-    } catch (error) {
-        if (error.code !== 'ENOENT') throw error;
-    }
-    try {
-        process.loadEnvFile?.(fileURLToPath(new URL('../.env', import.meta.url)));
-    }
-    catch (error) {
-        if (error.code !== 'ENOENT')
-            throw error;
-    }
-    try {
+        loadRuntimeEnvironment();
         const config = loadConfig();
         const container = await createContainer({ config, logger });
         let running;

@@ -1,0 +1,3045 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-10-23",
+  "authority": "docs/backend/05-API-CONTRACTS.md",
+  "baseUrl": "http://127.0.0.1:<ASI_PORT>",
+  "authentication": {
+    "cookieName": "asi_local_session",
+    "httpOnly": true,
+    "sameSite": "strict",
+    "path": "/api/v1",
+    "browserFetchCredentials": "include",
+    "csrfHeader": "X-CSRF-Token",
+    "origin": "Exact operator-allowed frontend origin; never infer arbitrary localhost ports"
+  },
+  "stage02": "No public database/SQL endpoint. Readiness uses canonical /health/ready.",
+  "routes": [
+    {
+      "stage": 1,
+      "canonicalRoute": "/health/ready",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Required dependencies ready",
+      "responseDto": "{ready:boolean} with no secret details",
+      "authProfile": "Public",
+      "contractErrors": "503 DEPENDENCY_UNREADY",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "Unwrapped JSON",
+      "implementationFile": "backend/controllers/health.controller.js",
+      "frontendReady": "yes",
+      "limitations": [
+        "503 and {ready:false} when required dependencies fail."
+      ]
+    },
+    {
+      "stage": 1,
+      "canonicalRoute": "/health/live",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Process liveness; no body",
+      "responseDto": "{status:\"live\"}",
+      "authProfile": "Public",
+      "contractErrors": "503",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "Unwrapped JSON",
+      "implementationFile": "backend/controllers/health.controller.js",
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 3,
+      "canonicalRoute": "/api/v1/session/bootstrap",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{challenge:string,clientNonce:string}; challenge issued by trusted launcher over OS-protected channel",
+      "responseDto": "Session; sets HttpOnly SameSite cookie",
+      "authProfile": "Public",
+      "contractErrors": "CHALLENGE_EXPIRED, ALREADY_USED; reject remote/cross-origin",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Single-use native challenge",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/identity.routes.js",
+      "implementationLine": 45,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 3,
+      "canonicalRoute": "/api/v1/session",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Current principal/session",
+      "responseDto": "Session",
+      "authProfile": "Owner-R",
+      "contractErrors": "SESSION_EXPIRED",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/identity.routes.js",
+      "implementationLine": 56,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 3,
+      "canonicalRoute": "/api/v1/session",
+      "implemented": true,
+      "method": "DELETE",
+      "requestDto": "Revoke current session; CSRF required",
+      "responseDto": "no body, 204",
+      "authProfile": "Owner-W",
+      "contractErrors": "none; repeated revoke is 204",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 204,
+      "responseEnvelope": "No body",
+      "implementationFile": "backend/src/http/identity.routes.js",
+      "implementationLine": 57,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 3,
+      "canonicalRoute": "/api/v1/workspaces",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page",
+      "responseDto": "Workspace[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/identity.routes.js",
+      "implementationLine": 62,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 3,
+      "canonicalRoute": "/api/v1/capabilities",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Available/disabled product operations",
+      "responseDto": "{items:[{name,state,reason?,qualificationRef?}]}",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/identity.routes.js",
+      "implementationLine": 72,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/uploads/:uploadId/content",
+      "implemented": true,
+      "method": "PUT",
+      "requestDto": "Bounded binary stream; expected length/digest",
+      "responseDto": "Upload",
+      "authProfile": "Owner-W",
+      "contractErrors": "HASH_MISMATCH, UPLOAD_EXPIRED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Upload ID plus expected digest",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/product.routes.js",
+      "implementationLine": 23,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects/:projectId/snapshots",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{includeUncommitted:boolean}",
+      "responseDto": "Operation → RepositorySnapshot",
+      "authProfile": "Owner-W",
+      "contractErrors": "ROOT_NOT_AUTHORIZED, REPOSITORY_CHANGED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 202,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/product.routes.js",
+      "implementationLine": 31,
+      "frontendReady": "yes",
+      "limitations": [
+        "Requires a native-authorized Git root. 202 result is polled through operations. Snapshot artifact is quarantined; knowledge indexing is deferred."
+      ]
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{name,kind:greenfield|existing,workspaceRootRef?,repositoryConnectionId?}",
+      "responseDto": "Project",
+      "authProfile": "Owner-W",
+      "contractErrors": "ROOT_NOT_AUTHORIZED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/product.routes.js",
+      "implementationLine": 43,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page & {status?}",
+      "responseDto": "Project[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/product.routes.js",
+      "implementationLine": 44,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects/:projectId",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Scoped project view",
+      "responseDto": "Project",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/product.routes.js",
+      "implementationLine": 48,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects/:projectId",
+      "implemented": true,
+      "method": "PATCH",
+      "requestDto": "{name?,description?}",
+      "responseDto": "Project",
+      "authProfile": "Owner-W",
+      "contractErrors": "PROJECT_ARCHIVED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": true,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/product.routes.js",
+      "implementationLine": 49,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects/:projectId/archive",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{reason}",
+      "responseDto": "Project",
+      "authProfile": "Owner-W",
+      "contractErrors": "ACTIVE_RUNS_EXIST",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/product.routes.js",
+      "implementationLine": 55,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/artifacts/:artifactId/export",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{destinationRef} authorized local destination",
+      "responseDto": "Operation",
+      "authProfile": "Owner-W",
+      "contractErrors": "DESTINATION_NOT_ALLOWED, OVERWRITE_APPROVAL_REQUIRED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 202,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 11,
+      "frontendReady": "yes",
+      "limitations": [
+        "Exact destinationRef must be registered by native owner command. No overwrite. Replay never dispatches again; blocked/uncertain effects require reconciliation."
+      ]
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects/:projectId/conversations",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{title?}",
+      "responseDto": "Conversation",
+      "authProfile": "Owner-W",
+      "contractErrors": "PROJECT_ARCHIVED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 16,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects/:projectId/conversations",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page",
+      "responseDto": "Conversation[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 22,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/conversations/:conversationId",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Conversation metadata",
+      "responseDto": "Conversation",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 23,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/conversations/:conversationId/messages",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{text:string(1..32000),attachmentIds?:UUID[0..10]}",
+      "responseDto": "Message",
+      "authProfile": "Owner-W",
+      "contractErrors": "ATTACHMENT_UNAVAILABLE",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 24,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/conversations/:conversationId/messages",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page",
+      "responseDto": "Message[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 29,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects/:projectId/artifacts",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page",
+      "responseDto": "Artifact[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 30,
+      "frontendReady": "yes",
+      "limitations": [
+        "Only limit/cursor are supported. Owner-approved clarification reserves kind until a taxonomy is approved and defers runId to Stage 07 ownership; both are strictly rejected now."
+      ]
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/artifacts/:artifactId",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Metadata and evidence links",
+      "responseDto": "Artifact",
+      "authProfile": "Owner-R",
+      "contractErrors": "QUARANTINED",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 31,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/artifacts/:artifactId/content",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Authorized byte stream; Range only if supported",
+      "responseDto": "bytes with digest, safe Content-Disposition",
+      "authProfile": "Owner-R",
+      "contractErrors": "ARTIFACT_UNAVAILABLE, 416 invalid range",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "Raw bytes",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 36,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/projects/:projectId/uploads",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{filename,mediaType,bytes:string,digest}",
+      "responseDto": "Upload",
+      "authProfile": "Owner-W",
+      "contractErrors": "QUOTA_EXCEEDED, MEDIA_TYPE_DENIED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 46,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/uploads/:uploadId/complete",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{digest}",
+      "responseDto": "Operation → Artifact",
+      "authProfile": "Owner-W",
+      "contractErrors": "INCOMPLETE_UPLOAD, QUARANTINED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 202,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 54,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 4,
+      "canonicalRoute": "/api/v1/operations/:operationId",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Poll async command",
+      "responseDto": "Operation",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/content.routes.js",
+      "implementationLine": 59,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/settings",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Non-secret preferences and limits",
+      "responseDto": "{version,privacy,retention,defaultAutonomy,limits}",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 48,
+      "frontendReady": "yes",
+      "limitations": [
+        "Privacy/limits project active policy; conflicting PATCH returns 409. Retention/defaultAutonomy are preferences, not purge or execution authorization."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/settings",
+      "implemented": true,
+      "method": "PATCH",
+      "requestDto": "{privacy?,retention?,defaultAutonomy?,limits?}; typed policy DTOs",
+      "responseDto": "same settings",
+      "authProfile": "Owner-H",
+      "contractErrors": "ACTIVE_POLICY_CONFLICT",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": true,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 52,
+      "frontendReady": "yes",
+      "limitations": [
+        "Privacy/limits project active policy; conflicting PATCH returns 409. Retention/defaultAutonomy are preferences, not purge or execution authorization.",
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/policies/current",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Active non-secret rules",
+      "responseDto": "PolicyRevision",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 58,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/policies/revisions",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{baseRevisionId,rules:PolicyRules,reason}",
+      "responseDto": "PolicyRevision",
+      "authProfile": "Owner-H",
+      "contractErrors": "RULE_CONFLICT, UNSAFE_POLICY",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 61,
+      "frontendReady": "yes",
+      "limitations": [
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/policies/:revisionId/activate",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{digest}",
+      "responseDto": "PolicyRevision",
+      "authProfile": "Owner-H",
+      "contractErrors": "DIGEST_MISMATCH, POLICY_QUALIFICATION_REQUIRED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 64,
+      "frontendReady": "yes",
+      "limitations": [
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/projects/:projectId/grants",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page",
+      "responseDto": "CapabilityGrant[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 68,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/projects/:projectId/grants",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{capability,resourceScope,expiresAt,contractRevisionId?}",
+      "responseDto": "CapabilityGrant",
+      "authProfile": "Owner-H",
+      "contractErrors": "SCOPE_NOT_ALLOWED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 71,
+      "frontendReady": "yes",
+      "limitations": [
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/grants/:grantId/revoke",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{reason}",
+      "responseDto": "CapabilityGrant",
+      "authProfile": "Owner-H",
+      "contractErrors": "none; revoke idempotent",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 74,
+      "frontendReady": "yes",
+      "limitations": [
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/contract-revisions/:revisionId/approval-requests",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{digest}",
+      "responseDto": "Approval",
+      "authProfile": "Owner-W",
+      "contractErrors": "CONTRACT_INCOMPLETE, DIGEST_MISMATCH",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 78,
+      "frontendReady": "yes",
+      "limitations": [
+        "Real contract creation workflows are Stage 09; Stage 05 uses immutable contract fixtures for qualification."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/approvals",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page & {projectId?,state?}",
+      "responseDto": "Approval[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 81,
+      "frontendReady": "yes",
+      "limitations": [
+        "Real contract creation workflows are Stage 09; Stage 05 uses immutable contract fixtures for qualification."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/approvals/:approvalId",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Approval, scope, diff, cost and consequences",
+      "responseDto": "Approval",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 85,
+      "frontendReady": "yes",
+      "limitations": [
+        "Real contract creation workflows are Stage 09; Stage 05 uses immutable contract fixtures for qualification."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/approvals/:approvalId/decisions",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{decision:approve|reject,nonce,digest,reason?}",
+      "responseDto": "Approval",
+      "authProfile": "Owner-H",
+      "contractErrors": "APPROVAL_EXPIRED, DIGEST_MISMATCH, ALREADY_DECIDED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 88,
+      "frontendReady": "yes",
+      "limitations": [
+        "Real contract creation workflows are Stage 09; Stage 05 uses immutable contract fixtures for qualification.",
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/approvals/:approvalId/revoke",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{reason}",
+      "responseDto": "Approval",
+      "authProfile": "Owner-H",
+      "contractErrors": "EFFECT_ALREADY_DISPATCHED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 91,
+      "frontendReady": "yes",
+      "limitations": [
+        "Real contract creation workflows are Stage 09; Stage 05 uses immutable contract fixtures for qualification.",
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/usage",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page & {projectId?,runId?,from?,to?,category?}",
+      "responseDto": "UsageEntry[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 95,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/projects/:projectId/budgets",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Active limits and reservations",
+      "responseDto": "Budget[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 105,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/projects/:projectId/budgets",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{scopeKind:project|run,runId?,limitMicroUsd,reason}",
+      "responseDto": "Budget",
+      "authProfile": "Owner-H",
+      "contractErrors": "BELOW_COMMITTED_SPEND",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 108,
+      "frontendReady": "yes",
+      "limitations": [
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 5,
+      "canonicalRoute": "/api/v1/budgets/:budgetId",
+      "implemented": true,
+      "method": "PATCH",
+      "requestDto": "{limitMicroUsd,reason}",
+      "responseDto": "Budget",
+      "authProfile": "Owner-H",
+      "contractErrors": "BELOW_COMMITTED_SPEND",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": true,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/governance.routes.js",
+      "implementationLine": 111,
+      "frontendReady": "yes",
+      "limitations": [
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 6,
+      "canonicalRoute": "/api/v1/providers",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{kind,displayName,endpointPolicy,secretReferenceId?,privacyPolicy}",
+      "responseDto": "Provider",
+      "authProfile": "Owner-H",
+      "contractErrors": "ENDPOINT_NOT_ALLOWED, AUTH_METHOD_UNSUPPORTED",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 201,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/provider.routes.js",
+      "implementationLine": 32,
+      "frontendReady": "yes",
+      "limitations": [
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 6,
+      "canonicalRoute": "/api/v1/providers",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page",
+      "responseDto": "Provider[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/provider.routes.js",
+      "implementationLine": 36,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 6,
+      "canonicalRoute": "/api/v1/providers/:providerId",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Safe configuration/health",
+      "responseDto": "Provider",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/provider.routes.js",
+      "implementationLine": 37,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 6,
+      "canonicalRoute": "/api/v1/providers/:providerId",
+      "implemented": true,
+      "method": "PATCH",
+      "requestDto": "{displayName?,secretReferenceId?,privacyPolicy?,enabled?}",
+      "responseDto": "Provider",
+      "authProfile": "Owner-H",
+      "contractErrors": "ACTIVE_CALLS_EXIST",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": true,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/provider.routes.js",
+      "implementationLine": 40,
+      "frontendReady": "yes",
+      "limitations": [
+        "Owner session only; no extra human-presence provider is currently configured."
+      ]
+    },
+    {
+      "stage": 6,
+      "canonicalRoute": "/api/v1/providers/:providerId/discovery",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{probe:boolean,budgetCeilingMicroUsd?}",
+      "responseDto": "Operation → Model[]",
+      "authProfile": "Owner-W",
+      "contractErrors": "CREDENTIAL_UNAVAILABLE, BUDGET_REQUIRED for paid probe",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 202,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/provider.routes.js",
+      "implementationLine": 46,
+      "frontendReady": "yes",
+      "limitations": [
+        "probe=false discovers models; probe=true fails closed (503 after required budget validation). Paid HTTP probing has no project/grant binding."
+      ]
+    },
+    {
+      "stage": 6,
+      "canonicalRoute": "/api/v1/models",
+      "implemented": true,
+      "method": "GET",
+      "requestDto": "Page & {providerId?,capability?}",
+      "responseDto": "Model[]",
+      "authProfile": "Owner-R",
+      "contractErrors": "none",
+      "csrfRequired": false,
+      "idempotencyKeyRequired": false,
+      "idempotencyMechanism": "Read-only",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/provider.routes.js",
+      "implementationLine": 52,
+      "frontendReady": "yes",
+      "limitations": []
+    },
+    {
+      "stage": 6,
+      "canonicalRoute": "/api/v1/routing/preview",
+      "implemented": true,
+      "method": "POST",
+      "requestDto": "{taskType,capabilities,estimatedInputTokens,maxOutputTokens,classification,budgetCeilingMicroUsd}",
+      "responseDto": "RoutingDecision",
+      "authProfile": "Owner-W",
+      "contractErrors": "NO_ELIGIBLE_MODEL; no model invocation",
+      "csrfRequired": true,
+      "idempotencyKeyRequired": true,
+      "idempotencyMechanism": "Scoped durable response replay",
+      "ifMatchRequired": false,
+      "successStatus": 200,
+      "responseEnvelope": "{data:responseDto,meta:{requestId,version?,nextCursor?}}",
+      "implementationFile": "backend/src/http/provider.routes.js",
+      "implementationLine": 59,
+      "frontendReady": "yes",
+      "limitations": []
+    }
+  ],
+  "compatibilityAliases": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "canonical": "/health/live",
+      "implementationFile": "backend/routes/health.routes.js",
+      "useForNewFrontend": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health",
+      "canonical": "/health/live",
+      "implementationFile": "backend/routes/health.routes.js",
+      "useForNewFrontend": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/live",
+      "canonical": "/health/live",
+      "implementationFile": "backend/routes/health.routes.js",
+      "useForNewFrontend": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/ready",
+      "canonical": "/health/ready",
+      "implementationFile": "backend/routes/health.routes.js",
+      "useForNewFrontend": false
+    }
+  ],
+  "excluded": [
+    "Legacy /api/ui/v1 routes are a separate adapter, not automatic canonical aliases.",
+    "Frontend /api/chat is separate pre-existing UI code, not a governed Stage 06 generation API.",
+    "Stages 07–18, including goal inference, runs/SSE, memory and deployment, are not exposed by this manifest."
+  ],
+  "dtoDefinitions": [
+    {
+      "name": "Session",
+      "shape": "{principalId,workspaceId,expiresAt,csrfToken}"
+    },
+    {
+      "name": "Workspace",
+      "shape": "{id,name,ownerPrincipalId,status}"
+    },
+    {
+      "name": "Project",
+      "shape": "{id,name,description?,kind,status,workspaceRootRef?,repositoryConnectionId?,version,createdAt,updatedAt}"
+    },
+    {
+      "name": "RepositorySnapshot",
+      "shape": "{id,projectId,commitSha?,treeDigest,artifactId,indexStatus,createdAt}"
+    },
+    {
+      "name": "Conversation",
+      "shape": "{id,projectId,title,status,version}"
+    },
+    {
+      "name": "Message",
+      "shape": "{id,conversationId,sequence,role,text,attachmentIds,createdAt,trustLabel}"
+    },
+    {
+      "name": "Constraint",
+      "shape": "{key,value,sourceMessageId}"
+    },
+    {
+      "name": "Goal",
+      "shape": "{id,projectId,conversationId,intent,constraints,status,activeRequirementRevisionId?,activeContractRevisionId?,version}"
+    },
+    {
+      "name": "IntentAnalysis",
+      "shape": "{goalId,literalRequest,desiredOutcome,constraints,assumptions,unknowns,acceptanceCandidates,sourceRefs}"
+    },
+    {
+      "name": "Clarification",
+      "shape": "{id,goalId,question,materiality,options:[{id,label}],answer?,status,version}"
+    },
+    {
+      "name": "Assumption",
+      "shape": "{key,statement,risk:low|medium|high,sourceRef?,needsDecision:boolean}"
+    },
+    {
+      "name": "RequirementInput",
+      "shape": "{key,kind:functional|nonfunctional,priority:must|should|could,statement,sourceRefs,criteria:[{key,required:boolean,method,expected,environment}]}"
+    },
+    {
+      "name": "RequirementRevision",
+      "shape": "{id,goalId,revision,digest,requirements:RequirementInput[],assumptions,exclusions,sourceRefs,createdAt}"
+    },
+    {
+      "name": "ResearchReport",
+      "shape": "{id,goalId,questions,conclusions:[{claim,sourceRefs,confidence,freshUntil?}],sourceRefs,artifactId,createdAt}"
+    },
+    {
+      "name": "Decision",
+      "shape": "{id,goalId,status:accepted|challenged|rejected|alternative|requires_user_decision,proposal,alternatives,rationale,sourceRefs,createdAt}"
+    },
+    {
+      "name": "PlanStep",
+      "shape": "{key,objective,dependsOn:string[],deliverableSchema,capabilities:string[],budgetCeilingMicroUsd,criterionRefs:UUID[]}"
+    },
+    {
+      "name": "PlanRevision",
+      "shape": "{id,planId,goalId,revision,requirementRevisionId,digest,layers,steps,createdAt}"
+    },
+    {
+      "name": "ContractRevision",
+      "shape": "{id,contractId,goalId,revision,planRevisionId,requirementRevisionId,digest,schemaVersion,canonicalizerVersion,document:BuildContractInput,supersedesId?,createdAt}"
+    },
+    {
+      "name": "Approval",
+      "shape": "{id,kind:contract|effect,contractRevisionId,effectId?,digest,policyRevisionId,state,expiresAt,nonce?,scopeSummary,costCeilingMicroUsd,diffRef?,consequences,decidedAt?}"
+    },
+    {
+      "name": "PolicyRules",
+      "shape": "{autonomyModes,capabilityRules,highImpactActions,budgetRules,privacyRules}"
+    },
+    {
+      "name": "PolicyRevision",
+      "shape": "{id,revision,digest,rules,active,createdAt}"
+    },
+    {
+      "name": "CapabilityGrant",
+      "shape": "{id,projectId,capability,resourceScope,expiresAt,revokedAt?,contractRevisionId?}"
+    },
+    {
+      "name": "Run",
+      "shape": "{id,goalId,contractRevisionId,planRevisionId,repositorySnapshotId,state,autonomyMode,epoch,progress:{completedTasks,totalTasks},budget:{limit,reserved,spent},verificationReportId?,blockers:[],version}"
+    },
+    {
+      "name": "Task",
+      "shape": "{id,runId,stepKey,state,attempt,maxAttempts,deadlineAt,leaseEpoch,dependencies,artifactIds}"
+    },
+    {
+      "name": "AgentSession",
+      "shape": "{id,runId,taskId,role,state,capabilities,deadlineAt,usageSummary}"
+    },
+    {
+      "name": "Effect",
+      "shape": "{id,runId,taskId,toolId,inputDigest,targetSummary,risk,state,approvalId?,receiptRef?,externalOperationId?}"
+    },
+    {
+      "name": "Checkpoint",
+      "shape": "{id,runId,sequence,epoch,stateDigest,createdAt}"
+    },
+    {
+      "name": "ToolDefinition",
+      "shape": "{id,name,revision,inputSchema,outputSchema,capabilities,risk,timeoutMs,idempotency,cancellation,availability}"
+    },
+    {
+      "name": "Upload",
+      "shape": "{id,state,expectedBytes,receivedBytes,expectedDigest,expiresAt}"
+    },
+    {
+      "name": "Artifact",
+      "shape": "{id,projectId,runId?,digest,bytes,mediaType,status,classification,createdAt,provenanceRefs}"
+    },
+    {
+      "name": "Provider",
+      "shape": "{id,kind,displayName,status,endpointSummary,authMethod,credentialConfigured:boolean,privacyPolicy,health,version}"
+    },
+    {
+      "name": "Model",
+      "shape": "{id,providerId,externalModelId,revision,capabilities,contextLimit,pricingRevision,availability,qualificationRef?}"
+    },
+    {
+      "name": "RoutingDecision",
+      "shape": "{eligible:[{modelId,score,reasons}],rejected:[{modelId,reasons}],selectedModelId?,estimatedCeilingMicroUsd,policyRevisionId}"
+    },
+    {
+      "name": "DeveloperConnection",
+      "shape": "{id,adapterKind,authMethod,capabilities,status,qualificationRef?,version}"
+    },
+    {
+      "name": "Memory",
+      "shape": "{id,projectId,scopeKind,memoryKind,revision,text,confidence,sourceRefs,expiresAt?,classification}"
+    },
+    {
+      "name": "KnowledgeNode",
+      "shape": "{id,snapshotId,kind,stableKey,path?,range?,contentDigest,sourceRefs}"
+    },
+    {
+      "name": "KnowledgeEdge",
+      "shape": "{id,snapshotId,fromNodeId,toNodeId,kind,confidence,sourceRefs}"
+    },
+    {
+      "name": "VerificationReport",
+      "shape": "{id,runId,artifactId,artifactDigest,contractRevisionId,outcome:pass|fail|unknown,criteria:[{criterionId,required,outcome,evidenceArtifactIds,reason}],verifierIdentity,suiteRevision,environmentDigest,checkedAt}"
+    },
+    {
+      "name": "UsageEntry",
+      "shape": "{id,operationKey,category,units,pricingRevision,estimatedMicroUsd,actualMicroUsd?,state}"
+    },
+    {
+      "name": "Budget",
+      "shape": "{id,scopeKind,scopeId,limitMicroUsd,spentMicroUsd,reservedMicroUsd,version}"
+    },
+    {
+      "name": "Schedule",
+      "shape": "{id,projectId,goalTemplate,recurrence,timezone,misfirePolicy:skip|latest|bounded_catchup,overlapPolicy:skip|queue_one|parallel,nextFireAt,paused,version}"
+    },
+    {
+      "name": "Occurrence",
+      "shape": "{id,scheduleId,scheduledFor,state:queued|running|skipped|completed|failed,runId?,reason?}"
+    },
+    {
+      "name": "Trigger",
+      "shape": "{id,source,eventFilter,goalTemplate,enabled,version}"
+    },
+    {
+      "name": "InboundEvent",
+      "shape": "{id,source,deliveryId,state,receivedAt,payloadDigest,goalId?}"
+    },
+    {
+      "name": "DeploymentPreview",
+      "shape": "{id,runId,artifactId,targetSummary,changes,migrationPlanRef?,costEstimate,inputDigest,expiresAt,rollbackEligibility,requiredApproval}"
+    },
+    {
+      "name": "Deployment",
+      "shape": "{id,runId,artifactId,targetSummary,state,externalReleaseId?,healthReportId?,rollbackRef?}"
+    },
+    {
+      "name": "ActivityItem",
+      "shape": "{id,type,projectId?,runId?,safeSummary,traceId,createdAt}"
+    },
+    {
+      "name": "Notification",
+      "shape": "{id,channel:local|approved_external,state,summary,artifactIds,createdAt,readAt?}"
+    },
+    {
+      "name": "RunEvent",
+      "shape": "{schemaVersion:1,eventId,runId,sequence,type,occurredAt,payload,traceId}"
+    },
+    {
+      "name": "TaskAssignment",
+      "shape": "{taskContract,contextBundleRef,repositorySnapshotRef,capabilityToken,limits}"
+    },
+    {
+      "name": "EffectProposal",
+      "shape": "{toolId,toolRevision,input,inputDigest,targetRef}"
+    },
+    {
+      "name": "ExecutionReceipt",
+      "shape": "{effectId,inputDigest,outputArtifactIds,exitCode?,startedAt,endedAt,externalOperationId?,usageRef?,workerImageDigest,signature}"
+    }
+  ],
+  "schemaReferences": {
+    "stage03": {
+      "Token": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_-]{43}$"
+      },
+      "Meta": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requestId"
+        ],
+        "properties": {
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "principalId",
+          "workspaceId",
+          "expiresAt",
+          "csrfToken"
+        ],
+        "properties": {
+          "principalId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "csrfToken": {
+            "$ref": "#/components/schemas/Token"
+          }
+        }
+      },
+      "Problem": {
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "detail",
+          "requestId",
+          "retryable"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          },
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "stage04": {
+      "Token": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_-]{43}$"
+      },
+      "Meta": {
+        "type": "object",
+        "required": [
+          "requestId"
+        ],
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Workspace": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "displayName",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "kind",
+          "status",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "greenfield",
+              "existing"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "archived"
+            ]
+          },
+          "version": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateProjectRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "kind"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "greenfield",
+              "existing"
+            ]
+          },
+          "workspaceRootRef": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "PatchProjectRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 8192
+          }
+        }
+      },
+      "Conversation": {
+        "type": "object",
+        "required": [
+          "id",
+          "projectId",
+          "title",
+          "status",
+          "version",
+          "lastSequence",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "lastSequence": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "id",
+          "conversationId",
+          "sequence",
+          "role",
+          "text",
+          "attachmentRefs",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "conversationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "attachmentRefs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "required": [
+          "principalId",
+          "workspaceId",
+          "expiresAt",
+          "csrfToken"
+        ],
+        "properties": {
+          "principalId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "csrfToken": {
+            "$ref": "#/components/schemas/Token"
+          }
+        }
+      },
+      "Problem": {
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "detail",
+          "requestId",
+          "retryable"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "stage06": {
+      "CreateProvider": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "openai_compatible"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "endpointPolicy": {
+            "type": "object",
+            "properties": {
+              "baseUrl": {
+                "type": "string",
+                "maxLength": 512,
+                "format": "uri",
+                "pattern": "^https:\\/\\/.*"
+              }
+            },
+            "required": [
+              "baseUrl"
+            ],
+            "additionalProperties": false
+          },
+          "secretReferenceId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          },
+          "privacyPolicy": {
+            "type": "object",
+            "properties": {
+              "allowedClassifications": {
+                "minItems": 1,
+                "maxItems": 2,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "internal"
+                  ]
+                }
+              },
+              "providerTraining": {
+                "type": "boolean",
+                "const": false
+              },
+              "retention": {
+                "type": "string",
+                "const": "none"
+              },
+              "dataResidency": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              }
+            },
+            "required": [
+              "allowedClassifications",
+              "providerTraining",
+              "retention"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "kind",
+          "displayName",
+          "endpointPolicy",
+          "privacyPolicy"
+        ],
+        "additionalProperties": false,
+        "description": "Only official OpenAI or the exact operator-allowlisted compatible endpoint. secretReferenceId is recognized but rejected until a qualified provider reference store exists. Never send API keys in this body."
+      },
+      "PatchProvider": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "secretReferenceId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          },
+          "privacyPolicy": {
+            "type": "object",
+            "properties": {
+              "allowedClassifications": {
+                "minItems": 1,
+                "maxItems": 2,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "internal"
+                  ]
+                }
+              },
+              "providerTraining": {
+                "type": "boolean",
+                "const": false
+              },
+              "retention": {
+                "type": "string",
+                "const": "none"
+              },
+              "dataResidency": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              }
+            },
+            "required": [
+              "allowedClassifications",
+              "providerTraining",
+              "retention"
+            ],
+            "additionalProperties": false
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "minProperties": 1
+      },
+      "Discovery": {
+        "type": "object",
+        "properties": {
+          "probe": {
+            "type": "boolean"
+          },
+          "budgetCeilingMicroUsd": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d{0,18})$"
+          }
+        },
+        "required": [
+          "probe"
+        ],
+        "additionalProperties": false,
+        "description": "probe:false performs bounded model discovery. probe:true requires a ceiling, then fails closed with CAPABILITY_UNAVAILABLE: HTTP lacks a project budget/grant binding. Project-scoped inference qualification uses the trusted provider:verify command."
+      },
+      "RoutingPreview": {
+        "type": "object",
+        "properties": {
+          "taskType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "capabilities": {
+            "maxItems": 32,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"
+            }
+          },
+          "estimatedInputTokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000000
+          },
+          "maxOutputTokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "public",
+              "internal"
+            ]
+          },
+          "budgetCeilingMicroUsd": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d{0,18})$"
+          }
+        },
+        "required": [
+          "taskType",
+          "capabilities",
+          "estimatedInputTokens",
+          "maxOutputTokens",
+          "classification",
+          "budgetCeilingMicroUsd"
+        ],
+        "additionalProperties": false
+      },
+      "Provider": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "openai_compatible"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "unavailable",
+              "healthy",
+              "degraded",
+              "disabled"
+            ]
+          },
+          "endpointSummary": {
+            "type": "string",
+            "format": "uri"
+          },
+          "authMethod": {
+            "type": "string",
+            "const": "api_key"
+          },
+          "credentialConfigured": {
+            "type": "boolean"
+          },
+          "privacyPolicy": {
+            "type": "object",
+            "properties": {
+              "allowedClassifications": {
+                "minItems": 1,
+                "maxItems": 2,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "internal"
+                  ]
+                }
+              },
+              "providerTraining": {
+                "type": "boolean",
+                "const": false
+              },
+              "retention": {
+                "type": "string",
+                "const": "none"
+              },
+              "dataResidency": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              }
+            },
+            "required": [
+              "allowedClassifications",
+              "providerTraining",
+              "retention"
+            ],
+            "additionalProperties": false
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^[1-9]\\d*$"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          },
+          "lastCheckedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          },
+          "health": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "unconfigured",
+                  "configured",
+                  "healthy",
+                  "degraded"
+                ]
+              },
+              "checkedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "modelCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "qualifiedModelCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "state",
+              "checkedAt"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "displayName",
+          "status",
+          "endpointSummary",
+          "authMethod",
+          "credentialConfigured",
+          "privacyPolicy",
+          "enabled",
+          "version",
+          "createdAt",
+          "updatedAt",
+          "health"
+        ],
+        "additionalProperties": false
+      },
+      "Model": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          },
+          "providerId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          },
+          "externalModelId": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "contextLimit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "maxOutputTokens": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "pricingRevision": {
+            "type": "string"
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "available",
+              "unavailable",
+              "unknown"
+            ]
+          },
+          "qualificationRef": {
+            "type": "string"
+          },
+          "discoveredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          }
+        },
+        "required": [
+          "id",
+          "providerId",
+          "externalModelId",
+          "revision",
+          "capabilities",
+          "contextLimit",
+          "maxOutputTokens",
+          "pricingRevision",
+          "availability",
+          "discoveredAt"
+        ],
+        "additionalProperties": false
+      },
+      "Operation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          },
+          "kind": {
+            "type": "string",
+            "const": "provider.discovery"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "blocked",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "provider",
+              "model"
+            ]
+          },
+          "resourceId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          },
+          "safeError": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "detail"
+            ],
+            "additionalProperties": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "state",
+          "createdAt",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "RoutingDecision": {
+        "type": "object",
+        "properties": {
+          "eligible": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "modelId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+                },
+                "score": {
+                  "type": "number"
+                },
+                "reasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "estimatedCeilingMicroUsd": {
+                  "type": "string",
+                  "pattern": "^(0|[1-9]\\d{0,18})$"
+                }
+              },
+              "required": [
+                "modelId",
+                "score",
+                "reasons",
+                "estimatedCeilingMicroUsd"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "rejected": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "modelId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+                },
+                "reasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "modelId",
+                "reasons"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "selectedModelId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          },
+          "estimatedCeilingMicroUsd": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d{0,18})$"
+          },
+          "policyRevisionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+          }
+        },
+        "required": [
+          "eligible",
+          "rejected",
+          "estimatedCeilingMicroUsd",
+          "policyRevisionId"
+        ],
+        "additionalProperties": false
+      },
+      "ProviderResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "openai",
+                  "openai_compatible"
+                ]
+              },
+              "displayName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "unavailable",
+                  "healthy",
+                  "degraded",
+                  "disabled"
+                ]
+              },
+              "endpointSummary": {
+                "type": "string",
+                "format": "uri"
+              },
+              "authMethod": {
+                "type": "string",
+                "const": "api_key"
+              },
+              "credentialConfigured": {
+                "type": "boolean"
+              },
+              "privacyPolicy": {
+                "type": "object",
+                "properties": {
+                  "allowedClassifications": {
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "public",
+                        "internal"
+                      ]
+                    }
+                  },
+                  "providerTraining": {
+                    "type": "boolean",
+                    "const": false
+                  },
+                  "retention": {
+                    "type": "string",
+                    "const": "none"
+                  },
+                  "dataResidency": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64
+                  }
+                },
+                "required": [
+                  "allowedClassifications",
+                  "providerTraining",
+                  "retention"
+                ],
+                "additionalProperties": false
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[1-9]\\d*$"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+              },
+              "lastCheckedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+              },
+              "health": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "unconfigured",
+                      "configured",
+                      "healthy",
+                      "degraded"
+                    ]
+                  },
+                  "checkedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "modelCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "qualifiedModelCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "state",
+                  "checkedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "displayName",
+              "status",
+              "endpointSummary",
+              "authMethod",
+              "credentialConfigured",
+              "privacyPolicy",
+              "enabled",
+              "version",
+              "createdAt",
+              "updatedAt",
+              "health"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[1-9]\\d*$"
+              },
+              "nextCursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "ProviderListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "openai",
+                    "openai_compatible"
+                  ]
+                },
+                "displayName": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "unavailable",
+                    "healthy",
+                    "degraded",
+                    "disabled"
+                  ]
+                },
+                "endpointSummary": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "authMethod": {
+                  "type": "string",
+                  "const": "api_key"
+                },
+                "credentialConfigured": {
+                  "type": "boolean"
+                },
+                "privacyPolicy": {
+                  "type": "object",
+                  "properties": {
+                    "allowedClassifications": {
+                      "minItems": 1,
+                      "maxItems": 2,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "public",
+                          "internal"
+                        ]
+                      }
+                    },
+                    "providerTraining": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "retention": {
+                      "type": "string",
+                      "const": "none"
+                    },
+                    "dataResidency": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64
+                    }
+                  },
+                  "required": [
+                    "allowedClassifications",
+                    "providerTraining",
+                    "retention"
+                  ],
+                  "additionalProperties": false
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "version": {
+                  "type": "string",
+                  "pattern": "^[1-9]\\d*$"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "lastCheckedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "health": {
+                  "type": "object",
+                  "properties": {
+                    "state": {
+                      "type": "string",
+                      "enum": [
+                        "unconfigured",
+                        "configured",
+                        "healthy",
+                        "degraded"
+                      ]
+                    },
+                    "checkedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "modelCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "qualifiedModelCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "state",
+                    "checkedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "displayName",
+                "status",
+                "endpointSummary",
+                "authMethod",
+                "credentialConfigured",
+                "privacyPolicy",
+                "enabled",
+                "version",
+                "createdAt",
+                "updatedAt",
+                "health"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[1-9]\\d*$"
+              },
+              "nextCursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "ModelListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+                },
+                "providerId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+                },
+                "externalModelId": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string"
+                },
+                "capabilities": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
+                  }
+                },
+                "contextLimit": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "maxOutputTokens": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "pricingRevision": {
+                  "type": "string"
+                },
+                "availability": {
+                  "type": "string",
+                  "enum": [
+                    "available",
+                    "unavailable",
+                    "unknown"
+                  ]
+                },
+                "qualificationRef": {
+                  "type": "string"
+                },
+                "discoveredAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                }
+              },
+              "required": [
+                "id",
+                "providerId",
+                "externalModelId",
+                "revision",
+                "capabilities",
+                "contextLimit",
+                "maxOutputTokens",
+                "pricingRevision",
+                "availability",
+                "discoveredAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[1-9]\\d*$"
+              },
+              "nextCursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "OperationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "provider.discovery"
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "queued",
+                  "running",
+                  "blocked",
+                  "succeeded",
+                  "failed",
+                  "cancelled"
+                ]
+              },
+              "resourceType": {
+                "type": "string",
+                "enum": [
+                  "provider",
+                  "model"
+                ]
+              },
+              "resourceId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+              },
+              "safeError": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "detail": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "detail"
+                ],
+                "additionalProperties": false
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "state",
+              "createdAt",
+              "updatedAt"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[1-9]\\d*$"
+              },
+              "nextCursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "RoutingResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "eligible": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "modelId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "reasons": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "estimatedCeilingMicroUsd": {
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d{0,18})$"
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "score",
+                    "reasons",
+                    "estimatedCeilingMicroUsd"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "rejected": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "modelId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+                    },
+                    "reasons": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "reasons"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "selectedModelId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+              },
+              "estimatedCeilingMicroUsd": {
+                "type": "string",
+                "pattern": "^(0|[1-9]\\d{0,18})$"
+              },
+              "policyRevisionId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$"
+              }
+            },
+            "required": [
+              "eligible",
+              "rejected",
+              "estimatedCeilingMicroUsd",
+              "policyRevisionId"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[1-9]\\d*$"
+              },
+              "nextCursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "Problem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          },
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "detail",
+          "requestId",
+          "retryable"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "dtoNotes": [
+    "Request/response DTO columns quote the authoritative contract. Read schemaReferences and linked validators for bounds and implemented extensions.",
+    "PolicyRules runtime schema: backend/src/modules/governance/policy.js; governance input schemas: backend/src/http/governance.routes.js.",
+    "Settings runtime DTO: backend/src/modules/operations/settings.js, approved refinement in 05-API-CONTRACTS.md.",
+    "Identifiers are UUIDs; digests are lowercase SHA-256 hex; versions, sequences, byte counts and money use decimal strings where defined.",
+    "Lists use limit/cursor (default 50, maximum 100) and only supported filters; loaded rows are not a global count."
+  ]
+}

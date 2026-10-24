@@ -185,13 +185,13 @@ test('Stage 02 real PostgreSQL qualification in a disposable database', { timeou
                     const response = await fetch(base + route);
                     assert.equal(response.status, 200);
                     const body = await response.json();
-                    assert.equal(body.status, 'ready');
-                    assert.equal(body.vector, true);
+                    if (route === '/health/ready') assert.deepEqual(body, { ready: true });
+                    else { assert.equal(body.status, 'ready'); assert.equal(body.vector, true); }
                 }
                 healthy = false;
                 const failed = await fetch(base + '/health/ready');
                 assert.equal(failed.status, 503);
-                assert.equal((await failed.json()).postgres, false);
+                assert.deepEqual(await failed.json(), { ready: false });
                 assert.equal((await fetch(base + '/health/live')).status, 200);
             } finally {
                 await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve(undefined)));
