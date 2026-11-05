@@ -1,0 +1,125 @@
+{
+  "entry": "INDEX.md",
+  "features": [
+    {
+      "id": "F01",
+      "title": "Gateway and transport",
+      "path": "gateway/index.md"
+    },
+    {
+      "id": "F02",
+      "title": "Identity security and credentials",
+      "path": "security/index.md"
+    },
+    {
+      "id": "F03",
+      "title": "Sessions and persistence",
+      "path": "sessions/index.md"
+    },
+    {
+      "id": "F04",
+      "title": "Model providers",
+      "path": "providers/index.md"
+    },
+    {
+      "id": "F05",
+      "title": "Routing and budgets",
+      "path": "routing/index.md"
+    },
+    {
+      "id": "F06",
+      "title": "Intent research and requirements",
+      "path": "requirements/index.md"
+    },
+    {
+      "id": "F07",
+      "title": "Planning and Build Contracts",
+      "path": "planning/index.md"
+    },
+    {
+      "id": "F08",
+      "title": "Approvals and governance",
+      "path": "approvals/index.md"
+    },
+    {
+      "id": "F09",
+      "title": "Runtime and durable recovery",
+      "path": "runtime/index.md"
+    },
+    {
+      "id": "F10",
+      "title": "Specialists and independent review",
+      "path": "specialists/index.md"
+    },
+    {
+      "id": "F11",
+      "title": "Workspace Git and artifacts",
+      "path": "workspace/index.md"
+    },
+    {
+      "id": "F12",
+      "title": "Tool runtime and sandbox",
+      "path": "tools/index.md"
+    },
+    {
+      "id": "F13",
+      "title": "MCP and code intelligence",
+      "path": "code-intelligence/index.md"
+    },
+    {
+      "id": "F14",
+      "title": "Context memory and skills",
+      "path": "context/index.md"
+    },
+    {
+      "id": "F15",
+      "title": "Verification and quality",
+      "path": "verification/index.md"
+    },
+    {
+      "id": "F16",
+      "title": "External worker adapters",
+      "path": "workers/index.md"
+    },
+    {
+      "id": "F17",
+      "title": "Scheduling events notifications",
+      "path": "automation/index.md"
+    },
+    {
+      "id": "F18",
+      "title": "Browser and computer runtime",
+      "path": "browser/index.md"
+    },
+    {
+      "id": "F19",
+      "title": "Deployment and integrations",
+      "path": "deployment/index.md"
+    },
+    {
+      "id": "F20",
+      "title": "Observability and evaluations",
+      "path": "observability/index.md"
+    },
+    {
+      "id": "F21",
+      "title": "Release backup and recovery",
+      "path": "operations/index.md"
+    },
+    {
+      "id": "F22",
+      "title": "Desktop shell and security",
+      "path": "desktop/index.md"
+    },
+    {
+      "id": "F23",
+      "title": "Frontend product surfaces",
+      "path": "web/index.md"
+    },
+    {
+      "id": "F24",
+      "title": "CLI and headless consumers",
+      "path": "cli/index.md"
+    }
+  ]
+}
